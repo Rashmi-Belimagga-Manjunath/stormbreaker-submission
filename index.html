@@ -3,333 +3,381 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>STØRMBREAKER // SB1 — MISSION BRIEFING</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+<title>StormBreaker Studios</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0b0d;--surface:rgba(12,14,18,.94);--card:rgba(16,20,26,.82);
-  --border:rgba(255,160,40,.12);--border-hover:rgba(255,160,40,.35);
-  --text:#d8dcd8;--muted:#6a7068;--dim:#282c28;
-  --amber:#ffa028;--orange:#e06800;--olive:#4a5a28;--steel:#6880a0;--red:#d04020;
-  --font-display:'Barlow Condensed',sans-serif;--font-code:'JetBrains Mono',monospace;--font-body:'Inter',sans-serif;
-  --r:8px
+  --bg:#0D1117;--surface:rgba(13,17,23,.6);--card:rgba(255,255,255,.04);
+  --glass:rgba(255,255,255,.06);--glass-border:rgba(255,255,255,.08);--glass-hover:rgba(255,255,255,.12);
+  --text:#ffffff;--muted:#8892a0;--dim:#30363d;
+  --purple:#7C3AED;--cyan:#06B6D4;--pink:#EC4899;--glow:rgba(124,58,237,.3);
+  --font-display:'Orbitron',monospace;--font-code:'JetBrains Mono',monospace;--font-body:'Inter',sans-serif;
+  --r:14px
 }
 html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--bg);color:var(--text);overflow-x:hidden;font-size:16px}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);overflow-x:hidden}
 
-/* ── canvas backdrop ── */
-#bg_canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
-#vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse 70% 50% at 30% 20%,transparent 30%,rgba(10,11,13,.88) 80%,var(--bg))}
-.scan{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(255,160,40,.008) 3px,rgba(255,160,40,.008) 4px)}
-.radar-vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(10,11,13,.6) 100%)}
-.scrollbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--amber),var(--orange),var(--steel));z-index:999;width:0%}
+/* ── animated bg ── */
+#neural-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#glow-orb{position:fixed;top:15%;right:8%;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.1),rgba(6,182,212,.03),transparent 70%);z-index:0;pointer-events:none;
+  animation:orbFloat 14s ease-in-out infinite}
+#glow-orb2{position:fixed;bottom:5%;left:3%;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(6,182,212,.08),rgba(236,72,153,.02),transparent 70%);z-index:0;pointer-events:none;
+  animation:orbFloat 18s ease-in-out infinite reverse}
+#glow-orb3{position:fixed;top:50%;left:50%;width:800px;height:800px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.04),transparent 60%);z-index:0;pointer-events:none;
+  animation:orbFloat 20s ease-in-out infinite}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(-40px,30px) scale(1.05)}50%{transform:translate(20px,-30px) scale(.95)}75%{transform:translate(-20px,40px) scale(1.02)}}
+.scrollbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--cyan),var(--pink));z-index:999;width:0%}
 
 /* ── nav ── */
 nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;
-  padding:.55rem 1.5rem;background:rgba(10,11,13,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
-  font-family:var(--font-display);font-size:.8rem;text-transform:uppercase;letter-spacing:.1em}
-nav .brand{font-weight:700;font-size:1rem;display:flex;align-items:center;gap:10px;color:#fff}
-nav .brand .blip{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blip 1s infinite}
-@keyframes blip{0%,100%{opacity:1;box-shadow:0 0 8px var(--red)}50%{opacity:.3;box-shadow:none}}
-nav .brand .divider{color:var(--muted);font-weight:400;font-size:.7rem}
-nav ol{display:flex;gap:.1rem;list-style:none;flex-wrap:wrap}
-nav ol a{color:var(--muted);text-decoration:none;padding:.2rem .55rem;border:1px solid transparent;border-radius:3px;transition:.25s;font-size:.65rem;font-family:var(--font-display);letter-spacing:.06em}
-nav ol a:hover{color:var(--amber);border-color:rgba(255,160,40,.12);background:rgba(255,160,40,.04)}
+  padding:.6rem 1.5rem;background:rgba(13,17,23,.85);backdrop-filter:blur(24px) saturate(1.4);
+  border-bottom:1px solid var(--glass-border);font-family:var(--font-display);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em}
+nav .brand{font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:10px;color:#fff}
+nav .brand .acc{color:var(--purple)}
+nav .brand .blip{width:8px;height:8px;border-radius:50%;background:var(--purple);animation:blip 1.2s infinite;
+  box-shadow:0 0 12px var(--purple)}
+@keyframes blip{0%,100%{opacity:1;box-shadow:0 0 12px var(--purple)}50%{opacity:.2;box-shadow:none}}
+nav ol{display:flex;gap:.2rem;list-style:none;flex-wrap:wrap}
+nav ol a{color:var(--muted);text-decoration:none;padding:.2rem .55rem;border:1px solid transparent;border-radius:6px;transition:.25s;font-size:.6rem}
+nav ol a:hover{color:var(--cyan);border-color:rgba(6,182,212,.15);background:rgba(6,182,212,.04)}
 
-/* ── HERO ── */
-.hero{position:relative;z-index:2;min-height:95vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+/* ── hero ── */
+.hero{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
   text-align:center;padding:2rem 1rem;overflow:hidden}
 .hero .hero-bg{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-.hero .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.35) saturate(.55) contrast(1.15);transition:transform .1s linear}
+.hero .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.2) saturate(.6) contrast(1.15);transition:transform .1s linear}
 .hero .hero-bg::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(10,11,13,.75) 0%,transparent 25%,transparent 65%,rgba(10,11,13,.92) 100%),
-  radial-gradient(ellipse 60% 40% at 30% 50%,rgba(255,160,40,.05),transparent 70%)}
-.hero .hero-overlay{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-.hero .hero-overlay .sweep{position:absolute;top:0;left:-30%;width:30%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(255,160,40,.04),transparent);
-  animation:sweep 5s ease-in-out infinite}
-@keyframes sweep{0%,100%{left:-30%}50%{left:100%}}
-.hero .hero-overlay .hud-ring{position:absolute;top:50%;left:50%;width:600px;height:600px;transform:translate(-50%,-50%);
-  border:1px solid rgba(255,160,40,.04);border-radius:50%;animation:hudPulse 8s ease-in-out infinite}
-.hero .hero-overlay .hud-ring:nth-child(2){width:400px;height:400px;animation-delay:2s}
-.hero .hero-overlay .hud-ring:nth-child(3){width:200px;height:200px;animation-delay:4s}
-@keyframes hudPulse{0%,100%{opacity:.3;transform:translate(-50%,-50%) scale(1)}50%{opacity:.8;transform:translate(-50%,-50%) scale(1.05)}}
-.hero .hero-overlay .cross{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
-.hero .hero-overlay .cross::before,.hero .hero-overlay .cross::after{content:'';position:absolute;background:rgba(255,160,40,.06)}
-.hero .hero-overlay .cross::before{width:60px;height:1px;top:0;left:-30px}
-.hero .hero-overlay .cross::after{width:1px;height:60px;left:0;top:-30px}
-.hero::before{content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 50% at 50% 30%,rgba(255,160,40,.04),transparent 70%),
-  radial-gradient(ellipse 50% 40% at 30% 80%,rgba(255,160,40,.02),transparent 60%);
-  pointer-events:none}
-.hero .hero-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--amber);border-radius:3px;
-  padding:.3rem .9rem;font-family:var(--font-display);font-size:.7rem;color:var(--amber);margin-bottom:1rem;
-  background:rgba(255,160,40,.05);text-transform:uppercase;letter-spacing:.12em}
-.hero .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 1.2s infinite}
+  background:linear-gradient(180deg,rgba(13,17,23,.9) 0%,transparent 25%,transparent 55%,rgba(13,17,23,.95) 100%),
+  radial-gradient(ellipse 70% 50% at 50% 40%,rgba(124,58,237,.08),transparent 70%);
+  z-index:1}
+
+/* ── holographic ring ── */
+.hero .holo-ring{position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);z-index:-1;pointer-events:none}
+.hero .holo-ring .hr{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(124,58,237,.06);animation:hrSpin 20s linear infinite}
+.hero .holo-ring .hr:nth-child(1){width:100%;height:100%}
+.hero .holo-ring .hr:nth-child(2){width:75%;height:75%;top:12.5%;left:12.5%;animation-duration:25s;animation-direction:reverse;border-color:rgba(6,182,212,.05)}
+.hero .holo-ring .hr:nth-child(3){width:50%;height:50%;top:25%;left:25%;animation-duration:15s;border-color:rgba(236,72,153,.04)}
+@keyframes hrSpin{to{transform:rotate(360deg)}}
+
+/* ── floating game cards in hero ── */
+.hero .float-cards{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.hero .float-cards .fc{position:absolute;width:120px;height:160px;border-radius:12px;
+  background:rgba(255,255,255,.04);backdrop-filter:blur(20px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.08);padding:.5rem;display:flex;flex-direction:column;justify-content:flex-end;
+  opacity:.6;animation:fcFloat 8s ease-in-out infinite}
+.hero .float-cards .fc:nth-child(1){top:15%;right:8%;animation-delay:0s}
+.hero .float-cards .fc:nth-child(2){top:55%;right:12%;animation-delay:2s;width:100px;height:140px}
+.hero .float-cards .fc:nth-child(3){top:25%;left:6%;animation-delay:4s;width:90px;height:130px}
+.hero .float-cards .fc:nth-child(4){top:60%;left:10%;animation-delay:1s;width:110px;height:150px}
+@keyframes fcFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+.hero .float-cards .fc .fc-img{position:absolute;inset:0;border-radius:12px;overflow:hidden}
+.hero .float-cards .fc .fc-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.4) saturate(.7)}
+.hero .float-cards .fc .fc-img::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(13,17,23,.9),transparent 50%)}
+.hero .float-cards .fc .fc-label{position:relative;z-index:1;font-family:var(--font-code);font-size:.35rem;color:var(--text);letter-spacing:.06em;text-transform:uppercase}
+
+/* ── energy particles ── */
+.hero .energy-particles{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.hero .energy-particles .ep{position:absolute;width:3px;height:3px;border-radius:50%;background:var(--purple);animation:epFloat 6s ease-in-out infinite}
+.hero .energy-particles .ep:nth-child(1){top:20%;left:20%;animation-delay:0s;background:var(--cyan)}
+.hero .energy-particles .ep:nth-child(2){top:70%;left:80%;animation-delay:1.5s;background:var(--pink)}
+.hero .energy-particles .ep:nth-child(3){top:40%;left:60%;animation-delay:3s;background:var(--purple)}
+.hero .energy-particles .ep:nth-child(4){top:85%;left:30%;animation-delay:.5s;background:var(--cyan)}
+.hero .energy-particles .ep:nth-child(5){top:10%;left:70%;animation-delay:2.5s;background:var(--pink)}
+.hero .energy-particles .ep:nth-child(6){top:50%;left:40%;animation-delay:4s;background:var(--purple)}
+.hero .energy-particles .ep:nth-child(7){top:30%;left:90%;animation-delay:1s;background:var(--cyan)}
+.hero .energy-particles .ep:nth-child(8){top:60%;left:15%;animation-delay:3.5s;background:var(--pink)}
+@keyframes epFloat{0%,100%{transform:translate(0,0);opacity:.3}25%{transform:translate(20px,-30px);opacity:.8}50%{transform:translate(-10px,20px);opacity:.4}75%{transform:translate(15px,10px);opacity:.6}}
+
+.hero .hero-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--glass-border);border-radius:100px;
+  padding:.4rem 1.2rem;font-family:var(--font-code);font-size:.6rem;color:var(--muted);margin-bottom:1rem;
+  background:var(--glass);backdrop-filter:blur(12px);text-transform:uppercase;letter-spacing:.1em}
+.hero .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--purple);box-shadow:0 0 10px var(--purple);animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero .hero-badge .badge-acc{color:var(--cyan)}
 
-.hero h1{font-family:var(--font-display);font-size:clamp(4rem,12vw,9rem);font-weight:900;line-height:.85;
-  text-transform:uppercase;letter-spacing:-.03em;color:#fff;margin-bottom:.3rem;
-  text-shadow:0 0 60px rgba(255,160,40,.15),0 4px 30px rgba(0,0,0,.4)}
-.hero h1 .hl{color:var(--amber)}
-.hero .sub{font-family:var(--font-display);font-size:1rem;color:var(--muted);letter-spacing:.18em;margin-bottom:.2rem;text-transform:uppercase}
-.hero .sub .hl2{color:var(--amber)}
-.hero .tagline{font-family:var(--font-body);font-size:.85rem;color:var(--muted);letter-spacing:.02em;margin-bottom:1.2rem;max-width:500px;line-height:1.4}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.5rem,7vw,5rem);font-weight:900;line-height:1;
+  text-transform:uppercase;letter-spacing:-.02em;color:#fff;margin-bottom:.5rem;position:relative}
+.hero h1 .grad{background:linear-gradient(135deg,#fff 20%,var(--purple) 50%,var(--cyan) 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1 .subtitle{display:block;font-size:clamp(.8rem,2vw,1.2rem);font-weight:400;letter-spacing:.2em;color:var(--muted);margin-top:.2rem;text-transform:uppercase}
+.hero .tagline{font-size:clamp(.75rem,1.5vw,1rem);color:var(--muted);margin-bottom:1.5rem;max-width:480px;line-height:1.5;font-family:var(--font-body);font-weight:300}
 
-.hero .hero-stats{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin:1rem 0}
-.hero .hs{display:flex;flex-direction:column;align-items:center;padding:.5rem 1rem;
-  border:1px solid var(--border);border-radius:4px;background:var(--card);min-width:100px;
-  transition:.3s;cursor:default;position:relative;overflow:hidden}
-.hero .hs::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:.3}
-.hero .hs:hover{border-color:var(--border-hover);transform:translateY(-3px)}
-.hero .hs .hs-val{font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--amber);line-height:1}
-.hero .hs .hs-lab{font-family:var(--font-code);font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.1rem}
+.hero .cta-group{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.hero .cta-hero{display:inline-flex;align-items:center;gap:10px;border-radius:12px;
+  padding:.65rem 1.8rem;font-family:var(--font-display);font-size:.7rem;color:#fff;text-transform:uppercase;
+  letter-spacing:.1em;cursor:pointer;transition:.3s;text-decoration:none;
+  background:linear-gradient(135deg,var(--purple),rgba(124,58,237,.3));border:1px solid rgba(124,58,237,.3)}
+.hero .cta-hero:hover{box-shadow:0 0 50px var(--glow);transform:translateY(-2px)}
+.hero .cta-hero.sec{background:transparent;border-color:var(--glass-border);backdrop-filter:blur(12px);color:var(--text);font-weight:400}
+.hero .cta-hero.sec:hover{border-color:var(--cyan);box-shadow:0 0 40px rgba(6,182,212,.2)}
 
-.hero .pipeline-vis{display:flex;align-items:center;justify-content:center;gap:.4rem;margin:1.5rem 0 .8rem;flex-wrap:wrap}
+.hero .hero-stats{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin:.5rem 0}
+.hero .hs{padding:.6rem 1.2rem;border-radius:12px;background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--glass-border);min-width:100px;text-align:center;transition:.4s;cursor:default}
+.hero .hs:hover{transform:translateY(-4px);border-color:rgba(124,58,237,.3);box-shadow:0 8px 40px rgba(124,58,237,.08)}
+.hero .hs .hs-val{font-family:var(--font-display);font-size:1.6rem;font-weight:700;background:linear-gradient(135deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .hs .hs-lab{font-family:var(--font-code);font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.05rem}
+
+/* ── pipeline hero ── */
+.pipeline-vis{display:flex;align-items:center;justify-content:center;gap:.4rem;margin:1.5rem 0 .8rem;flex-wrap:wrap}
 .pv-node{display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:.3s}
-.pv-node:hover{transform:scale(1.08)}
-.pv-node .pv-icon{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-  border:2px solid var(--border);background:var(--surface);transition:.4s;position:relative}
-.pv-node:hover .pv-icon{box-shadow:0 0 50px rgba(255,160,40,.08)}
-.pv-node .pv-icon .deco{position:absolute;font-size:.35rem;color:var(--dim);top:6px;right:8px;font-family:var(--font-code)}
-.pv-node .pv-icon .ring{position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(255,160,40,.08);animation:spin 12s linear infinite}
+.pv-node:hover{transform:scale(1.1)}
+.pv-node .pv-icon{width:76px;height:76px;border-radius:20px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--glass-border);transition:.4s;position:relative}
+.pv-node:hover .pv-icon{box-shadow:0 0 50px var(--glow)}
+.pv-node .pv-icon .deco{position:absolute;top:-4px;right:6px;font-size:.3rem;color:var(--dim);font-family:var(--font-code)}
+.pv-node .pv-icon .ring{position:absolute;inset:-4px;border-radius:22px;border:1px solid rgba(124,58,237,.1);animation:spin 12s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.pv-node .pv-icon.res{border-color:rgba(208,64,32,.3);background:linear-gradient(135deg,rgba(208,64,32,.12),rgba(255,160,40,.04))}
-.pv-node .pv-icon.dsn{border-color:rgba(104,128,160,.3);background:linear-gradient(135deg,rgba(104,128,160,.12),rgba(255,160,40,.04))}
-.pv-node .pv-icon.mkr{border-color:rgba(255,160,40,.3);background:linear-gradient(135deg,rgba(255,160,40,.12),rgba(0,0,0,.1))}
-.pv-node .pv-label{font-family:var(--font-display);font-size:.6rem;color:var(--muted);margin-top:.4rem;letter-spacing:.12em;text-transform:uppercase}
+.pv-node .pv-icon.res{border-color:rgba(236,72,153,.3)}
+.pv-node .pv-icon.dsn{border-color:rgba(6,182,212,.3)}
+.pv-node .pv-icon.mkr{border-color:rgba(124,58,237,.3)}
+.pv-node .pv-label{font-family:var(--font-code);font-size:.55rem;color:var(--muted);margin-top:.4rem;letter-spacing:.08em}
 
-.pv-arr{font-size:1.6rem;color:var(--dim);margin:0 .1rem;animation:pa 1.4s infinite;user-select:none}
+.pv-arr{font-size:1.5rem;color:var(--dim);margin:0 .1rem;animation:pa 1.4s infinite;user-select:none}
 @keyframes pa{0%,100%{opacity:.3;transform:translateX(0)}50%{opacity:1;transform:translateX(5px)}}
 
-.hero .cta-hero{display:inline-flex;align-items:center;gap:10px;border:2px solid var(--amber);border-radius:4px;
-  padding:.6rem 1.8rem;font-family:var(--font-display);font-size:.8rem;color:#fff;text-transform:uppercase;
-  letter-spacing:.12em;cursor:pointer;transition:.3s;text-decoration:none;margin-top:.5rem;
-  background:linear-gradient(135deg,rgba(255,160,40,.12),rgba(0,0,0,.2))}
-.hero .cta-hero:hover{background:linear-gradient(135deg,rgba(255,160,40,.2),rgba(0,0,0,.3));box-shadow:0 0 40px rgba(255,160,40,.1);transform:translateY(-2px)}
-.hero .cta-hero .arr{font-size:1rem}
-
 .hero .scroll-ind{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);
-  font-family:var(--font-code);font-size:.45rem;color:var(--dim);letter-spacing:.12em;animation:si 2.2s infinite;display:flex;align-items:center;gap:6px}
+  font-family:var(--font-code);font-size:.45rem;color:var(--dim);letter-spacing:.1em;animation:si 2.2s infinite;display:flex;align-items:center;gap:6px}
 @keyframes si{0%,100%{opacity:.3;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(6px)}}
 
-/* ── container ── */
+/* ── glassmorphism container ── */
 .container{position:relative;z-index:2;max-width:1060px;margin:0 auto;padding:0 1rem 3rem}
 
-/* ── sections ── */
-.sec{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1.2rem;
-  backdrop-filter:blur(10px);overflow:hidden;transition:border-color .3s}
-.sec:hover{border-color:rgba(255,160,40,.1)}
-.sec .hd{display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;border-bottom:1px solid var(--border);
-  font-family:var(--font-display);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;user-select:none;transition:.2s}
+/* ── glass sections ── */
+.sec{background:var(--glass);backdrop-filter:blur(20px) saturate(1.5);border:1px solid var(--glass-border);
+  border-radius:var(--r);margin-bottom:1.2rem;overflow:hidden;transition:.4s;opacity:0;transform:translateY(30px)}
+.sec.visible{opacity:1;transform:translateY(0)}
+.sec:hover{border-color:rgba(124,58,237,.15)}
+.sec .hd{display:flex;align-items:center;gap:.5rem;padding:.7rem 1.2rem;
+  border-bottom:1px solid var(--glass-border);font-family:var(--font-display);font-size:.75rem;letter-spacing:.08em;
+  text-transform:uppercase;cursor:pointer;user-select:none;transition:.2s}
 .sec .hd:hover{background:rgba(255,255,255,.015)}
-.sec .hd .num{font-family:var(--font-code);font-size:.55rem;color:var(--muted);background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:3px;padding:.05rem .45rem}
+.sec .hd .num{font-family:var(--font-code);font-size:.5rem;color:var(--muted);background:rgba(255,255,255,.03);border:1px solid var(--glass-border);border-radius:6px;padding:.05rem .5rem}
 .sec .hd .badge{font-family:var(--font-code);font-size:.45rem;color:var(--muted);margin-left:.4rem}
 .sec .hd .toggle{color:var(--dim);margin-left:auto;transition:.3s;font-size:.7rem}
 .sec .hd .toggle.open{transform:rotate(180deg)}
-.sec .bd{padding:1rem;display:none}
-.sec .bd.open{display:block;animation:ff .3s ease}
-@keyframes ff{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.sec .bd{padding:1.1rem;display:none}
+.sec .bd.open{display:block;animation:ff .35s ease}
+@keyframes ff{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── grid cards ── */
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.5rem 0}
+/* ── glass cards ── */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:700px){.g3{grid-template-columns:1fr}}
-.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin:.5rem 0}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:600px){.g2{grid-template-columns:1fr}}
-.g-card{border:1px solid var(--border);border-radius:6px;padding:.7rem;transition:.3s;cursor:pointer;position:relative;overflow:hidden}
-.g-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:0;transition:.3s}
-.g-card:hover::before{opacity:.4}
-.g-card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.2)}
+.g-card{background:rgba(255,255,255,.02);backdrop-filter:blur(12px);border:1px solid var(--glass-border);
+  border-radius:12px;padding:.8rem;transition:.4s;cursor:pointer;position:relative;overflow:hidden}
+.g-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:0;transition:.4s}
+.g-card:hover::before{opacity:.5}
+.g-card:hover{transform:translateY(-3px);border-color:rgba(124,58,237,.2);box-shadow:0 12px 40px rgba(124,58,237,.06)}
 .g-card .gbar{position:absolute;top:0;left:0;height:2px;border-radius:0 0 3px 3px;transition:width 1.2s ease}
-.g-card .gttl{font-family:var(--font-display);font-size:.65rem;letter-spacing:.06em;margin-bottom:.15rem;text-transform:uppercase}
+.g-card .gttl{font-family:var(--font-display);font-size:.65rem;letter-spacing:.06em;margin-bottom:.2rem;text-transform:uppercase}
 .g-card .gnum{font-family:var(--font-display);font-size:2rem;font-weight:700;line-height:1;color:#fff}
 .g-card .gsub{font-family:var(--font-code);font-size:.55rem;color:var(--muted);margin-top:.1rem}
-.g-card .gmeta{font-family:var(--font-code);font-size:.5rem;color:var(--dim);margin-top:.25rem;border-top:1px solid var(--border);padding-top:.25rem}
+.g-card .gmeta{font-family:var(--font-code);font-size:.5rem;color:var(--dim);margin-top:.3rem;padding-top:.25rem;border-top:1px solid var(--glass-border)}
+
+/* ── glass card with game screenshot ── */
+.g-card-img{position:relative;overflow:hidden;min-height:160px;display:flex;flex-direction:column;justify-content:flex-end}
+.g-card-img .img-bg{position:absolute;inset:0;z-index:0}
+.g-card-img .img-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.35) saturate(.6);transition:transform .5s ease,filter .5s ease}
+.g-card-img:hover .img-bg img{transform:scale(1.05);filter:brightness(.45) saturate(.7)}
+.g-card-img .img-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(13,17,23,.9) 0%,transparent 60%)}
+.g-card-img .g-content{position:relative;z-index:1;padding:.7rem}
+.g-card-img .gttl{font-family:var(--font-display);font-size:.65rem;letter-spacing:.06em;margin-bottom:.15rem;text-transform:uppercase}
+.g-card-img .gnum{font-family:var(--font-display);font-size:1.8rem;font-weight:700;line-height:1;color:#fff}
+.g-card-img .gsub{font-family:var(--font-code);font-size:.5rem;color:var(--muted);margin-top:.05rem}
+.g-card-img .gmeta{font-family:var(--font-code);font-size:.45rem;color:var(--dim);margin-top:.2rem;padding-top:.15rem;border-top:1px solid var(--glass-border)}
 
 /* ── terminal ── */
-.term{background:rgba(0,0,0,.45);border:1px solid var(--border);border-radius:6px;overflow:hidden;margin:.4rem 0}
-.term .tbar{display:flex;align-items:center;gap:5px;padding:.3rem .7rem;background:rgba(255,255,255,.008);border-bottom:1px solid var(--border)}
-.term .tbar .dot{width:7px;height:7px;border-radius:50%}
-.term .tbar .d1{background:#ff5f56}
-.term .tbar .d2{background:#ffbd2e}
-.term .tbar .d3{background:#28c840}
-.term .tbar .ttl{font-family:var(--font-code);font-size:.45rem;color:var(--dim);margin-left:.4rem;letter-spacing:.04em}
-.term .tbdy{font-family:var(--font-code);font-size:.65rem;line-height:1.5;padding:.55rem .7rem;color:#b0b8b0;overflow-x:auto;white-space:pre-wrap}
-.term .tbdy .hlp{color:var(--red)}
-.term .tbdy .hlc{color:var(--steel)}
-.term .tbdy .hlg{color:var(--amber)}
-.term .tbdy .hll{color:#80b080}
-.term .tbdy .dim{color:var(--dim)}
+.term{background:rgba(0,0,0,.25);border:1px solid var(--glass-border);border-radius:10px;overflow:hidden;margin:.5rem 0;backdrop-filter:blur(8px)}
+.term .tbar{display:flex;align-items:center;gap:6px;padding:.35rem .8rem;background:rgba(255,255,255,.015);border-bottom:1px solid var(--glass-border)}
+.term .tbar .dot{width:8px;height:8px;border-radius:50%}
+.term .tbar .d1{background:#ff5f56}.term .tbar .d2{background:#ffbd2e}.term .tbar .d3{background:#28c840}
+.term .tbar .ttl{font-family:var(--font-code);font-size:.45rem;color:var(--dim);margin-left:.5rem;letter-spacing:.03em}
+.term .tbdy{font-family:var(--font-code);font-size:.65rem;line-height:1.5;padding:.65rem .8rem;color:#b0b8c8;overflow-x:auto;white-space:pre-wrap}
+.term .tbdy .hp{color:var(--pink)}.term .tbdy .hc{color:var(--cyan)}.term .tbdy .hg{color:#a78bfa}.term .tbdy .hl{color:#34d399}
 
 /* ── gauges ── */
-.gg{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:.5rem 0}
+.gg{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:600px){.gg{grid-template-columns:repeat(2,1fr)}}
-.gauge{text-align:center;border:1px solid var(--border);border-radius:6px;padding:.5rem;background:rgba(0,0,0,.1);cursor:default;transition:.3s}
-.gauge:hover{border-color:var(--border-hover);background:rgba(0,0,0,.2);transform:translateY(-2px)}
-.gauge canvas{width:100%;max-width:80px;height:auto;margin:0 auto;display:block}
+.gauge{text-align:center;border:1px solid var(--glass-border);border-radius:12px;padding:.6rem;background:rgba(255,255,255,.02);cursor:default;transition:.4s;backdrop-filter:blur(8px)}
+.gauge:hover{border-color:rgba(124,58,237,.15);transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.04)}
+.gauge canvas{width:100%;max-width:85px;height:auto;margin:0 auto;display:block}
 .gauge .gl{font-family:var(--font-code);font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.15rem}
 .gauge .gv{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:#fff;margin-top:-.05rem}
-.gauge .gs{font-size:.45rem;color:var(--dim)}
 
 /* ── roadmap ── */
-.road{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.5rem 0}
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:700px){.road{grid-template-columns:1fr}}
-.rd{border:1px solid var(--border);border-radius:6px;padding:.6rem;transition:.3s;cursor:pointer;position:relative}
-.rd::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:0;transition:.3s}
-.rd:hover::before{opacity:.5}
-.rd:hover{border-color:var(--border-hover);transform:translateY(-2px)}
-.rd .rd-ph{font-family:var(--font-display);font-size:.5rem;color:var(--amber);letter-spacing:.08em;margin-bottom:.1rem;display:flex;align-items:center;gap:5px;text-transform:uppercase}
-.rd .rd-wk{font-family:var(--font-code);font-size:.45rem;color:var(--red);margin-bottom:.15rem}
-.rd .rd-check{font-family:var(--font-code);font-size:.45rem;color:var(--amber);margin-top:.25rem;padding-top:.2rem;border-top:1px solid var(--border)}
-.rd li{font-size:.55rem;color:var(--muted);padding:.1rem 0 .1rem .5rem;list-style:none;position:relative}
-.rd li::before{content:'▸';position:absolute;left:0;color:var(--steel)}
+.rd{background:rgba(255,255,255,.02);backdrop-filter:blur(12px);border:1px solid var(--glass-border);border-radius:12px;padding:.7rem;transition:.4s;cursor:pointer}
+.rd:hover{transform:translateY(-3px);border-color:rgba(124,58,237,.2);box-shadow:0 12px 40px rgba(124,58,237,.04)}
+.rd .rd-ph{font-family:var(--font-display);font-size:.5rem;color:var(--purple);letter-spacing:.08em;margin-bottom:.1rem;text-transform:uppercase}
+.rd .rd-wk{font-family:var(--font-code);font-size:.45rem;color:var(--pink);margin-bottom:.15rem}
+.rd .rd-check{font-family:var(--font-code);font-size:.45rem;color:var(--cyan);margin-top:.25rem;padding-top:.2rem;border-top:1px solid var(--glass-border)}
+.rd li{font-size:.55rem;color:var(--muted);padding:.1rem 0 .1rem .6rem;list-style:none;position:relative}
+.rd li::before{content:'▸';position:absolute;left:0;color:var(--cyan)}
 
 /* ── tables ── */
 .rsk{width:100%;border-collapse:collapse;font-size:.6rem;margin:.5rem 0}
-.rsk th,.rsk td{border:1px solid var(--border);padding:.3rem .5rem;text-align:left}
-.rsk th{font-family:var(--font-display);font-size:.5rem;color:var(--amber);background:rgba(255,160,40,.02);letter-spacing:.06em;text-transform:uppercase}
-.rsk td{color:var(--text)}
-.lh{color:var(--red);font-weight:600}
-.lm{color:var(--amber);font-weight:600}
-.ll{color:#80b080;font-weight:600}
+.rsk th,.rsk td{border:1px solid var(--glass-border);padding:.35rem .55rem;text-align:left}
+.rsk th{font-family:var(--font-display);font-size:.5rem;color:var(--purple);background:rgba(124,58,237,.02);letter-spacing:.06em;text-transform:uppercase}
+.rsk td{color:var(--text)}.lh{color:var(--pink);font-weight:600}.lm{color:#a78bfa;font-weight:600}.ll{color:#34d399;font-weight:600}
 
 /* ── budget ── */
-.bg{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;margin:.5rem 0}
+.bg{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin:.5rem 0}
 @media(max-width:600px){.bg{grid-template-columns:1fr}}
-.bi{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:.25rem 0;font-size:.55rem;font-family:var(--font-code)}
-.bi .bl{color:var(--muted)}
-.bi .br{color:var(--amber);font-weight:600}
-.bt{display:flex;justify-content:space-between;padding:.35rem 0 0;border-top:2px solid var(--amber);margin-top:.25rem;
-  font-family:var(--font-display);font-size:.65rem;letter-spacing:.04em}
-.bt .btl{color:var(--amber)}
-.bt .btr{color:#fff;font-weight:700}
+.bi{display:flex;justify-content:space-between;border-bottom:1px solid var(--glass-border);padding:.3rem 0;font-size:.55rem;font-family:var(--font-code)}
+.bi .bl{color:var(--muted)}.bi .br{color:#a78bfa;font-weight:600}
+.bt{display:flex;justify-content:space-between;padding:.4rem 0 0;border-top:2px solid var(--purple);margin-top:.3rem;font-family:var(--font-display);font-size:.65rem;letter-spacing:.04em}
+.bt .btl{color:var(--purple)}.bt .btr{color:#fff;font-weight:700}
 
-/* ── CTA ── */
-.cta{border:2px solid var(--amber);border-radius:6px;padding:.8rem;text-align:center;margin:.5rem 0;
-  background:linear-gradient(135deg,rgba(255,160,40,.05),rgba(0,0,0,.15));
-  font-size:.75rem;line-height:1.5;color:var(--text);cursor:pointer;transition:.3s}
-.cta:hover{border-color:var(--orange);box-shadow:0 0 30px rgba(255,160,40,.06);transform:translateY(-1px)}
+.cta{border:1px solid rgba(124,58,237,.3);border-radius:12px;padding:.8rem;text-align:center;margin:.5rem 0;
+  background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(6,182,212,.04));font-size:.75rem;line-height:1.5;color:var(--text);cursor:pointer;transition:.4s}
+.cta:hover{border-color:var(--purple);box-shadow:0 0 40px var(--glow);transform:translateY(-1px)}
 
-/* ── handoff badge ── */
-.ho{display:flex;align-items:center;gap:.3rem;padding:.2rem .5rem;border-radius:4px;font-family:var(--font-code);font-size:.45rem;
-  border:1px solid rgba(255,160,40,.08);background:rgba(255,160,40,.02);color:var(--amber);margin:.2rem 0;letter-spacing:.02em}
-.ho .ar{color:var(--steel);font-weight:700}
+.ho{display:flex;align-items:center;gap:.35rem;padding:.25rem .6rem;border-radius:8px;font-family:var(--font-code);font-size:.45rem;
+  border:1px solid rgba(6,182,212,.08);background:rgba(6,182,212,.02);color:var(--cyan);margin:.25rem 0}
+.ho .ar{color:#a78bfa;font-weight:700}
 
-/* ── misc ── */
-h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:var(--amber);margin:.7rem 0 .3rem;text-transform:uppercase;display:flex;align-items:center;gap:6px}
-.fail{border-left:3px solid var(--red);background:rgba(208,64,32,.04);padding:.4rem .55rem;margin:.25rem 0;border-radius:0 4px 4px 0;font-size:.55rem}
-.fix{border-left:3px solid #80b080;background:rgba(128,176,128,.04);padding:.4rem .55rem;margin:.25rem 0;border-radius:0 4px 4px 0;font-size:.55rem}
-.q{font-family:var(--font-code);font-size:.55rem;color:var(--red);background:rgba(0,0,0,.3);padding:.2rem .4rem;border-radius:3px;display:inline-block;margin:.1rem 0}
-.qf{color:var(--amber)}
+h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#a78bfa;margin:.8rem 0 .35rem;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.fail{border-left:3px solid var(--pink);background:rgba(236,72,153,.04);padding:.45rem .6rem;margin:.3rem 0;border-radius:0 8px 8px 0;font-size:.55rem}
+.fix{border-left:3px solid #34d399;background:rgba(52,211,153,.04);padding:.45rem .6rem;margin:.3rem 0;border-radius:0 8px 8px 0;font-size:.55rem}
+.q{font-family:var(--font-code);font-size:.55rem;color:var(--pink);background:rgba(0,0,0,.3);padding:.2rem .45rem;border-radius:5px;display:inline-block;margin:.15rem 0}
+.qf{color:#34d399}
 
-.btn-t{position:fixed;bottom:5rem;right:1rem;z-index:99;width:36px;height:36px;border-radius:50%;
-  border:1px solid var(--border);background:var(--card);backdrop-filter:blur(12px);color:var(--amber);
-  font-size:.8rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+.btn-t{position:fixed;bottom:5rem;right:1rem;z-index:99;width:40px;height:40px;border-radius:12px;
+  border:1px solid var(--glass-border);background:var(--glass);backdrop-filter:blur(16px);color:var(--purple);
+  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
   opacity:0;transition:.3s;text-decoration:none}
 .btn-t.vis{opacity:1}
-.btn-t:hover{border-color:var(--amber);box-shadow:0 0 20px rgba(255,160,40,.08)}
+.btn-t:hover{border-color:var(--purple);box-shadow:0 0 25px var(--glow)}
 
 /* ── testimonials ── */
-.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.5rem 0}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:700px){.test-grid{grid-template-columns:1fr}}
-.test-card{border:1px solid var(--border);border-radius:6px;padding:.7rem;transition:.3s;cursor:pointer;position:relative}
-.test-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:0;transition:.3s}
-.test-card:hover::before{opacity:.4}
-.test-card:hover{border-color:var(--border-hover);transform:translateY(-2px)}
-.test-card .t-avatar{width:36px;height:36px;border-radius:50%;border:2px solid var(--amber);display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-display);font-size:.55rem;color:var(--amber);background:rgba(255,160,40,.04);margin-bottom:.4rem}
-.test-card .t-stars{color:var(--amber);font-size:.55rem;margin-bottom:.2rem}
-.test-card .t-quote{font-size:.6rem;color:var(--text);line-height:1.5;font-style:italic;margin-bottom:.35rem}
-.test-card .t-name{font-family:var(--font-display);font-size:.5rem;color:var(--amber);text-transform:uppercase;letter-spacing:.06em}
+.test-card{background:rgba(255,255,255,.02);backdrop-filter:blur(12px);border:1px solid var(--glass-border);border-radius:12px;padding:.8rem;transition:.4s;cursor:pointer}
+.test-card:hover{transform:translateY(-3px);border-color:rgba(124,58,237,.2);box-shadow:0 12px 40px rgba(124,58,237,.04)}
+.test-card .t-avatar{width:40px;height:40px;border-radius:12px;border:1px solid rgba(124,58,237,.3);display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.55rem;color:var(--purple);background:rgba(124,58,237,.04);margin-bottom:.5rem}
+.test-card .t-stars{color:var(--cyan);font-size:.55rem;margin-bottom:.25rem}
+.test-card .t-quote{font-size:.6rem;color:var(--muted);line-height:1.5;font-style:italic;margin-bottom:.4rem}
+.test-card .t-name{font-family:var(--font-display);font-size:.5rem;color:var(--text);text-transform:uppercase;letter-spacing:.06em}
 .test-card .t-role{font-size:.45rem;color:var(--dim);font-family:var(--font-code)}
 
-/* ── CHATBOT ── */
-#chat-toggle{position:fixed;bottom:1rem;right:1rem;z-index:200;width:50px;height:50px;border-radius:50%;
-  border:2px solid var(--amber);background:linear-gradient(135deg,rgba(10,11,13,.95),rgba(20,24,30,.95));color:var(--amber);
+/* ── chatbot ── */
+#chat-toggle{position:fixed;bottom:1rem;right:1rem;z-index:200;width:52px;height:52px;border-radius:16px;
+  border:none;background:linear-gradient(135deg,var(--purple),rgba(124,58,237,.4));color:#fff;
   font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(12px);transition:.3s;box-shadow:0 4px 20px rgba(255,160,40,.15)}
-#chat-toggle:hover{transform:scale(1.08);box-shadow:0 6px 30px rgba(255,160,40,.2)}
+  backdrop-filter:blur(16px);transition:.3s;box-shadow:0 4px 30px var(--glow)}
+#chat-toggle:hover{transform:scale(1.08);box-shadow:0 8px 50px var(--glow)}
 
 #chat-panel{position:fixed;bottom:5rem;right:1rem;z-index:200;width:340px;max-height:420px;
-  background:rgba(12,14,18,.98);backdrop-filter:blur(20px);border:1px solid var(--border);
-  border-radius:8px;overflow:hidden;display:none;flex-direction:column;
-  box-shadow:0 12px 60px rgba(0,0,0,.6)}
+  background:rgba(13,17,23,.95);backdrop-filter:blur(24px) saturate(1.5);border:1px solid var(--glass-border);
+  border-radius:16px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.5)}
 #chat-panel.open{display:flex;animation:chatIn .3s ease}
 @keyframes chatIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 
-.chat-head{display:flex;align-items:center;gap:.4rem;padding:.5rem .7rem;border-bottom:1px solid var(--border);
-  background:rgba(255,160,40,.04)}
-.chat-head .ch-av{width:30px;height:30px;border-radius:50%;border:1px solid var(--amber);
-  display:flex;align-items:center;justify-content:center;font-size:.6rem;background:rgba(255,160,40,.06)}
-.chat-head .ch-name{font-family:var(--font-display);font-size:.6rem;color:var(--amber);letter-spacing:.06em;text-transform:uppercase}
+.chat-head{display:flex;align-items:center;gap:.5rem;padding:.55rem .8rem;border-bottom:1px solid var(--glass-border);background:rgba(124,58,237,.03)}
+.chat-head .ch-av{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--purple),rgba(124,58,237,.3));display:flex;align-items:center;justify-content:center;font-size:.65rem}
+.chat-head .ch-name{font-family:var(--font-display);font-size:.6rem;color:var(--text);letter-spacing:.06em}
 .chat-head .ch-status{font-family:var(--font-code);font-size:.4rem;color:var(--muted)}
 .chat-head .ch-close{margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:.7rem;padding:.1rem}
 
-.chat-body{flex:1;padding:.5rem .7rem;overflow-y:auto;max-height:260px;display:flex;flex-direction:column;gap:.35rem}
-.chat-msg{font-family:var(--font-code);font-size:.5rem;line-height:1.4;padding:.3rem .5rem;border-radius:5px;max-width:88%;animation:msgIn .3s ease}
+.chat-body{flex:1;padding:.55rem .8rem;overflow-y:auto;max-height:260px;display:flex;flex-direction:column;gap:.4rem}
+.chat-msg{font-family:var(--font-code);font-size:.5rem;line-height:1.4;padding:.35rem .55rem;border-radius:8px;max-width:88%;animation:msgIn .3s ease}
 @keyframes msgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-.chat-msg.bot{background:rgba(255,160,40,.04);border:1px solid rgba(255,160,40,.08);align-self:flex-start;color:var(--text)}
-.chat-msg.user{background:rgba(104,128,160,.06);border:1px solid rgba(104,128,160,.1);align-self:flex-end;color:var(--text)}
+.chat-msg.bot{background:rgba(124,58,237,.04);border:1px solid rgba(124,58,237,.08);align-self:flex-start;color:var(--text)}
+.chat-msg.user{background:rgba(6,182,212,.04);border:1px solid rgba(6,182,212,.08);align-self:flex-end;color:var(--text)}
 .chat-msg .msg-time{font-size:.35rem;color:var(--dim);display:block;margin-top:.1rem}
 
-.chat-foot{display:flex;gap:.3rem;padding:.35rem .5rem .45rem;border-top:1px solid var(--border)}
-.chat-foot input{flex:1;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:4px;padding:.3rem .45rem;
+.chat-foot{display:flex;gap:.3rem;padding:.4rem .6rem .5rem;border-top:1px solid var(--glass-border)}
+.chat-foot input{flex:1;background:rgba(0,0,0,.3);border:1px solid var(--glass-border);border-radius:8px;padding:.35rem .5rem;
   font-family:var(--font-code);font-size:.5rem;color:var(--text);outline:none;transition:.3s}
-.chat-foot input:focus{border-color:var(--amber)}
-.chat-foot button{background:var(--amber);border:none;border-radius:4px;padding:.3rem .5rem;
-  color:var(--bg);font-family:var(--font-display);font-size:.5rem;cursor:pointer;font-weight:600;transition:.3s}
-.chat-foot button:hover{background:var(--orange);color:#fff}
+.chat-foot input:focus{border-color:var(--purple)}
+.chat-foot button{background:var(--purple);border:none;border-radius:8px;padding:.35rem .55rem;
+  color:#fff;font-family:var(--font-display);font-size:.5rem;cursor:pointer;font-weight:600;transition:.3s}
+.chat-foot button:hover{box-shadow:0 0 25px var(--glow)}
 
 .ft{text-align:center;padding:1.2rem 0;font-family:var(--font-code);font-size:.45rem;color:var(--dim);letter-spacing:.1em}
 </style>
 </head>
 <body>
 
-<canvas id="bg_canvas"></canvas>
-<div id="vignette"></div>
-<div class="radar-vignette"></div>
-<div class="scan"></div>
+<canvas id="neural-bg"></canvas>
+<div id="glow-orb"></div>
+<div id="glow-orb2"></div>
 <div class="scrollbar" id="sp"></div>
 <a href="#" class="btn-t" id="tp">↑</a>
 
 <nav>
   <div class="brand">
     <span class="blip"></span>
-    <span style="font-weight:300;color:var(--muted);font-size:.85rem">///</span> STØRM<span style="color:var(--amber)">/</span>SB1
-    <span class="divider">|</span>
-    <span style="font-size:.7rem;font-weight:400;color:var(--muted)">MISSION BRIEFING</span>
+    <span class="acc">✦</span> StormBreaker
+    <span style="font-weight:300;color:var(--dim);font-size:.75rem;margin-left:4px">|</span>
+    <span style="font-size:.65rem;font-weight:400;color:var(--muted)">STUDIOS</span>
   </div>
   <ol>
-    <a href="#s1">INTEL</a>
-    <a href="#s2">OPS</a>
+    <a href="#s1">MISSION</a>
+    <a href="#s2">PIPELINE</a>
     <a href="#s3">LOG</a>
     <a href="#s4">FAIL</a>
-    <a href="#s5">REG</a>
-    <a href="#s6">DEBRIEF</a>
+    <a href="#s5">TRUST</a>
+    <a href="#s6">DATA</a>
   </ol>
 </nav>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
   <div class="hero-bg">
-    <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1800&q=85" alt="hero" loading="eager" id="heroImg" />
+    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1800&q=85" alt="" loading="eager" id="heroImg" />
   </div>
-  <div class="hero-overlay">
-    <div class="sweep"></div>
-    <div class="hud-ring"></div>
-    <div class="hud-ring"></div>
-    <div class="hud-ring"></div>
-    <div class="cross"></div>
+
+  <div class="holo-ring">
+    <div class="hr"></div>
+    <div class="hr"></div>
+    <div class="hr"></div>
   </div>
-  <div class="hero-badge"><span class="dot"></span> INTELLIGENCE &amp; PERSONALISATION · SB1</div>
-  <h1>STØRM<span class="hl">BREAKER</span></h1>
-  <div class="sub"><span class="hl2">RESEARCHER</span> ◆ <span class="hl2">DESIGNER</span> ◆ <span class="hl2">MAKER</span> &nbsp;·&nbsp; 3-AGENT PIPELINE</div>
-  <div class="tagline">Converting 2M downloads into sustainable revenue through AI-driven player personalisation at scale.</div>
+
+  <div class="float-cards">
+    <div class="fc">
+      <div class="fc-img"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6bccba?auto=format&fit=crop&w=200&q=80" alt="" loading="lazy" /></div>
+      <div class="fc-label">FLASHPOINT</div>
+    </div>
+    <div class="fc">
+      <div class="fc-img"><img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=200&q=80" alt="" loading="lazy" /></div>
+      <div class="fc-label">BOUTIQUE</div>
+    </div>
+    <div class="fc">
+      <div class="fc-img"><img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=200&q=80" alt="" loading="lazy" /></div>
+      <div class="fc-label">CAROUSEL</div>
+    </div>
+    <div class="fc">
+      <div class="fc-img"><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=200&q=80" alt="" loading="lazy" /></div>
+      <div class="fc-label">PERSONA</div>
+    </div>
+  </div>
+
+  <div class="energy-particles">
+    <div class="ep"></div><div class="ep"></div><div class="ep"></div><div class="ep"></div>
+    <div class="ep"></div><div class="ep"></div><div class="ep"></div><div class="ep"></div>
+  </div>
+
+  <div class="hero-badge"><span class="dot"></span> <span class="badge-acc">AI-POWERED</span> · GAMING EXPERIENCES</div>
+  <h1>
+    <span class="grad">StormBreaker</span>
+    <span class="subtitle">Studios</span>
+  </h1>
+  <div class="tagline">Creating AI-powered gaming experiences that adapt to every player.</div>
+
+  <div class="cta-group">
+    <a class="cta-hero" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">✦ EXPLORE OUR GAMES</a>
+    <a class="cta-hero sec" onclick="document.getElementById('s2').scrollIntoView({behavior:'smooth'})">◈ DISCOVER PERSONALISATION</a>
+  </div>
 
   <div class="hero-stats">
     <div class="hs"><span class="hs-val">2.04M</span><span class="hs-lab">DOWNLOADS</span></div>
@@ -355,68 +403,65 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:v
     </div>
   </div>
 
-  <div class="cta-hero" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">VIEW MISSION BRIEFING <span class="arr">▸</span></div>
-
-  <div class="scroll-ind">▼ SCROLL FOR INTEL ▼</div>
+  <div class="scroll-ind">▼ SCROLL ▼</div>
 </section>
 
 <div class="container">
 
-<!-- ═══ S1: DIAGNOSIS ═══ -->
+<!-- ═══ S1 ═══ -->
 <div class="sec" id="s1">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">01</div> SEGMENT INTEL <span class="badge">· TARGET ANALYSIS</span>
+    <div class="num">01</div> SEGMENT ANALYSIS <span class="badge">· INTEL</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd open">
     <div class="g3">
-      <div class="g-card" onclick="chatSend('SPRINTERS · 66% of installs','47s avg session · 69% fail D1→D2 · Zero purchases · Zero push opt-in\n\nTARGET MECHANIC: FLASHPOINT\nHero-moment VFX + cosmetic tease in first 47s\nGated behind tutorial completion\nTarget: lift Level-5 reach from 34% → 55%')">
-        <div class="gbar" style="width:66%;background:linear-gradient(90deg,var(--red),var(--amber))"></div>
-        <div class="gttl" style="color:var(--red)">SPRINTERS</div>
-        <div class="gnum">66<span style="font-size:.8rem;color:var(--muted)">%</span></div>
-        <div class="gsub">47s sessions · €0 · churn D1</div>
-        <div class="gmeta">TARGET: FLASHPOINT MECHANIC</div>
+      <div class="g-card-img" onclick="chatSend('SPRINTERS · 66% of installs','47s avg session · 69% fail D1→D2 · Zero purchases\n\nMECHANIC: FLASHPOINT\nHero-moment VFX + cosmetic tease in first 47s\nGated behind tutorial completion\nTarget: Level-5 reach 34% → 55%')">
+        <div class="img-bg"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6bccba?auto=format&fit=crop&w=400&q=80" alt="" loading="lazy" /></div>
+        <div class="g-content">
+          <div class="gttl" style="color:var(--pink)">SPRINTERS</div>
+          <div class="gnum">66<span style="font-size:.8rem;color:var(--muted)">%</span></div>
+          <div class="gsub">47s sessions · €0 · churn D1</div>
+          <div class="gmeta">TARGET: FLASHPOINT</div>
+        </div>
       </div>
-      <div class="g-card" onclick="chatSend('FLOATERS · 30% of installs','3m42s avg session · 34% reach L5\n73% of ALL purchases happen in first 48h\n\nTARGET MECHANIC: RE-ENGAGEMENT CAROUSEL\nPersonalised push notification within 4h gap\n"You almost unlocked X" + reward thumbnail\nTarget: convert 5% of Floaters')">
-        <div class="gbar" style="width:30%;background:linear-gradient(90deg,var(--steel),var(--amber))"></div>
-        <div class="gttl" style="color:var(--steel)">FLOATERS</div>
-        <div class="gnum">30<span style="font-size:.8rem;color:var(--muted)">%</span></div>
-        <div class="gsub">3m42s · 73% buys in 48h</div>
-        <div class="gmeta">TARGET: RE-ENGAGEMENT CAROUSEL</div>
+      <div class="g-card-img" onclick="chatSend('FLOATERS · 30% of installs','3m42s avg · 34% reach L5 · 73% purchases in first 48h\n\nMECHANIC: RE-ENGAGEMENT CAROUSEL\nPersonalised push within 4h gap window\n"You almost unlocked X" + reward thumbnail\nTarget: convert 5% of Floaters')">
+        <div class="img-bg"><img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=400&q=80" alt="" loading="lazy" /></div>
+        <div class="g-content">
+          <div class="gttl" style="color:var(--cyan)">FLOATERS</div>
+          <div class="gnum">30<span style="font-size:.8rem;color:var(--muted)">%</span></div>
+          <div class="gsub">3m42s · 73% buys in 48h</div>
+          <div class="gmeta">TARGET: RE-ENGAGEMENT</div>
+        </div>
       </div>
-      <div class="g-card" onclick="chatSend('PILLARS · 4% of installs','19.8k payers @ €3.12 ARPPU · 62.2k engaged non-payers\n62% revenue from COSMETICS\n\nTARGET MECHANIC: CURATED BOUTIQUE\nC1 → €0.49–0.99 low-friction hook\nC2 → 3-item weekly bundle + loyalty discount\nTarget: convert 1% of C1 → +622 new payers')">
-        <div class="gbar" style="width:4%;background:linear-gradient(90deg,var(--amber),#ffcc44)"></div>
-        <div class="gttl" style="color:var(--amber)">PILLARS</div>
-        <div class="gnum">4<span style="font-size:.8rem;color:var(--muted)">%</span></div>
-        <div class="gsub">19.8k payers · €3.12 ARPPU</div>
-        <div class="gmeta">TARGET: CURATED BOUTIQUE</div>
+      <div class="g-card-img" onclick="chatSend('PILLARS · 4% of installs','19.8k payers @ €3.12 ARPPU · 62.2k engaged non-payers\n62% revenue from cosmetics\n\nMECHANIC: CURATED BOUTIQUE\nC1 → €0.49–0.99 hook · C2 → weekly bundle\nTarget: +622 new payers from C1')">
+        <div class="img-bg"><img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80" alt="" loading="lazy" /></div>
+        <div class="g-content">
+          <div class="gttl" style="color:#a78bfa">PILLARS</div>
+          <div class="gnum">4<span style="font-size:.8rem;color:var(--muted)">%</span></div>
+          <div class="gsub">19.8k payers · €3.12 ARPPU</div>
+          <div class="gmeta">TARGET: CURATED BOUTIQUE</div>
+        </div>
       </div>
     </div>
 
     <div class="g2">
-      <div class="g-card" onclick="chatSend('SIGNAL GAPS','GAP_01: No within-session events\n→ Where do players fail? Tutorial boss? PvP match?\n\nGAP_02: No purchase-context funnel\n→ Who enters shop? Browses items? Aborts payment?\n\nGAP_03: No install-source attribution\n→ Inorganic campaigns vs organic word-of-mouth?\n\nRESOLUTION: 3 engineer-days → 8 new behavioural events')">
-        <div class="gttl" style="color:var(--red);font-size:.55rem">⚠ SIGNAL GAPS</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
-          <span style="color:var(--red)">●</span> No session-level events<br/>
-          <span style="color:var(--red)">●</span> No purchase funnel data<br/>
-          <span style="color:var(--red)">●</span> No install source tracking
-        </div>
+      <div class="g-card" onclick="chatSend('SIGNAL GAPS','GAP_01: No within-session events\n→ Where do players fail?\n\nGAP_02: No purchase-context funnel\n→ Who enters shop? Aborts payment?\n\nGAP_03: No install-source attribution\n→ Inorganic vs organic?\n\nFIX: 3 engineer-days → 8 new events')">
+        <div class="gttl" style="color:var(--pink);font-size:.55rem">SIGNAL GAPS</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:var(--pink)">●</span> No session-level events<br/><span style="color:var(--pink)">●</span> No purchase funnel<br/><span style="color:var(--pink)">●</span> No install source</div>
       </div>
-      <div class="g-card" onclick="chatSend('ROOT CAUSE HYPOTHESIS','Conversion <1% because:\n\n■ INVISIBLE to 69% of players\n   (never see Day 2 — churn before shop loads)\n\n■ TOO LATE for 66% of players\n   (shop gated behind Level 5 — only 34% reach it)\n\nTEST: Move cosmetic-shop to post-tutorial screen\nPredict: +0.5pp conversion → doubles revenue')">
-        <div class="gttl" style="color:var(--amber);font-size:.55rem">🔍 ROOT CAUSE</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
-          Monetisation <span style="color:var(--amber)">invisible to 69%</span><br/>
-          Monetisation <span style="color:var(--amber)">too late for 66%</span>
-        </div>
+      <div class="g-card" onclick="chatSend('ROOT CAUSE HYPOTHESIS','Conversion <1% because:\n\n■ INVISIBLE to 69% (never see Day 2)\n■ TOO LATE for 66% (shop at L5, only 34% reach)\n\nTEST: Move shop to post-tutorial\n→ +0.5pp conversion → doubles revenue')">
+        <div class="gttl" style="color:#a78bfa;font-size:.55rem">ROOT CAUSE</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Monetisation <span style="color:#a78bfa">invisible to 69%</span><br/>Monetisation <span style="color:#a78bfa">too late for 66%</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ S2: PIPELINE ═══ -->
+<!-- ═══ S2 ═══ -->
 <div class="sec" id="s2">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">02</div> OPERATION PIPELINE <span class="badge">· 3-AGENT CHAIN · GATED 15 MARKS</span>
+    <div class="num">02</div> 3-AGENT PIPELINE <span class="badge">· GATED 15 MARKS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd open">
@@ -424,101 +469,79 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:v
     <div class="ho"><span class="ar">◈</span> HANDOFF 1: RESEARCHER → DESIGNER <span style="color:var(--dim)">(full segment analysis passed verbatim)</span></div>
 
     <div class="g3">
-      <div class="g-card" style="border-color:rgba(208,64,32,.2)" onclick="chatSend('AGENT 01 · RESEARCHER OUTPUT','3 SEGMENTS IDENTIFIED:\n• Sprinters 66% — 47s sessions, €0, churn D1\n• Floaters 30% — 3m42s avg, 73% purchases in 48h\n• Pillars 4% — 19.8k payers @ €3.12 ARPPU\n\n3 SIGNAL GAPS: events · purchase funnel · install source\n\nHYPOTHESIS: invisible monetisation → move shop earlier\n→ Post-tutorial shop entry predicted to double revenue')">
-        <div class="gttl" style="color:var(--red);font-size:.55rem">⟐ AGENT 01 · RESEARCHER</div>
+      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('RESEARCHER OUTPUT','3 SEGMENTS:\nSprinter 66% · Floater 30% · Pillar 4%\n3 SIGNAL GAPS: events · funnel · source\nHYPOTHESIS: invisible monetisation\n→ Move shop earlier: predicted +0.5pp conv')">
+        <div class="gttl" style="color:var(--pink);font-size:.55rem">⟐ RESEARCHER</div>
         <div class="term" style="margin:.2rem 0">
           <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">res@stormbreaker</span></div>
-          <div class="tbdy" style="font-size:.55rem"><span class="hlp">● 3 SEGMENTS</span>
+          <div class="tbdy" style="font-size:.55rem"><span class="hp">● 3 SEGMENTS</span>
   Sprinter 66% · Floater 30% · Pillar 4%
-  <span class="hlp">● 3 SIGNAL GAPS</span>
+  <span class="hp">● 3 SIGNAL GAPS</span>
   events · purchase_funnel · source
-  <span class="hlp">● HYPOTHESIS</span>
-  invisible monetisation → move shop</div>
+  <span class="hp">● HYPOTHESIS</span>
+  invisible monetisation</div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(104,128,160,.2)" onclick="chatSend('AGENT 02 · DESIGNER OUTPUT','STØRMPERSONA ENGINE v1.0\n\nMECHANIC A — FLASHPOINT (Sprinters)\n→ hero VFX + cosmetic tease in first 47s\n\nMECHANIC B — RE-ENGAGEMENT (Floaters)\n→ push notification with near-miss reward\n\nMECHANIC C — CURATED BOUTIQUE (Pillars)\n→ C1: €0.49 hook · C2: weekly bundle\n\nDATA FLOW: A→B→C with purchase feedback loop\nINFRA: 3 engineer-days\nIMPACT: Conv &lt;1% → 1.6-2.0% · ARPU €0.03→€0.06')">
-        <div class="gttl" style="color:var(--steel);font-size:.55rem">⟐ AGENT 02 · DESIGNER</div>
+      <div class="g-card" style="border-color:rgba(6,182,212,.15)" onclick="chatSend('DESIGNER OUTPUT','STØRMPERSONA ENGINE v1\n\nA: Flashpoint → Sprinters (hero VFX in 47s)\nB: Re-engagement → Floaters (push reward)\nC: Curated Boutique → Pillars (personalised shop)\n\nFlow: A→B→C with feedback loop\nInfra: 3 engineer-days\nConv: <1% → 1.6-2.0% · ARPU: €0.03→€0.06')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">⟐ DESIGNER</div>
         <div class="term" style="margin:.2rem 0">
           <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">dsn@stormbreaker</span></div>
-          <div class="tbdy" style="font-size:.55rem"><span class="hlc">● STØRMPERSONA ENGINE v1</span>
+          <div class="tbdy" style="font-size:.55rem"><span class="hc">● STØRMPERSONA ENGINE</span>
   A: Flashpoint → Sprinters
   B: Re-engagement → Floaters
   C: Curated Boutique → Pillars
-  <span class="hlc">● 3 engineer-days · Conv ↑2×</span></div>
+  <span class="hc">● 3 engineer-days · Conv ↑2×</span></div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(255,160,40,.2)" onclick="chatSend('AGENT 03 · MAKER OUTPUT','STRATEGY CANVAS — FINAL DELIVERABLE\n\nEXECUTIVE SUMMARY: StormPersona Engine. 12 weeks.\n\nROADMAP:\nP1 (Wk1-4): Instrument 8 events · deploy SDK\nP2 (Wk5-8): Flashpoint + Re-engagement A/B test\nP3 (Wk9-12): Curated Boutique · full engine launch\n\nMETRICS: Conv &lt;1%→1.6% · ARPU €0.03→€0.06<br>D7 8%→12% · D30 3%→5%\n\nBUDGET: €65,550 · ROI: 42% Y1 · 143% Y2+')">
-        <div class="gttl" style="color:var(--amber);font-size:.55rem">⟐ AGENT 03 · MAKER</div>
+      <div class="g-card" style="border-color:rgba(124,58,237,.15)" onclick="chatSend('MAKER OUTPUT — STRATEGY CANVAS','12wk roadmap · €65,550 budget\nConv <1%→1.6% · ARPU €0.03→€0.06\nD7 8%→12% · D30 3%→5%\nROI: 42% Y1 · 143% Y2+\nPays for itself in 8 months')">
+        <div class="gttl" style="color:#a78bfa;font-size:.55rem">⟐ MAKER</div>
         <div class="term" style="margin:.2rem 0">
           <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">mkr@stormbreaker</span></div>
-          <div class="tbdy" style="font-size:.55rem"><span class="hlg">● STRATEGY CANVAS</span>
+          <div class="tbdy" style="font-size:.55rem"><span class="hg">● STRATEGY CANVAS</span>
   12wk · €65,550 budget
-  Conv: <span class="hll">1.6%</span> · ARPU: <span class="hll">€0.06</span>
-  ROI: <span class="hlg">42% Y1 · 143% Y2+</span></div>
+  Conv: <span class="hl">1.6%</span> · ARPU: <span class="hl">€0.06</span>
+  ROI: <span class="hg">42% Y1 · 143% Y2+</span></div>
         </div>
       </div>
     </div>
 
     <div class="ho"><span class="ar">▶</span> HANDOFF 2: DESIGNER → MAKER <span style="color:var(--dim)">(StormPersona Engine design passed verbatim)</span></div>
-    <div class="ho" style="border-color:rgba(255,160,40,.1);background:rgba(255,160,40,.02);color:var(--amber)"><span class="ar">✓</span> PIPELINE COMPLETE — Strategy Canvas = final actionable deliverable</div>
+    <div class="ho" style="border-color:rgba(124,58,237,.1);background:rgba(124,58,237,.02);color:#a78bfa"><span class="ar">✓</span> PIPELINE COMPLETE — Strategy Canvas = final actionable deliverable</div>
 
-    <h3>📊 METRICS TARGETS</h3>
+    <h3>📊 METRICS</h3>
     <div class="gg">
-      <div class="gauge">
-        <canvas class="gc" data-pct="60" data-color="#d04020"></canvas>
-        <div class="gv">&lt;1% → <span style="color:var(--red)">1.6%</span></div>
-        <div class="gl">CONVERSION</div>
-      </div>
-      <div class="gauge">
-        <canvas class="gc" data-pct="50" data-color="#6880a0"></canvas>
-        <div class="gv">€0.03 → <span style="color:var(--steel)">€0.06</span></div>
-        <div class="gl">ARPU</div>
-      </div>
-      <div class="gauge">
-        <canvas class="gc" data-pct="44" data-color="#ffa028"></canvas>
-        <div class="gv">8% → <span style="color:var(--amber)">12%</span></div>
-        <div class="gl">D7 RETENTION</div>
-      </div>
-      <div class="gauge">
-        <canvas class="gc" data-pct="40" data-color="#4a5a28"></canvas>
-        <div class="gv">3% → <span style="color:var(--olive)">5%</span></div>
-        <div class="gl">D30 RETENTION</div>
-      </div>
+      <div class="gauge"><canvas class="gc" data-pct="60" data-color="#EC4899"></canvas><div class="gv">&lt;1% → <span style="color:var(--pink)">1.6%</span></div><div class="gl">CONVERSION</div></div>
+      <div class="gauge"><canvas class="gc" data-pct="50" data-color="#7C3AED"></canvas><div class="gv">€0.03 → <span style="color:var(--purple)">€0.06</span></div><div class="gl">ARPU</div></div>
+      <div class="gauge"><canvas class="gc" data-pct="44" data-color="#06B6D4"></canvas><div class="gv">8% → <span style="color:var(--cyan)">12%</span></div><div class="gl">D7 RETENTION</div></div>
+      <div class="gauge"><canvas class="gc" data-pct="40" data-color="#a78bfa"></canvas><div class="gv">3% → <span style="color:#a78bfa">5%</span></div><div class="gl">D30 RETENTION</div></div>
     </div>
 
     <h3>🗺 ROADMAP</h3>
     <div class="road">
-      <div class="rd" onclick="chatSend('PHASE 1 · DATA INFRASTRUCTURE','Weeks 1–4\n\n📋 Instrument 8 behavioural events:\ntutorial_step_complete · tutorial_boss_death\npvp_match_loss/win · shop_entry_seen\nshop_item_viewed · shop_confirm_tapped/aborted\n\n🔧 Deploy event-pipeline SDK\n📊 Server-side gap_hours computation\n\nGATE: E2E event test passes (p99 &lt;200ms)')">
+      <div class="rd" onclick="chatSend('PHASE 1 · INFRASTRUCTURE','Weeks 1–4\n• 8 events instrumented\n• Pipeline SDK deployed\n• Server-side gap_hours\nGATE: E2E test passes (p99 <200ms)')">
         <div class="rd-ph">PHASE 01 · INFRA</div>
         <div class="rd-wk">Weeks 1–4</div>
-        <li>8 events instrumented</li>
-        <li>SDK deployed to all titles</li>
-        <li>Server-side gap_hours</li>
-        <div class="rd-check">GATE: E2E test passes</div>
+        <li>8 behavioural events</li><li>SDK deployed</li>
+        <div class="rd-check">GATE: E2E passes</div>
       </div>
-      <div class="rd" onclick="chatSend('PHASE 2 · CORE MECHANICS','Weeks 5–8\n\n⚡ FLASHPOINT:\nPre-load skin-unlock VFX\nHero-moment cutscene in first 47s\nCosmetic gated behind tutorial\n\n🔄 RE-ENGAGEMENT CAROUSEL:\nCompute nearest unearned reward\nPush notification within 4h gap\n\nA/B TEST: 50/50 on Starfall Arena\n\nGATE: +2pp D0→D1 retention')">
+      <div class="rd" onclick="chatSend('PHASE 2 · CORE','Weeks 5–8\n• Flashpoint VFX + hero cutscene\n• Re-engagement push system\n• 50/50 A/B test\nGATE: +2pp D0→D1 retention')">
         <div class="rd-ph">PHASE 02 · CORE</div>
         <div class="rd-wk">Weeks 5–8</div>
-        <li>Flashpoint VFX + hero cutscene</li>
-        <li>Re-engagement push system</li>
-        <li>50/50 A/B test live</li>
+        <li>Flashpoint + Re-engagement</li><li>A/B test live</li>
         <div class="rd-check">GATE: +2pp retention</div>
       </div>
-      <div class="rd" onclick="chatSend('PHASE 3 · FULL ENGINE','Weeks 9–12\n\n🎯 CURATED BOUTIQUE:\nAffinity model (character + time-of-day)\nC1 → €0.49-0.99 first-purchase hook\nC2 → 3-item weekly bundle + discount\n\n🔄 FEEDBACK LOOP:\nC2 purchases → re-rank Flashpoint cosmetics\n\nFULL PIPELINE LAUNCH: all 3 titles\n\nGATE: C1 conv ≥1% · C2 conv ≥4%')">
+      <div class="rd" onclick="chatSend('PHASE 3 · ENGINE','Weeks 9–12\n• Curated Boutique affinity ranker\n• A→B→C feedback loop\n• Full pipeline launch\nGATE: C1 conv ≥1%')">
         <div class="rd-ph">PHASE 03 · ENGINE</div>
         <div class="rd-wk">Weeks 9–12</div>
-        <li>Curated Boutique affinity ranker</li>
-        <li>A→B→C feedback loop wired</li>
-        <li>Full pipeline launch</li>
+        <li>Curated Boutique live</li><li>Feedback loop wired</li>
         <div class="rd-check">GATE: C1 conv ≥1%</div>
       </div>
     </div>
 
-    <h3>⚠ RISK ASSESSMENT</h3>
+    <h3>⚠ RISK</h3>
     <table class="rsk">
       <tr><th>RISK</th><th>L</th><th>I</th><th>MITIGATION</th></tr>
-      <tr><td>Flashpoint VFX latency exceeds 47s window</td><td class="lm">MED</td><td class="lh">HIGH</td><td>Pre-load during install; 200ms SLA + auto kill-switch</td></tr>
-      <tr><td>Players dismiss personalised mechanics as spam</td><td class="lm">MED</td><td class="lm">MED</td><td>Independent A/B test per mechanic in P2; iterate</td></tr>
+      <tr><td>Flashpoint VFX latency exceeds 47s window</td><td class="lm">MED</td><td class="lh">HIGH</td><td>Pre-load during install; 200ms SLA + kill-switch</td></tr>
+      <tr><td>Players dismiss personalised mechanics</td><td class="lm">MED</td><td class="lm">MED</td><td>Independent A/B test per mechanic; iterate</td></tr>
       <tr><td>Conversion lift &lt;0.5pp → ROI fails</td><td class="ll">LOW</td><td class="lh">HIGH</td><td>Hard gate: kill P3 if P2 retention &lt;1pp</td></tr>
     </table>
 
@@ -531,71 +554,71 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:v
       <div class="bi"><span class="bl">Cloud Infra (6mo)</span><span class="br">€4,000</span></div>
       <div class="bi"><span class="bl">Contingency 15%</span><span class="br">€8,550</span></div>
     </div>
-    <div class="bt"><span class="btl">TOTAL INVESTMENT</span><span class="btr">€65,550</span></div>
+    <div class="bt"><span class="btl">TOTAL</span><span class="btr">€65,550</span></div>
 
-    <div class="cta" onclick="chatSend('⟐ CALL TO ACTION ⟐','STØRMPERSONA ENGINE\n\n■ Cost: €65,550\n■ Timeline: 12 weeks\n■ Backend rewrite: NONE (5 events + SDK)\n■ Target: 2× conversion lift (&lt;1% → 1.6%)\n■ ARPU: €0.03 → €0.06\n■ ROI: 42% Y1 · 143% Y2+\n\nPays for itself in 8 months of incremental revenue.\nApprove Phase 1 → live A/B results by Week 6.')">
-      <span style="font-family:var(--font-display);font-size:.55rem;color:var(--amber);letter-spacing:.1em;display:block;margin-bottom:.2rem">⟐ CALL TO ACTION ⟐</span>
+    <div class="cta" onclick="chatSend('CALL TO ACTION','StormPersona Engine\n\nCost: €65,550 · Timeline: 12 weeks\nBackend rewrite: NONE (5 events + SDK)\nTarget: 2× conversion (<1% → 1.6%)\nARPU: €0.03 → €0.06\nROI: 42% Y1 · 143% Y2+\n\nPays for itself in 8 months.\nApprove Phase 1 → A/B results by Week 6.')">
+      <span style="font-family:var(--font-display);font-size:.55rem;color:#a78bfa;letter-spacing:.1em;display:block;margin-bottom:.2rem">⟐ CALL TO ACTION ⟐</span>
       €65.5k · 12 weeks · no backend rewrite · <strong>2× conversion</strong> · pays for itself in <strong>8 months</strong>
     </div>
   </div>
 </div>
 
-<!-- ═══ S3: DECISIONS ═══ -->
+<!-- ═══ S3 ═══ -->
 <div class="sec" id="s3">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">03</div> COMMAND LOG <span class="badge">· DECISION RECORD · 30 MARKS</span>
+    <div class="num">03</div> DECISION LOG <span class="badge">· 30 MARKS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
     <div class="g3">
-      <div class="g-card" onclick="chatSend('ARCHETYPE SELECTION','CHOSEN: Researcher → Designer → Maker\nREJECTED: Researcher→Communicator→Maker\nREJECTED: Manager→Researcher→Maker\n\nRATIONALE: Data-first sequence grounds every design decision in empirics. Communicator adds polish but no analytical depth at this stage. Trade-off: no marketing copy in final output, acceptable for a strategy canvas.')">
-        <div class="gttl" style="color:var(--steel);font-size:.55rem">ARCHETYPES</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#80b080">✓</span> Res → Dsn → Mkr<br/><span style="color:var(--dim)">✗</span> Res→Comm→Mkr</div>
+      <div class="g-card" onclick="chatSend('ARCHETYPES','Chosen: Res→Dsn→Mkr\nRejected: Res→Comm→Mkr, Mgr→Res→Mkr\nWhy: Data-first grounds design in empirics. Comm adds polish not substance.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">ARCHETYPES</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> Res → Dsn → Mkr<br/><span style="color:var(--dim)">✗</span> Res→Comm→Mkr</div>
       </div>
-      <div class="g-card" onclick="chatSend('OUTPUT FORMAT','CHOSEN: Structured markdown (tables + lists)\nREJECTED: Narrative prose essay\nREJECTED: Bullet-point summary only\n\nRATIONALE: Designer needs parseable tables to reliably extract segment sizes and signal gaps. Narrative risks interpretive drift. Pure bullets lack analytical depth.')">
-        <div class="gttl" style="color:var(--steel);font-size:.55rem">OUTPUT FORMAT</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#80b080">✓</span> Structured markdown<br/><span style="color:var(--dim)">✗</span> Narrative prose</div>
+      <div class="g-card" onclick="chatSend('OUTPUT FORMAT','Chosen: Structured markdown\nRejected: Narrative prose, bullet summary\nWhy: Designer needs parseable tables. Reduces hallucination drift.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">OUTPUT FORMAT</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> Structured markdown<br/><span style="color:var(--dim)">✗</span> Narrative prose</div>
       </div>
-      <div class="g-card" onclick="chatSend('MECHANIC DESIGN','CHOSEN: 3 deterministic rules (1 per segment)\nREJECTED: Single ML ranking model for all players\n\nRATIONALE: Only 19.8k paying players exist — insufficient training data. Deterministic rules deploy immediately and generate training data for future ML. Cold-start-then-learn strategy.')">
-        <div class="gttl" style="color:var(--steel);font-size:.55rem">MECHANIC DESIGN</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#80b080">✓</span> 1 per segment<br/><span style="color:var(--dim)">✗</span> Single ranking model</div>
+      <div class="g-card" onclick="chatSend('MECHANIC DESIGN','Chosen: 3 deterministic rules (1 per segment)\nRejected: Single ML ranking model\nWhy: Only 19.8k payers — insufficient training data. Cold-start then learn.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">MECHANICS</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 1 per segment<br/><span style="color:var(--dim)">✗</span> Single ranking model</div>
       </div>
-      <div class="g-card" onclick="chatSend('HANDOFF METHOD','CHOSEN: Full transcript passed verbatim in prompt\nREJECTED: Human-written summary\nREJECTED: Shared vector store retrieval\n\nRATIONALE: Verbatim guarantees handoff integrity — examiner sees Agent 2 built on Agent 1\'s actual output. Longer prompts (~8K tokens) but meets gated-task requirement.')">
-        <div class="gttl" style="color:var(--steel);font-size:.55rem">HANDOFF METHOD</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#80b080">✓</span> Verbatim transcript<br/><span style="color:var(--dim)">✗</span> Human summary</div>
+      <div class="g-card" onclick="chatSend('HANDOFF METHOD','Chosen: Full transcript verbatim\nRejected: Human summary, vector store\nWhy: Guarantees handoff integrity for gated task.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">HANDOFF METHOD</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> Verbatim transcript<br/><span style="color:var(--dim)">✗</span> Human summary</div>
       </div>
-      <div class="g-card" onclick="chatSend('AGENT COUNT','CHOSEN: 3 agents (minimum viable chain)\nREJECTED: 4 agents (add Communicator)\nREJECTED: 5 agents (add Manager + Communicator)\n\nRATIONALE: Each handoff compounds error. At 10% hallucination rate/agent:\nP(error 3-agent) = 27%\nP(error 5-agent) = 41%\nMinimum viable to demonstrate analysis→design→build.')">
-        <div class="gttl" style="color:var(--steel);font-size:.55rem">AGENT COUNT</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#80b080">✓</span> 3 agents<br/><span style="color:var(--dim)">✗</span> 4 or 5 agents</div>
+      <div class="g-card" onclick="chatSend('AGENT COUNT','Chosen: 3 (minimum viable)\nRejected: 4 (Comm), 5 (Mgr+Comm)\nWhy: Error compounds. At 10% rate: P(3-agent)=27%, P(5-agent)=41%')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">AGENT COUNT</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 3 agents<br/><span style="color:var(--dim)">✗</span> 4 or 5 agents</div>
       </div>
-      <div class="g-card" onclick="chatSend('FINAL FORMAT','CHOSEN: 1-page Strategy Canvas\nREJECTED: 20-slide deck\nREJECTED: Technical implementation spec\n\nRATIONALE: CEO+CTO audience needs one page to decide yes/no on Phase 1 funding. Deck takes longer to produce AND consume. Tech spec is premature. Canvas forces concision and actionability.')">
-        <div class="gttl" style="color:var(--steel);font-size:.55rem">FINAL FORMAT</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#80b080">✓</span> 1-page Strategy Canvas<br/><span style="color:var(--dim)">✗</span> 20-slide deck</div>
+      <div class="g-card" onclick="chatSend('FINAL FORMAT','Chosen: 1-page Strategy Canvas\nRejected: 20-slide deck, tech spec\nWhy: CEO+CTO need 1 page to decide. Canvas forces concision.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">FINAL FORMAT</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 1-page Strategy Canvas<br/><span style="color:var(--dim)">✗</span> 20-slide deck</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ S4: FAILURES ═══ -->
+<!-- ═══ S4 ═══ -->
 <div class="sec" id="s4">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">04</div> FAILURE DOSSIER <span class="badge">· ERROR LOG · 30 MARKS</span>
+    <div class="num">04</div> FAILURE DOSSIER <span class="badge">· 30 MARKS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
     <div class="g3">
-      <div class="g-card" style="border-color:rgba(208,64,32,.2)" onclick="chatSend('FAIL 01 · RESEARCHER — Hallucinated Benchmark','OFFENDING OUTPUT:\n"...lifted conversion by 1.2pp on average across 14 studies."\n\nDETECTION: No such meta-analysis exists in F2P gaming literature.\n\nFIX: Replaced with verifiable citation.\n\nCORRECTED:\n"Dynamic difficulty adjustment improved retention by 30-50% per Lallé et al. (2021)"')">
-        <div class="gttl" style="color:var(--red);font-size:.5rem">FAIL 01 · RESEARCHER</div>
+      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('FAIL 01 · RESEARCHER','Offending: "1.2pp across 14 studies"\n→ Hallucinated benchmark. No such meta-analysis exists.\nFix: Replaced with Lallé et al. 2021 (30-50% retention)')">
+        <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 01 · RESEARCHER</div>
         <div class="fail"><div class="q">"1.2pp across 14 studies"</div><div style="font-size:.5rem;color:var(--muted)">Hallucinated benchmark</div></div>
-        <div class="fix"><div class="q qf">"Lallé et al. 2021 — 30-50%"</div></div>
+        <div class="fix"><div class="q qf">"Lallé et al. 2021"</div></div>
       </div>
-      <div class="g-card" style="border-color:rgba(208,64,32,.2)" onclick="chatSend('FAIL 02 · DESIGNER — Off-Brief Mechanic','OFFENDING OUTPUT:\n"Consider adding a battle-pass with cross-game progress tracking..."\n\nDETECTION: Battle-pass is a fixed product, NOT personalisation. Drifted off the Intelligence & Personalisation lens.\n\nFIX: Replaced with Cross-Title Ambassador — personalised recommendation per play-history similarity.\n\nCORRECTED:\n"Cross-Title Ambassador: tailored recommendation + personalised XP boost"')">
-        <div class="gttl" style="color:var(--red);font-size:.5rem">FAIL 02 · DESIGNER</div>
+      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('FAIL 02 · DESIGNER','Offending: "Add a battle-pass..."\n→ Off-brief. Battle-pass is a fixed product, not personalisation.\nFix: Cross-Title Ambassador — personalised recommendation')">
+        <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 02 · DESIGNER</div>
         <div class="fail"><div class="q">"Add a battle-pass..."</div><div style="font-size:.5rem;color:var(--muted)">Off-brief mechanic</div></div>
         <div class="fix"><div class="q qf">"Cross-Title Ambassador"</div></div>
       </div>
-      <div class="g-card" style="border-color:rgba(208,64,32,.2)" onclick="chatSend('FAIL 03 · MAKER — Invalid Assumption','OFFENDING OUTPUT:\n"Sprinters don\'t buy because they don\'t understand value — a forced store tutorial at Level 2 will educate them."\n\nDETECTION: Assumes problem is awareness, not engagement. Sprinters have 47-second sessions — no time for "education." Classic blame-the-player error.\n\nFIX: Replaced with engagement-first logic.\n\nCORRECTED:\n"QuickStart Ramp adapts early difficulty — conversion follows engagement, not precedes it."')">
-        <div class="gttl" style="color:var(--red);font-size:.5rem">FAIL 03 · MAKER</div>
+      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('FAIL 03 · MAKER','Offending: "Force store tutorial"\n→ Invalid assumption. Problem is engagement (47s), not awareness.\nFix: QuickStart Ramp adapts difficulty first')">
+        <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 03 · MAKER</div>
         <div class="fail"><div class="q">"Force store tutorial"</div><div style="font-size:.5rem;color:var(--muted)">Invalid assumption</div></div>
         <div class="fix"><div class="q qf">"QuickStart Ramp"</div></div>
       </div>
@@ -603,103 +626,88 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:v
 
     <div class="term">
       <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">lesson.log</span></div>
-      <div class="tbdy"><span class="hlg">⟐ ORCHESTRATION LESSON</span>
+      <div class="tbdy"><span class="hg">⟐ ORCHESTRATION LESSON</span>
   Per-agent hallucination rate ~10%.
-  <span class="hlp">P(error in 3-agent output) = 1 − (0.9)³ = 27%</span>
-  The orchestrator's primary job is <span class="hlc">verification</span>, not generation.
-  Future pipelines need a dedicated <span class="hlg">Verifier</span> agent — a fourth stage whose
-  sole role is fact-checking every benchmark, assumption, and off-brief drift
-  before the output reaches decision-makers.</div>
+  <span class="hp">P(error in 3-agent output) = 1 − (0.9)³ = 27%</span>
+  The orchestrator's primary job is <span class="hc">verification</span>, not generation.
+  Future pipelines need a dedicated <span class="hg">Verifier</span> stage — a fourth agent whose
+  sole role is fact-checking every benchmark, assumption, and off-brief drift.</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ S5: REGULATORY ═══ -->
+<!-- ═══ S5 ═══ -->
 <div class="sec" id="s5">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">05</div> COMPLIANCE BRIEF <span class="badge">· REGULATORY &amp; TRUST · 10 MARKS</span>
+    <div class="num">05</div> REGULATORY &amp; TRUST <span class="badge">· 10 MARKS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
     <div class="g3">
-      <div class="g-card" onclick="chatSend('EU AI ACT · ARTICLE 50','OBLIGATION: Transparency duty\nPlayers must be informed when interacting with AI-personalised difficulty (Flashpoint) and pricing (Curated Boutique).\n\nCOMPLIANCE:\n① Settings → About: "This game uses AI to adapt difficulty and offers to your play style."\n② Micro-Offer tooltip: "Price personalised to your activity level."\n③ Internal model card — available to regulators on request.')">
-        <div class="gttl" style="color:var(--steel);font-size:.5rem">EU AI ACT · ART 50</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
-          <span style="color:var(--red)">OBLIGATION:</span> Transparency<br/>
-          <span style="color:#80b080">✓</span> Settings disclosure + tooltip + model card
-        </div>
+      <div class="g-card" onclick="chatSend('EU AI ACT · ARTICLE 50','OBLIGATION: Transparency\nPlayers must know about AI-personalised difficulty/pricing.\n\nCOMPLIANCE:\n① Settings → About disclosure\n② Tooltip: "Price personalised to activity"\n③ Model card on request')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">EU AI ACT · ART 50</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:var(--pink)">OBLIGATION:</span> Transparency<br/><span style="color:#34d399">✓</span> Disclosure + tooltip + model card</div>
       </div>
-      <div class="g-card" onclick="chatSend('GDPR · ARTICLE 6','DATA: Pseudonymised behavioural events (deviceID, session_length, level_progression, purchase_history, ad_views) — no real name or email.\n\nBASIS: Legitimate Interest (Art 6(1)(f)) — core service requires behaviour adaptation. Plus consent at onboarding.\n\nDSAR PROCESS:\n① Player emails privacy@stormbreaker.com\n② Query DynamoDB by device ID within 72h\n③ Export JSON + human-readable summary PDF\n④ Deliver via encrypted link within 30 days\nEst. €2.10/request · ~€420/yr at 0.01% of MAU')">
-        <div class="gttl" style="color:var(--steel);font-size:.5rem">GDPR · ART 6</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
-          <span style="color:var(--red)">DATA:</span> Pseudonymised device ID<br/>
-          <span style="color:var(--red)">BASIS:</span> Legitimate Interest<br/>
-          <span style="color:#80b080">✓</span> DSAR: ~€2.10/req
-        </div>
+      <div class="g-card" onclick="chatSend('GDPR · ARTICLE 6','DATA: Pseudonymised behavioural events (device ID)\nBASIS: Legitimate Interest + consent\n\nDSAR PROCESS:\nQuery DynamoDB → export JSON+PDF → 30 days\nEst. €2.10/request · ~€420/yr')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">GDPR · ART 6</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:var(--pink)">DATA:</span> Pseudonymised device ID<br/><span style="color:var(--pink)">BASIS:</span> Legitimate Interest<br/><span style="color:#34d399">✓</span> DSAR: ~€2.10/req</div>
       </div>
-      <div class="g-card" onclick="chatSend('CUSTOMER TRUST','TRUST ARCHITECTURE:\n\nPlayers accept personalisation when it feels helpful (not manipulative). The risk is not "creepy" but "unfair" — a player who gets harder difficulty or higher pricing than a friend will attribute it to the system.\n\nTHREE PILLARS:\n① Frame adaptation as fun-enhancement, not extraction\n② Label price personalisation as activity-based\n③ Opt-out toggle in Settings → Privacy\n\nTrust = Transparency × Control')">
-        <div class="gttl" style="color:var(--steel);font-size:.5rem">CUSTOMER TRUST</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
-          <span style="color:var(--amber)">Transparency + Control</span><br/>
-          <span style="color:#80b080">✓</span> Opt-out toggle in settings
-        </div>
+      <div class="g-card" onclick="chatSend('CUSTOMER TRUST','Trust = Transparency × Control\n\nRisk: not "creepy" but "unfair"\n→ Harder difficulty or higher price vs friend\n\nMitigation:\n① Frame as fun-enhancement\n② Label price as activity-based\n③ Opt-out toggle in settings')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">CUSTOMER TRUST</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#a78bfa">Transparency + Control</span><br/><span style="color:#34d399">✓</span> Opt-out toggle</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ S6: APPENDIX ═══ -->
+<!-- ═══ S6 ═══ -->
 <div class="sec" id="s6">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">A</div> DEBRIEF <span class="badge">· PROMPTS · EVIDENCE · TESTIMONIALS</span>
+    <div class="num">A</div> APPENDIX <span class="badge">· PROMPTS · EVIDENCE · TESTIMONIALS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
     <div class="g2">
-      <div class="g-card" onclick="chatSend('AGENT 01 · RESEARCHER PROMPT','ROLE: Player-intelligence researcher\n\nINPUT DATA:\n2.04M installs · 19.8k payers · €0.03 ARPU\nD1→D2: 31% · D7: 9% · D30: 4%\n73% purchases in first 48h · 34% reach Level 5\n\nTASK:\n① Identify 3 behavioural segments\n② Biggest personalisation opportunity per segment\n③ Top-3 signal gaps\n④ Testable hypothesis for &lt;1% conversion\n\nOUTPUT: Structured markdown with tables')">
-        <div class="gttl" style="color:var(--red);font-size:.5rem">AGENT 01 · RESEARCHER</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Role: Player-intelligence researcher<br/>Task: Segments + signal gaps + hypothesis</div>
+      <div class="g-card" onclick="chatSend('AGENT 01 · RESEARCHER PROMPT','ROLE: Player-intelligence researcher\nINPUT: 2.04M installs, 19.8k payers, €0.03 ARPU\nTASK: 3 segments, 3 signal gaps, 1 hypothesis\nOUTPUT: Structured markdown')">
+        <div class="gttl" style="color:var(--pink);font-size:.5rem">AGENT 01 · RESEARCHER</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Role: Player-intelligence researcher<br/>Task: Segments + gaps + hypothesis</div>
       </div>
-      <div class="g-card" onclick="chatSend('AGENT 02 · DESIGNER PROMPT','ROLE: Game-personalisation designer\n\nINPUT: Full Researcher output (3 segments + signal gaps + hypothesis) passed verbatim\n\nTASK:\n① Design StormPersona Engine\n② 3 mechanics (Flashpoint, Re-engagement, Curated Boutique)\n③ Input→Decision→Output table per mechanic\n④ Pipeline data flow with feedback loop\n⑤ Minimum infra change (3 engineer-days)\n⑥ Expected conversion + ARPU impact\n\nOUTPUT: Structured design document')">
-        <div class="gttl" style="color:var(--steel);font-size:.5rem">AGENT 02 · DESIGNER</div>
+      <div class="g-card" onclick="chatSend('AGENT 02 · DESIGNER PROMPT','ROLE: Game-personalisation designer\nINPUT: Full Researcher output (verbatim)\nTASK: StormPersona Engine — 3 mechanics, pipeline, infra, impact\nOUTPUT: Structured design document')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">AGENT 02 · DESIGNER</div>
         <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Role: Game-personalisation designer<br/>Task: 3 mechanics + pipeline + impact</div>
       </div>
     </div>
     <div class="g2">
-      <div class="g-card" onclick="chatSend('AGENT 03 · MAKER PROMPT','ROLE: Strategy-maker (CEO+CTO audience)\n\nINPUT: Full StormPersona Engine design from Designer passed verbatim\n\nTASK — 1-PAGE STRATEGY CANVAS:\n① Executive Summary (3 sentences)\n② 3-month roadmap with gate checks\n③ Success metrics table (baseline→3mo→6mo)\n④ Budget + ROI calculation\n⑤ Risk table (3 risks × mitigation)\n⑥ Call to action\n\nOUTPUT: 6-section canvas, all numbers tied to data')">
-        <div class="gttl" style="color:var(--amber);font-size:.5rem">AGENT 03 · MAKER</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Role: Strategy-maker<br/>Task: Strategy Canvas with budget + ROI</div>
+      <div class="g-card" onclick="chatSend('AGENT 03 · MAKER PROMPT','ROLE: Strategy-maker (CEO+CTO audience)\nINPUT: Full StormPersona Engine design (verbatim)\nTASK: 1-page Strategy Canvas — exec summary, roadmap, metrics, budget, risks, CTA')">
+        <div class="gttl" style="color:#a78bfa;font-size:.5rem">AGENT 03 · MAKER</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Role: Strategy-maker<br/>Task: Strategy Canvas + budget + ROI</div>
       </div>
-      <div class="g-card" onclick="chatSend('HANDOFF VERIFICATION','HANDOFF 1: Researcher → Designer\nDesigner prompt included full segment table. All 3 mechanics map 1:1 to Researcher segments.\n\nHANDOFF 2: Designer → Maker\nMaker prompt included full StormPersona Engine design. Roadmap/budget derive from Designer.\n\nHANDOFF 3: Maker → Business\nStrategy Canvas is the final actionable deliverable — budgeted (€65,550), gated, directly executable by CEO+CTO.')">
-        <div class="gttl" style="color:var(--steel);font-size:.5rem">HANDOFF VERIFICATION</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
-          <span style="color:#80b080">✓</span> 3 visible handoffs<br/>
-          <span style="color:#80b080">✓</span> Each agent received prior output<br/>
-          <span style="color:#80b080">✓</span> Strategy Canvas = final deliverable
-        </div>
+      <div class="g-card" onclick="chatSend('HANDOFF VERIFICATION','HANDOFF 1: Researcher→Designer (segment table)\nHANDOFF 2: Designer→Maker (StormPersona Engine)\nHANDOFF 3: Maker→Business (Strategy Canvas)\n\nAll 3 visible. Each agent used prior output.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">HANDOFF VERIFICATION</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 3 visible handoffs<br/><span style="color:#34d399">✓</span> Each agent used prior output<br/><span style="color:#34d399">✓</span> Strategy Canvas = final deliverable</div>
       </div>
     </div>
 
-    <h3>⭐ FIELD REPORT · TESTIMONIALS</h3>
+    <h3>⭐ TESTIMONIALS</h3>
     <div class="test-grid">
       <div class="test-card">
         <div class="t-avatar">MK</div>
         <div class="t-stars">★★★★★</div>
-        <div class="t-quote">"The segment analysis alone is worth the price of admission. We had no idea 66% of our installs were churning in under a minute."</div>
+        <div class="t-quote">"The segment analysis alone is worth the price of admission. 66% of our installs churning in under a minute — we had no idea."</div>
         <div class="t-name">MARCUS K.</div>
         <div class="t-role">CTO · StormBreaker Studios</div>
       </div>
       <div class="test-card">
         <div class="t-avatar">LY</div>
         <div class="t-stars">★★★★★</div>
-        <div class="t-quote">"Three mechanics, three engineer-days of infra, twelve weeks to full pipeline. This is the most concrete plan I've seen for our monetisation problem."</div>
+        <div class="t-quote">"Three mechanics, three engineer-days of infra, twelve weeks to full pipeline. The most concrete monetisation plan I've seen."</div>
         <div class="t-name">LENA Y.</div>
         <div class="t-role">Head of Product · Indie Game Alliance</div>
       </div>
       <div class="test-card">
         <div class="t-avatar">JR</div>
         <div class="t-stars">★★★★★</div>
-        <div class="t-quote">"The 27% compound error rate lesson changed how we think about multi-agent pipelines. Verifier stage is now standard in our stack."</div>
+        <div class="t-quote">"The 27% compound error rate lesson changed our approach to multi-agent pipelines. Verifier stage is now standard."</div>
         <div class="t-name">JAX R.</div>
         <div class="t-role">AI Pipeline Architect · PlayLabs</div>
       </div>
@@ -707,23 +715,20 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:v
   </div>
 </div>
 
-<div class="ft">/// STØRMBREAKER SB1 · INTELLIGENCE &amp; PERSONALISATION · 3-AGENT PIPELINE · MISSION COMPLETE ///</div>
+<div class="ft">// STØRMBREAKER STUDIOS · AI-POWERED GAMING EXPERIENCES //</div>
 </div>
 
 <!-- ═══ CHATBOT ═══ -->
-<button id="chat-toggle" onclick="toggleChat()">🎯</button>
+<button id="chat-toggle" onclick="toggleChat()">✦</button>
 <div id="chat-panel">
   <div class="chat-head">
-    <div class="ch-av">🎯</div>
-    <div>
-      <div class="ch-name">TARGET.AI</div>
-      <div class="ch-status">● online · systems nominal</div>
-    </div>
+    <div class="ch-av">✦</div>
+    <div><div class="ch-name">NOVA.AI</div><div class="ch-status">● online</div></div>
     <button class="ch-close" onclick="toggleChat()">✕</button>
   </div>
   <div class="chat-body" id="chat-body">
-    <div class="chat-msg bot">⟐ TARGET.AI initialised. StormPersona Engine pipeline loaded. <span class="msg-time">12:04</span></div>
-    <div class="chat-msg bot">Click any card or ask me about segments, mechanics, budget, or ROI. <span class="msg-time">12:04</span></div>
+    <div class="chat-msg bot">✦ NOVA.AI initialised. StormPersona Engine loaded. <span class="msg-time">12:04</span></div>
+    <div class="chat-msg bot">Click any card or ask about segments, mechanics, budget, ROI. <span class="msg-time">12:04</span></div>
   </div>
   <div class="chat-foot">
     <input id="chat-input" placeholder="Type a command..." onkeydown="if(event.key==='Enter')sendMsg()"/>
@@ -732,68 +737,75 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:v
 </div>
 
 <script>
-// scroll
+// scroll + reveal
 window.addEventListener('scroll',()=>{
-  const h=document.documentElement.scrollHeight-window.innerHeight;
-  document.getElementById('sp').style.width=h>0?(window.scrollY/h)*100+'%':'0%';
-  document.getElementById('tp').classList.toggle('vis',window.scrollY>400);
-  // parallax hero
-  const hi=document.getElementById('heroImg');
-  if(hi){const sc=window.scrollY;hi.style.transform=`translateY(${sc*.12}px)`}
+  const h=document.documentElement.scrollHeight-window.innerHeight,s=window.scrollY;
+  document.getElementById('sp').style.width=h>0?(s/h)*100+'%':'0%';
+  document.getElementById('tp').classList.toggle('vis',s>400);
+  const hi=document.getElementById('heroImg');if(hi)hi.style.transform=`translateY(${s*.1}px)`;
+  document.querySelectorAll('.sec').forEach(el=>{
+    const r=el.getBoundingClientRect();if(r.top<window.innerHeight-60)el.classList.add('visible')
+  })
 });
+// initial reveal check
+setTimeout(()=>document.querySelectorAll('.sec').forEach(el=>{const r=el.getBoundingClientRect();if(r.top<window.innerHeight-60)el.classList.add('visible')}),100);
+
 function toggle(el){const bd=el.parentElement.querySelector('.bd'),tg=el.querySelector('.toggle');bd.classList.toggle('open');tg.classList.toggle('open')}
 
-// ── chat helper ──
 function chatSend(title,body){
-  const panel=document.getElementById('chat-panel'),bodyEl=document.getElementById('chat-body');
-  if(!panel.classList.contains('open'))toggleChat();
+  const p=document.getElementById('chat-panel'),b=document.getElementById('chat-body');
+  if(!p.classList.contains('open'))toggleChat();
   const d=new Date(),t=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');
-  bodyEl.innerHTML+=`<div class="chat-msg user">▶ ${title}<span class="msg-time">${t}</span></div>`;
-  bodyEl.innerHTML+=`<div class="chat-msg bot">${body.replace(/\n/g,'<br>')}<span class="msg-time">${t}</span></div>`;
-  bodyEl.scrollTop=bodyEl.scrollHeight;
+  b.innerHTML+=`<div class="chat-msg user">▶ ${title}<span class="msg-time">${t}</span></div>`;
+  b.innerHTML+=`<div class="chat-msg bot">${body.replace(/\n/g,'<br>')}<span class="msg-time">${t}</span></div>`;
+  b.scrollTop=b.scrollHeight;
 }
 
-// ── chatbot ──
 function toggleChat(){document.getElementById('chat-panel').classList.toggle('open')}
 function sendMsg(){
   const inp=document.getElementById('chat-input'),msg=inp.value.trim();if(!msg)return;
-  const body=document.getElementById('chat-body');
+  const b=document.getElementById('chat-body');
   const d=new Date(),t=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');
-  body.innerHTML+=`<div class="chat-msg user">${msg}<span class="msg-time">${t}</span></div>`;inp.value='';
+  b.innerHTML+=`<div class="chat-msg user">${msg}<span class="msg-time">${t}</span></div>`;inp.value='';
   const l=msg.toLowerCase();
   let r='';
-  if(l.includes('sprinter')||l.includes('flash'))r='FLASHPOINT targets Sprinters (66%). Hero-moment VFX + cosmetic tease in first 47s. Gated behind tutorial. Target: Level-5 reach 34%→55%.';
-  else if(l.includes('floater')||l.includes('re-eng'))r='RE-ENGAGEMENT CAROUSEL targets Floaters (30%). Computes nearest unearned reward. Fires push notification within 4h gap. Target: 5% conversion of Floaters.';
-  else if(l.includes('pillar')||l.includes('boutique'))r='CURATED BOUTIQUE targets Pillars (4%). C1: €0.49-0.99 hook. C2: 3-item weekly bundle with loyalty discount. Target: +622 new payers from C1 at 1% conversion.';
-  else if(l.includes('budget')||l.includes('cost'))r='Total: €65,550. 2 eng×6wk (€36k) + data eng×2wk (€6k) + VFX (€8k) + UI (€3k) + infra (€4k) + 15% contingency. ROI: 42% Y1, 143% Y2+.';
-  else if(l.includes('segment')||l.includes('intel'))r='Three segments: Sprinters (66%, 47s, €0), Floaters (30%, 3m42s, 73% buys in 48h), Pillars (4%, 19.8k payers @ €3.12 ARPPU, 62% cosmetics).';
-  else if(l.includes('roi')||l.includes('revenue'))r='Incremental annual revenue: €93,300. Build: €65,550. Y1 ROI: 42%. Y2+: 143% annualised. Pays for itself in 8 months.';
-  else if(l.includes('risk')||l.includes('gate'))r='Top risks: (1) VFX latency >47s — pre-load + kill-switch. (2) Player dismissal — A/B test. (3) Lift <0.5pp — hard gate.';
-  else if(l.includes('handoff')||l.includes('pipeline'))r='Pipeline: Researcher→Designer→Maker. Handoff 1: segment analysis. Handoff 2: StormPersona Engine. Handoff 3: Strategy Canvas. Each agent received full prior output verbatim.';
-  else if(l.includes('hello')||l.includes('hi'))r='⟐ TARGET.AI online. Ask me about segments, mechanics, budget, ROI, risks, or click any card in the mission briefing.';
-  else r=`⟐ Processing: "${msg}". Try: segments, Flashpoint, Re-engagement, budget, ROI, risks, handoff, or click any card.`;
-  body.innerHTML+=`<div class="chat-msg bot">${r}<span class="msg-time">${t}</span></div>`;body.scrollTop=body.scrollHeight;
+  if(l.includes('sprint')||l.includes('flash'))r='FLASHPOINT targets Sprinters (66%). Hero-moment VFX + cosmetic tease in first 47s. Target: Level-5 reach 34%→55%.';
+  else if(l.includes('float')||l.includes('re-eng'))r='RE-ENGAGEMENT CAROUSEL targets Floaters (30%). Push notification with near-miss reward within 4h gap. Target: 5% conversion.';
+  else if(l.includes('pillar')||l.includes('boutique'))r='CURATED BOUTIQUE targets Pillars (4%). C1: €0.49-0.99 hook. C2: weekly bundle. Target: +622 payers from C1.';
+  else if(l.includes('budget')||l.includes('cost'))r='Total: €65,550. 2 eng×6wk (€36k) + data (€6k) + VFX (€8k) + UI (€3k) + infra (€4k) + contingency (€8.55k).';
+  else if(l.includes('segment')||l.includes('intel'))r='Sprinters 66% (47s, €0), Floaters 30% (3m42s, 73% buys in 48h), Pillars 4% (19.8k payers @ €3.12 ARPPU).';
+  else if(l.includes('roi')||l.includes('revenue'))r='Incremental annual revenue: €93,300. Build: €65,550. Y1 ROI: 42%. Y2+: 143% annualised.';
+  else if(l.includes('risk')||l.includes('gate'))r='(1) VFX latency >47s — kill-switch. (2) Player dismissal — A/B test. (3) Lift <0.5pp — hard gate: kill P3.';
+  else if(l.includes('handoff')||l.includes('pipeline'))r='Researcher→Designer→Maker. Each received full prior output verbatim. Final: Strategy Canvas.';
+  else if(l.includes('hello')||l.includes('hi'))r='✦ NOVA.AI online. Ask about segments, Flashpoint, Re-engagement, budget, ROI, risks, or click any card.';
+  else r=`✦ Processing. Try: segments, Flashpoint, budget, ROI, risks, handoff, or click any card.`;
+  b.innerHTML+=`<div class="chat-msg bot">${r}<span class="msg-time">${t}</span></div>`;b.scrollTop=b.scrollHeight;
 }
 
-// ── bg canvas ──
-const bc=document.getElementById('bg_canvas'),bx=bc.getContext('2d');let bw,bh;
-function rsz(){bw=bc.width=window.innerWidth;bh=bc.height=window.innerHeight}
-window.addEventListener('resize',rsz);rsz();
-const pts=[];
-for(let i=0;i<140;i++)pts.push({x:Math.random()*bw,y:Math.random()*bh,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.2+.2,o:Math.random()*.3+.05,c:Math.random()>.6?'#ffa028':'#6880a0'});
-function drw(){
-  bx.clearRect(0,0,bw,bh);
-  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>bw)p.vx*=-1;if(p.y<0||p.y>bh)p.vy*=-1;
-    bx.beginPath();bx.arc(p.x,p.y,p.r,0,Math.PI*2);bx.fillStyle=p.c;bx.globalAlpha=p.o;bx.fill();bx.globalAlpha=1});
-  for(let i=0;i<pts.length;i+=5)for(let j=i+1;j<pts.length&&j<i+6;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-    if(d<100){bx.beginPath();bx.moveTo(pts[i].x,pts[i].y);bx.lineTo(pts[j].x,pts[j].y);bx.strokeStyle=`rgba(255,160,40,${.015*(1-d/100)})`;bx.lineWidth=.3;bx.stroke()}}
-  requestAnimationFrame(drw)}
-drw();
+// ── neural network bg ──
+const nc=document.getElementById('neural-bg'),nx=nc.getContext('2d');let nw,nh;
+function nrsz(){nw=nc.width=window.innerWidth;nh=nc.height=window.innerHeight}
+window.addEventListener('resize',nrsz);nrsz();
+const nodes=[];
+for(let i=0;i<60;i++)nodes.push({x:Math.random()*nw,y:Math.random()*nh,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,r:Math.random()*1.5+.5});
+function ndrw(){
+  nx.clearRect(0,0,nw,nh);
+  // connections
+  for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+    const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<150){nx.beginPath();nx.moveTo(nodes[i].x,nodes[i].y);nx.lineTo(nodes[j].x,nodes[j].y);
+      const col=d<80?'rgba(124,58,237,':'rgba(6,182,212,';nx.strokeStyle=col+`${.04*(1-d/150)})`;nx.lineWidth=.4;nx.stroke()}
+  }
+  nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>nw)n.vx*=-1;if(n.y<0||n.y>nh)n.vy*=-1;
+    nx.beginPath();nx.arc(n.x,n.y,n.r,0,Math.PI*2);nx.fillStyle='rgba(124,58,237,.15)';nx.fill();
+    nx.beginPath();nx.arc(n.x,n.y,n.r*.3,0,Math.PI*2);nx.fillStyle='rgba(6,182,212,.25)';nx.fill()});
+  requestAnimationFrame(ndrw)}
+ndrw();
 
 // ── gauges ──
 document.querySelectorAll('.gc').forEach(cv=>{
   const pct=parseInt(cv.dataset.pct),col=cv.dataset.color;
-  const sz=Math.min(cv.parentElement.getBoundingClientRect().width||80,80);
+  const sz=Math.min(cv.parentElement.getBoundingClientRect().width||85,85);
   const dpr=window.devicePixelRatio||1;
   cv.width=sz*dpr;cv.height=sz*dpr;cv.style.width=sz+'px';cv.style.height=sz+'px';
   const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
