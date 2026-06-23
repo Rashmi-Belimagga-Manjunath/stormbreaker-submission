@@ -43,6 +43,25 @@ nav ol a:hover{color:var(--amber);border-color:rgba(255,160,40,.12);background:r
 /* ── HERO ── */
 .hero{position:relative;z-index:2;min-height:95vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
   text-align:center;padding:2rem 1rem;overflow:hidden}
+.hero .hero-bg{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.hero .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:brightness(.35) saturate(.55) contrast(1.15);transition:transform .1s linear}
+.hero .hero-bg::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(10,11,13,.75) 0%,transparent 25%,transparent 65%,rgba(10,11,13,.92) 100%),
+  radial-gradient(ellipse 60% 40% at 30% 50%,rgba(255,160,40,.05),transparent 70%)}
+.hero .hero-overlay{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.hero .hero-overlay .sweep{position:absolute;top:0;left:-30%;width:30%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,160,40,.04),transparent);
+  animation:sweep 5s ease-in-out infinite}
+@keyframes sweep{0%,100%{left:-30%}50%{left:100%}}
+.hero .hero-overlay .hud-ring{position:absolute;top:50%;left:50%;width:600px;height:600px;transform:translate(-50%,-50%);
+  border:1px solid rgba(255,160,40,.04);border-radius:50%;animation:hudPulse 8s ease-in-out infinite}
+.hero .hero-overlay .hud-ring:nth-child(2){width:400px;height:400px;animation-delay:2s}
+.hero .hero-overlay .hud-ring:nth-child(3){width:200px;height:200px;animation-delay:4s}
+@keyframes hudPulse{0%,100%{opacity:.3;transform:translate(-50%,-50%) scale(1)}50%{opacity:.8;transform:translate(-50%,-50%) scale(1.05)}}
+.hero .hero-overlay .cross{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.hero .hero-overlay .cross::before,.hero .hero-overlay .cross::after{content:'';position:absolute;background:rgba(255,160,40,.06)}
+.hero .hero-overlay .cross::before{width:60px;height:1px;top:0;left:-30px}
+.hero .hero-overlay .cross::after{width:1px;height:60px;left:0;top:-30px}
 .hero::before{content:'';position:absolute;inset:0;
   background:radial-gradient(ellipse 80% 50% at 50% 30%,rgba(255,160,40,.04),transparent 70%),
   radial-gradient(ellipse 50% 40% at 30% 80%,rgba(255,160,40,.02),transparent 60%);
@@ -297,6 +316,16 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:v
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1800&q=85" alt="hero" loading="eager" id="heroImg" />
+  </div>
+  <div class="hero-overlay">
+    <div class="sweep"></div>
+    <div class="hud-ring"></div>
+    <div class="hud-ring"></div>
+    <div class="hud-ring"></div>
+    <div class="cross"></div>
+  </div>
   <div class="hero-badge"><span class="dot"></span> INTELLIGENCE &amp; PERSONALISATION · SB1</div>
   <h1>STØRM<span class="hl">BREAKER</span></h1>
   <div class="sub"><span class="hl2">RESEARCHER</span> ◆ <span class="hl2">DESIGNER</span> ◆ <span class="hl2">MAKER</span> &nbsp;·&nbsp; 3-AGENT PIPELINE</div>
@@ -708,6 +737,9 @@ window.addEventListener('scroll',()=>{
   const h=document.documentElement.scrollHeight-window.innerHeight;
   document.getElementById('sp').style.width=h>0?(window.scrollY/h)*100+'%':'0%';
   document.getElementById('tp').classList.toggle('vis',window.scrollY>400);
+  // parallax hero
+  const hi=document.getElementById('heroImg');
+  if(hi){const sc=window.scrollY;hi.style.transform=`translateY(${sc*.12}px)`}
 });
 function toggle(el){const bd=el.parentElement.querySelector('.bd'),tg=el.querySelector('.toggle');bd.classList.toggle('open');tg.classList.toggle('open')}
 
