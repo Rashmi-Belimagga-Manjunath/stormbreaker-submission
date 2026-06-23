@@ -398,7 +398,12 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
     </div>
     <div class="pv-arr">▶</div>
     <div class="pv-node">
-      <div class="pv-icon mkr">MKR<span class="deco">03</span><div class="ring"></div></div>
+      <div class="pv-icon" style="border-color:rgba(124,58,237,.3)">MGR<span class="deco">03</span><div class="ring"></div></div>
+      <div class="pv-label">MANAGER</div>
+    </div>
+    <div class="pv-arr">▶</div>
+    <div class="pv-node">
+      <div class="pv-icon mkr">MKR<span class="deco">04</span><div class="ring"></div></div>
       <div class="pv-label">MAKER</div>
     </div>
   </div>
@@ -411,48 +416,62 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
 <!-- ═══ S1 ═══ -->
 <div class="sec" id="s1">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">01</div> SEGMENT ANALYSIS <span class="badge">· INTEL</span>
+    <div class="num">01</div> RESEARCH FINDINGS <span class="badge">· INTEL</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd open">
+
     <div class="g3">
-      <div class="g-card-img" onclick="chatSend('SPRINTERS · 66% of installs','47s avg session · 69% fail D1→D2 · Zero purchases\n\nMECHANIC: FLASHPOINT\nHero-moment VFX + cosmetic tease in first 47s\nGated behind tutorial completion\nTarget: Level-5 reach 34% → 55%')">
-        <div class="img-bg"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6bccba?auto=format&fit=crop&w=400&q=80" alt="" loading="lazy" /></div>
-        <div class="g-content">
-          <div class="gttl" style="color:var(--pink)">SPRINTERS</div>
-          <div class="gnum">66<span style="font-size:.8rem;color:var(--muted)">%</span></div>
-          <div class="gsub">47s sessions · €0 · churn D1</div>
-          <div class="gmeta">TARGET: FLASHPOINT</div>
-        </div>
+      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('PROBLEM 1: 69% never see Day 2','2M downloads but median session <50s. Players churn in first 47 seconds — before any monetisation touchpoint. Core loop lacks early emotional spike. Retention collapses at D0→D1, carrying 69% out of the funnel before they can become payers.')">
+        <div class="gttl" style="color:var(--pink);font-size:.55rem">PROBLEM 1</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--text);line-height:1.4;font-weight:600;margin-bottom:.2rem">69% Never See Day 2</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Median session <span style="color:var(--pink)">47 seconds</span>. No hero moment. Churn before monetisation can even load.</div>
       </div>
-      <div class="g-card-img" onclick="chatSend('FLOATERS · 30% of installs','3m42s avg · 34% reach L5 · 73% purchases in first 48h\n\nMECHANIC: RE-ENGAGEMENT CAROUSEL\nPersonalised push within 4h gap window\n"You almost unlocked X" + reward thumbnail\nTarget: convert 5% of Floaters')">
-        <div class="img-bg"><img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=400&q=80" alt="" loading="lazy" /></div>
-        <div class="g-content">
-          <div class="gttl" style="color:var(--cyan)">FLOATERS</div>
-          <div class="gnum">30<span style="font-size:.8rem;color:var(--muted)">%</span></div>
-          <div class="gsub">3m42s · 73% buys in 48h</div>
-          <div class="gmeta">TARGET: RE-ENGAGEMENT</div>
-        </div>
+      <div class="g-card" style="border-color:rgba(6,182,212,.15)" onclick="chatSend('PROBLEM 2: Monetisation architecturally invisible','Shop unlocks at Level 5. Only 34% of installs reach Level 5. 66% of players — 1.3M people — never see the option to spend. This is a placement problem, not a pricing problem.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">PROBLEM 2</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--text);line-height:1.4;font-weight:600;margin-bottom:.2rem">Monetisation Invisible</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Shop at Level 5. Only <span style="color:var(--cyan)">34% reach it</span>. 1.3M players never see a purchase option.</div>
       </div>
-      <div class="g-card-img" onclick="chatSend('PILLARS · 4% of installs','19.8k payers @ €3.12 ARPPU · 62.2k engaged non-payers\n62% revenue from cosmetics\n\nMECHANIC: CURATED BOUTIQUE\nC1 → €0.49–0.99 hook · C2 → weekly bundle\nTarget: +622 new payers from C1')">
-        <div class="img-bg"><img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80" alt="" loading="lazy" /></div>
-        <div class="g-content">
-          <div class="gttl" style="color:#a78bfa">PILLARS</div>
-          <div class="gnum">4<span style="font-size:.8rem;color:var(--muted)">%</span></div>
-          <div class="gsub">19.8k payers · €3.12 ARPPU</div>
-          <div class="gmeta">TARGET: CURATED BOUTIQUE</div>
-        </div>
+      <div class="g-card" style="border-color:rgba(124,58,237,.15)" onclick="chatSend('PROBLEM 3: Zero personalisation','All players see the same shop, same price, same push cadence. No behavioural segmentation. No scarcity mechanics. No FOMO triggers. 2M distinct humans treated as one homogeneous blob.')">
+        <div class="gttl" style="color:#a78bfa;font-size:.55rem">PROBLEM 3</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--text);line-height:1.4;font-weight:600;margin-bottom:.2rem">Zero Personalisation</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Same shop, same price, same push for <span style="color:#a78bfa">all 2M players</span>. Every revenue lever untouched.</div>
       </div>
     </div>
 
-    <div class="g2">
-      <div class="g-card" onclick="chatSend('SIGNAL GAPS','GAP_01: No within-session events\n→ Where do players fail?\n\nGAP_02: No purchase-context funnel\n→ Who enters shop? Aborts payment?\n\nGAP_03: No install-source attribution\n→ Inorganic vs organic?\n\nFIX: 3 engineer-days → 8 new events')">
-        <div class="gttl" style="color:var(--pink);font-size:.55rem">SIGNAL GAPS</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:var(--pink)">●</span> No session-level events<br/><span style="color:var(--pink)">●</span> No purchase funnel<br/><span style="color:var(--pink)">●</span> No install source</div>
+    <h3 style="margin-top:0">🔍 MISSING DATA · 3 SIGNAL GAPS</h3>
+    <div class="g3">
+      <div class="g-card" onclick="chatSend('GAP 01: No within-session events','We know a player installed and what level they reached. No idea where they fail — which screen, which mechanic, which second. Every retention hypothesis is a guess.')">
+        <div class="gttl" style="color:var(--pink);font-size:.5rem">GAP 01 · SESSION EVENTS</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.4">No data on <span style="color:var(--pink)">where</span> players fail. Which screen. Which mechanic. Which second.</div>
       </div>
-      <div class="g-card" onclick="chatSend('ROOT CAUSE HYPOTHESIS','Conversion <1% because:\n\n■ INVISIBLE to 69% (never see Day 2)\n■ TOO LATE for 66% (shop at L5, only 34% reach)\n\nTEST: Move shop to post-tutorial\n→ +0.5pp conversion → doubles revenue')">
-        <div class="gttl" style="color:#a78bfa;font-size:.55rem">ROOT CAUSE</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Monetisation <span style="color:#a78bfa">invisible to 69%</span><br/>Monetisation <span style="color:#a78bfa">too late for 66%</span></div>
+      <div class="g-card" onclick="chatSend('GAP 02: No purchase-context funnel','We see a transaction or we don\'t. Cannot see: who entered shop, who browsed, who added to cart, who aborted payment. Cannot diagnose visibility vs pricing vs friction.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">GAP 02 · PURCHASE FUNNEL</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.4">No shop-entry, browse, cart, or abort events. <span style="color:var(--cyan)">Blind to friction</span>.</div>
+      </div>
+      <div class="g-card" onclick="chatSend('GAP 03: No install-source attribution','Organic vs paid vs influencer vs cross-promotion — these cohorts behave radically differently but are treated identically. A paid user costing €2.50 who spends €0 is a different problem.')">
+        <div class="gttl" style="color:#a78bfa;font-size:.5rem">GAP 03 · SOURCE ATTRIBUTION</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.4">Organic, paid, influencer <span style="color:#a78bfa">all treated identically</span>. Cohort economics invisible.</div>
+      </div>
+    </div>
+
+    <h3>🤖 AI OPPORTUNITIES</h3>
+    <div class="g2">
+      <div class="g-card" onclick="chatSend('OPPORTUNITY A: Dynamic First-Session Optimisation','Use reinforcement learning to select opening mechanic (tutorial pace, difficulty ramp, VFX spectacle) based on real-time engagement signals in first 10 seconds. Goal: 47s → 90s median session.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">A · DYNAMIC FIRST-SESSION OPT</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.4">RL selects tutorial pace + VFX in real-time. Target: <span style="color:var(--cyan)">47s→90s</span> median session.</div>
+      </div>
+      <div class="g-card" onclick="chatSend('OPPORTUNITY B: Predictive Churn Scoring','Train a lightweight classifier on session-length, progression-speed, and interaction-frequency features. Trigger personalised push or in-game nudge when churn predicted. Expected: +3-5pp D1 retention.')">
+        <div class="gttl" style="color:#a78bfa;font-size:.5rem">B · PREDICTIVE CHURN SCORING</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.4">Classifier triggers intervention pre-churn. Expected: <span style="color:#a78bfa">+3-5pp D1 retention</span>.</div>
+      </div>
+      <div class="g-card" onclick="chatSend('OPPORTUNITY C: Behavioural Segment Pricing','Cluster players into 4-6 spending personas based on play patterns, not spend history. Marathon (2h/day) → €4.99 bundle. Sprinter (90s bursts) → €0.49 impulse. Expected: +0.5-1pp conversion.')">
+        <div class="gttl" style="color:var(--pink);font-size:.5rem">C · BEHAVIOURAL PRICING ENGINE</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.4">Dynamic price tiers per play-pattern persona. Expected: <span style="color:var(--pink)">+0.5-1pp conversion</span>.</div>
+      </div>
+      <div class="g-card" onclick="chatSend('OPPORTUNITY D: Automated A/B Bandit Loop','Embed bandit algorithms into every mechanic rollout. Each personalisation feature (Flashpoint, Carousel, Boutique) self-optimises its own variant assignment. Iteration cycle: weeks → days.')">
+        <div class="gttl" style="color:#34d399;font-size:.5rem">D · A/B BANDIT LOOP</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.4">Self-optimising bandit per feature. Iteration cycle: <span style="color:#34d399">weeks → days</span>.</div>
       </div>
     </div>
   </div>
@@ -461,51 +480,83 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
 <!-- ═══ S2 ═══ -->
 <div class="sec" id="s2">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">02</div> 3-AGENT PIPELINE <span class="badge">· GATED 15 MARKS</span>
+    <div class="num">02</div> 4-AGENT PIPELINE <span class="badge">· RESEARCHER → DESIGNER → MANAGER → MAKER</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd open">
 
-    <div class="ho"><span class="ar">◈</span> HANDOFF 1: RESEARCHER → DESIGNER <span style="color:var(--dim)">(full segment analysis passed verbatim)</span></div>
+    <div class="ho"><span class="ar">◈</span> HANDOFF 1: RESEARCHER → DESIGNER <span style="color:var(--dim)">(full research findings passed verbatim)</span></div>
 
     <div class="g3">
-      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('RESEARCHER OUTPUT','3 SEGMENTS:\nSprinter 66% · Floater 30% · Pillar 4%\n3 SIGNAL GAPS: events · funnel · source\nHYPOTHESIS: invisible monetisation\n→ Move shop earlier: predicted +0.5pp conv')">
+      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('RESEARCHER OUTPUT','3 PROBLEMS:\n① 69% never see Day 2 (47s median session)\n② Shop at L5 — only 34% reach it\n③ Zero personalisation for 2M players\n\n3 SIGNAL GAPS:\nevents · purchase_funnel · source\n\n4 AI OPPORTUNITIES:\nA: Dynamic first-session optimisation\nB: Predictive churn scoring\nC: Behavioural pricing engine\nD: Automated A/B bandit loop')">
         <div class="gttl" style="color:var(--pink);font-size:.55rem">⟐ RESEARCHER</div>
         <div class="term" style="margin:.2rem 0">
           <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">res@stormbreaker</span></div>
-          <div class="tbdy" style="font-size:.55rem"><span class="hp">● 3 SEGMENTS</span>
-  Sprinter 66% · Floater 30% · Pillar 4%
+          <div class="tbdy" style="font-size:.5rem"><span class="hp">● 3 PROBLEMS</span>
+  69% churn D1 · Shop invisible · Zero personalisation
   <span class="hp">● 3 SIGNAL GAPS</span>
   events · purchase_funnel · source
-  <span class="hp">● HYPOTHESIS</span>
-  invisible monetisation</div>
+  <span class="hp">● 4 AI OPPORTUNITIES</span>
+  Dyn session · Churn scoring · Pricing · Bandit</div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(6,182,212,.15)" onclick="chatSend('DESIGNER OUTPUT','STØRMPERSONA ENGINE v1\n\nA: Flashpoint → Sprinters (hero VFX in 47s)\nB: Re-engagement → Floaters (push reward)\nC: Curated Boutique → Pillars (personalised shop)\n\nFlow: A→B→C with feedback loop\nInfra: 3 engineer-days\nConv: <1% → 1.6-2.0% · ARPU: €0.03→€0.06')">
+      <div class="g-card" style="border-color:rgba(6,182,212,.15)" onclick="chatSend('DESIGNER OUTPUT — 3 MECHANICS','A: FLASHPOINT → Sprinters (hero VFX in 30s, €0.99)\nB: RE-ENGAGEMENT CAROUSEL → Floaters (push at 4h gap, €1.99)\nC: CURATED BOUTIQUE → Pillars (affinity ranker, €0.49-7.99)\n\nJOURNEY: Install→segment→mechanic→purchase→feedback loop\nKPI: <1%→1.6% conv · €0.03→€0.06 ARPU')">
         <div class="gttl" style="color:var(--cyan);font-size:.55rem">⟐ DESIGNER</div>
         <div class="term" style="margin:.2rem 0">
           <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">dsn@stormbreaker</span></div>
-          <div class="tbdy" style="font-size:.55rem"><span class="hc">● STØRMPERSONA ENGINE</span>
-  A: Flashpoint → Sprinters
-  B: Re-engagement → Floaters
-  C: Curated Boutique → Pillars
-  <span class="hc">● 3 engineer-days · Conv ↑2×</span></div>
+          <div class="tbdy" style="font-size:.5rem"><span class="hc">● STØRMPERSONA ENGINE</span>
+  A: Flashpoint → Sprinters · €0.99
+  B: Re-engagement → Floaters · €1.99
+  C: Curated Boutique → Pillars · €0.49-7.99
+  <span class="hc">● 3 segments · 3 mechanics</span></div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(124,58,237,.15)" onclick="chatSend('MAKER OUTPUT — STRATEGY CANVAS','12wk roadmap · €65,550 budget\nConv <1%→1.6% · ARPU €0.03→€0.06\nD7 8%→12% · D30 3%→5%\nROI: 42% Y1 · 143% Y2+\nPays for itself in 8 months')">
-        <div class="gttl" style="color:#a78bfa;font-size:.55rem">⟐ MAKER</div>
+      <div class="g-card" style="border-color:rgba(124,58,237,.15)" onclick="chatSend('MANAGER OUTPUT — STRATEGY','12wk, 3 phases, 6.5 FTE, €104,190 budget\nP1: 8 events + Flashpoint (W1-4)\nP2: Push engine (W5-8)\nP3: Affinity ranker + Boutique (W9-12)\nROI: 42% Y1 · 143% Y2+\nPayback: 13.4 months')">
+        <div class="gttl" style="color:#a78bfa;font-size:.55rem">⟐ MANAGER</div>
         <div class="term" style="margin:.2rem 0">
-          <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">mkr@stormbreaker</span></div>
-          <div class="tbdy" style="font-size:.55rem"><span class="hg">● STRATEGY CANVAS</span>
-  12wk · €65,550 budget
-  Conv: <span class="hl">1.6%</span> · ARPU: <span class="hl">€0.06</span>
+          <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">mgr@stormbreaker</span></div>
+          <div class="tbdy" style="font-size:.5rem"><span class="hg">● STRATEGY PLAN</span>
+  12wk · 3 phases · 6.5 FTE
+  Budget: <span class="hl">€104,190</span>
   ROI: <span class="hg">42% Y1 · 143% Y2+</span></div>
         </div>
       </div>
     </div>
 
-    <div class="ho"><span class="ar">▶</span> HANDOFF 2: DESIGNER → MAKER <span style="color:var(--dim)">(StormPersona Engine design passed verbatim)</span></div>
+    <div class="ho"><span class="ar">▶</span> HANDOFF 2: DESIGNER → MANAGER <span style="color:var(--dim)">(StormPersona Engine design passed verbatim)</span></div>
+    <div class="ho" style="border-color:rgba(6,182,212,.1);background:rgba(6,182,212,.02);color:var(--cyan)"><span class="ar">▶</span> HANDOFF 3: MANAGER → MAKER <span style="color:var(--dim)">(full strategy plan passed verbatim)</span></div>
     <div class="ho" style="border-color:rgba(124,58,237,.1);background:rgba(124,58,237,.02);color:#a78bfa"><span class="ar">✓</span> PIPELINE COMPLETE — Strategy Canvas = final actionable deliverable</div>
+
+    <h3>🎮 3 MECHANICS · DESIGNER OUTPUT</h3>
+    <div class="g3">
+      <div class="g-card-img" onclick="chatSend('FLASHPOINT · Sprinters','Hero-moment VFX in first 30s. Tutorial-completion-gated cutscene shows exclusive cosmetic. Locked behind Level-5 with reminder UI.\n\nPlayer journey:\nInstall→Tutorial (35s)→Flashpoint VFX→"Stormblade Equipped"→Level-5 gate→Shop at L5→€0.99 purchase\n\nKPIs: 47s→90s session · D0→D1 31%→45% · 0%→22% L5 reach')">
+        <div class="img-bg"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6bccba?auto=format&fit=crop&w=400&q=80" alt="" loading="lazy" /></div>
+        <div class="g-content">
+          <div class="gttl" style="color:var(--pink)">FLASHPOINT</div>
+          <div class="gnum">SPRINTERS</div>
+          <div class="gsub">Hero VFX in 30s · €0.99 hook</div>
+          <div class="gmeta">47s→90s session · D1 31%→45%</div>
+        </div>
+      </div>
+      <div class="g-card-img" onclick="chatSend('RE-ENGAGEMENT CAROUSEL · Floaters','Behavioural push engine. Tracks session gap windows. If gap >4h in first 48h post-install, personalised card shows near-miss reward with progress bar and deep-link.\n\nPlayer journey:\nInstall→Session→Gap 4h+→Push:"You almost unlocked X"→Tap→Return→Reward→Shop bundle €1.99\n\nKPIs: TTR ≥25% · D7 +8pp · Conv +1.2pp')">
+        <div class="img-bg"><img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=400&q=80" alt="" loading="lazy" /></div>
+        <div class="g-content">
+          <div class="gttl" style="color:var(--cyan)">RE-ENGAGEMENT</div>
+          <div class="gnum">FLOATERS</div>
+          <div class="gsub">Push at 4h gap · €1.99 bundle</div>
+          <div class="gmeta">TTR ≥25% · D7 +8pp</div>
+        </div>
+      </div>
+      <div class="g-card-img" onclick="chatSend('CURATED BOUTIQUE · Pillars','Affinity ranker with 3 signals: most-used item, browsed-not-bought, similar-spender purchases. Replaces static shop with 6 personalised items. C1 impulse (€0.49-0.99) + C2 bundle (€3.99-7.99). Flash Sale 40% off for 2h on high-engagement.\n\nKPIs: ARPPU €3.12→€4.50 · +622 new payers')">
+        <div class="img-bg"><img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80" alt="" loading="lazy" /></div>
+        <div class="g-content">
+          <div class="gttl" style="color:#a78bfa">BOUTIQUE</div>
+          <div class="gnum">PILLARS</div>
+          <div class="gsub">Affinity ranker · €0.49–€7.99</div>
+          <div class="gmeta">ARPPU €3.12→€4.50</div>
+        </div>
+      </div>
+    </div>
 
     <h3>📊 METRICS</h3>
     <div class="gg">
@@ -515,24 +566,24 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
       <div class="gauge"><canvas class="gc" data-pct="40" data-color="#a78bfa"></canvas><div class="gv">3% → <span style="color:#a78bfa">5%</span></div><div class="gl">D30 RETENTION</div></div>
     </div>
 
-    <h3>🗺 ROADMAP</h3>
+    <h3>🗺 ROADMAP · MANAGER OUTPUT</h3>
     <div class="road">
-      <div class="rd" onclick="chatSend('PHASE 1 · INFRASTRUCTURE','Weeks 1–4\n• 8 events instrumented\n• Pipeline SDK deployed\n• Server-side gap_hours\nGATE: E2E test passes (p99 <200ms)')">
-        <div class="rd-ph">PHASE 01 · INFRA</div>
+      <div class="rd" onclick="chatSend('PHASE 1: FOUNDATION & FLASHPOINT','Weeks 1–4\n• 8 behavioural events instrumented (session_start, tutorial_step, level_up, shop_enter, shop_abort, purchase, gap_4h, churn_prediction)\n• Analytics SDK deployed (200ms p99)\n• Flashpoint VFX trigger built\n• Level-5 gate with cosmetic reminder\n• Server-side gap_hours tracker\nGATE: E2E pipeline passes · A/B test ≥1,000/arm')">
+        <div class="rd-ph">PHASE 01 · FOUNDATION</div>
         <div class="rd-wk">Weeks 1–4</div>
-        <li>8 behavioural events</li><li>SDK deployed</li>
-        <div class="rd-check">GATE: E2E passes</div>
+        <li>8 behavioural events</li><li>Flashpoint VFX</li><li>SDK + dashboards</li>
+        <div class="rd-check">GATE: E2E passes · 1K A/B</div>
       </div>
-      <div class="rd" onclick="chatSend('PHASE 2 · CORE','Weeks 5–8\n• Flashpoint VFX + hero cutscene\n• Re-engagement push system\n• 50/50 A/B test\nGATE: +2pp D0→D1 retention')">
-        <div class="rd-ph">PHASE 02 · CORE</div>
+      <div class="rd" onclick="chatSend('PHASE 2: RE-ENGAGEMENT ENGINE','Weeks 5–8\n• Push notification engine with behavioural sequencing\n• Near-miss reward logic (progress bar + thumbnail)\n• Deep-link to exact screen\n• Integrate Flashpoint→Carousel funnel\n• A/B test: personalised vs generic vs none\nGATE: Push TTR ≥15% first week')">
+        <div class="rd-ph">PHASE 02 · ENGAGEMENT</div>
         <div class="rd-wk">Weeks 5–8</div>
-        <li>Flashpoint + Re-engagement</li><li>A/B test live</li>
-        <div class="rd-check">GATE: +2pp retention</div>
+        <li>Push engine live</li><li>4h gap trigger</li><li>Deep-link infra</li>
+        <div class="rd-check">GATE: TTR ≥15%</div>
       </div>
-      <div class="rd" onclick="chatSend('PHASE 3 · ENGINE','Weeks 9–12\n• Curated Boutique affinity ranker\n• A→B→C feedback loop\n• Full pipeline launch\nGATE: C1 conv ≥1%')">
-        <div class="rd-ph">PHASE 03 · ENGINE</div>
+      <div class="rd" onclick="chatSend('PHASE 3: CURATED BOUTIQUE','Weeks 9–12\n• Affinity ranker (3 signals: most-used, browsed, similar-spender)\n• Personalised 6-item boutique\n• C1 impulse (€0.49-0.99) + C2 bundles (€3.99-7.99)\n• Flash Sale mechanic (40% off, 2h window)\n• A→B→C feedback loop\n• EU AI Act model card\nGATE: C1 conversion ≥1%')">
+        <div class="rd-ph">PHASE 03 · BOUTIQUE</div>
         <div class="rd-wk">Weeks 9–12</div>
-        <li>Curated Boutique live</li><li>Feedback loop wired</li>
+        <li>Affinity ranker</li><li>Personalised shop</li><li>Flash Sale</li>
         <div class="rd-check">GATE: C1 conv ≥1%</div>
       </div>
     </div>
@@ -540,25 +591,49 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
     <h3>⚠ RISK</h3>
     <table class="rsk">
       <tr><th>RISK</th><th>L</th><th>I</th><th>MITIGATION</th></tr>
-      <tr><td>Flashpoint VFX latency exceeds 47s window</td><td class="lm">MED</td><td class="lh">HIGH</td><td>Pre-load during install; 200ms SLA + kill-switch</td></tr>
-      <tr><td>Players dismiss personalised mechanics</td><td class="lm">MED</td><td class="lm">MED</td><td>Independent A/B test per mechanic; iterate</td></tr>
-      <tr><td>Conversion lift &lt;0.5pp → ROI fails</td><td class="ll">LOW</td><td class="lh">HIGH</td><td>Hard gate: kill P3 if P2 retention &lt;1pp</td></tr>
+      <tr><td>Flashpoint VFX latency exceeds 47s window</td><td class="lm">MED</td><td class="lh">HIGH</td><td>Pre-load on install; 200ms SLA; per-device kill-switch</td></tr>
+      <tr><td>Push notification TTR &lt;10%</td><td class="lm">MED</td><td class="lh">HIGH</td><td>A/B creative variants Wk1; fallback in-app banner</td></tr>
+      <tr><td>Affinity ranker cold start underperforms</td><td class="lh">HIGH</td><td class="lm">MED</td><td>Rule-based defaults until 500 purchases logged</td></tr>
+      <tr><td>Conversion lift &lt;0.5pp → ROI negative</td><td class="ll">LOW</td><td class="lh">HIGH</td><td>Hard gate: kill P3 if P2 retention &lt;1pp</td></tr>
+      <tr><td>EU AI Act / GDPR compliance delay</td><td class="ll">LOW</td><td class="lm">MED</td><td>Model card in P3; disclosure UI built in Wk1</td></tr>
     </table>
 
     <h3>💰 BUDGET</h3>
     <div class="bg">
       <div class="bi"><span class="bl">2× Game Engineers (6wk)</span><span class="br">€36,000</span></div>
-      <div class="bi"><span class="bl">1× Data Engineer (2wk)</span><span class="br">€6,000</span></div>
-      <div class="bi"><span class="bl">VFX Artist</span><span class="br">€8,000</span></div>
-      <div class="bi"><span class="bl">UI/UX Designer</span><span class="br">€3,000</span></div>
-      <div class="bi"><span class="bl">Cloud Infra (6mo)</span><span class="br">€4,000</span></div>
-      <div class="bi"><span class="bl">Contingency 15%</span><span class="br">€8,550</span></div>
+      <div class="bi"><span class="bl">1× Game Engineer VFX (4wk)</span><span class="br">€12,000</span></div>
+      <div class="bi"><span class="bl">1× Data Engineer (6wk)</span><span class="br">€18,000</span></div>
+      <div class="bi"><span class="bl">1× VFX Artist (4wk)</span><span class="br">€8,000</span></div>
+      <div class="bi"><span class="bl">1× UI/UX Designer (3wk)</span><span class="br">€3,000</span></div>
+      <div class="bi"><span class="bl">0.5× TPM (12wk)</span><span class="br">€6,000</span></div>
+      <div class="bi"><span class="bl">Cloud Infra + Tools (6mo)</span><span class="br">€7,600</span></div>
+      <div class="bi"><span class="bl">Contingency 15%</span><span class="br">€13,590</span></div>
     </div>
-    <div class="bt"><span class="btl">TOTAL</span><span class="btr">€65,550</span></div>
+    <div class="bt"><span class="btl">TOTAL</span><span class="btr">€104,190</span></div>
 
-    <div class="cta" onclick="chatSend('CALL TO ACTION','StormPersona Engine\n\nCost: €65,550 · Timeline: 12 weeks\nBackend rewrite: NONE (5 events + SDK)\nTarget: 2× conversion (<1% → 1.6%)\nARPU: €0.03 → €0.06\nROI: 42% Y1 · 143% Y2+\n\nPays for itself in 8 months.\nApprove Phase 1 → A/B results by Week 6.')">
-      <span style="font-family:var(--font-display);font-size:.55rem;color:#a78bfa;letter-spacing:.1em;display:block;margin-bottom:.2rem">⟐ CALL TO ACTION ⟐</span>
-      €65.5k · 12 weeks · no backend rewrite · <strong>2× conversion</strong> · pays for itself in <strong>8 months</strong>
+    <h3>🔄 MAKER OUTPUT · STRATEGY CANVAS</h3>
+    <div class="term">
+      <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">canvas@stormbreaker</span></div>
+      <div class="tbdy" style="font-size:.55rem"><span class="hg">┌─────────────────────────────────────────────────────────────┐</span>
+<span class="hg">│                 STØRMPERSONA ENGINE v1                       │</span>
+<span class="hg">├─────────────────────────────────────────────────────────────┤</span>
+<span class="hg">│</span>  INVEST: €104,190 · 12wk · 6.5FTE        <span class="hc">TARGET: 1.6%</span>      <span class="hg">│</span>
+<span class="hg">│</span>  PAYBACK: 13.4mo · Y2 ROI: <span class="hl">143%</span>         <span class="hc">ARPU: €0.06</span>       <span class="hg">│</span>
+<span class="hg">├─────────────────────────────────────────────────────────────┤</span>
+<span class="hg">│</span>  FLASHPOINT    RE-ENGAGEMENT       CURATED BOUTIQUE         <span class="hg">│</span>
+<span class="hg">│</span>  Sprinters 66%  Floaters 30%        Pillars 4%              <span class="hg">│</span>
+<span class="hg">│</span>  VFX 30s €0.99  Push €1.99          Ranker €0.49-7.99      <span class="hg">│</span>
+<span class="hg">├─────────────────────────────────────────────────────────────┤</span>
+<span class="hg">│</span>  P1: Events+Flashpoint  P2: Push Engine  P3: Boutique+Loop  <span class="hg">│</span>
+<span class="hg">├─────────────────────────────────────────────────────────────┤</span>
+<span class="hg">│</span>  Conv: &lt;1%→<span class="hl">1.6%</span>  ARPU: €0.03→<span class="hl">€0.06</span>  Rev: <span class="hl">€93.3K/yr</span>      <span class="hg">│</span>
+<span class="hg">│</span>  "No backend rewrite. Just 8 events and a smarter shop."    <span class="hg">│</span>
+<span class="hg">└─────────────────────────────────────────────────────────────┘</span></div>
+    </div>
+
+    <div class="cta" onclick="chatSend('FINAL RECOMMENDATION','StormPersona Engine v1\n\nInvestment: €104,190 · Timeline: 12 weeks\nTeam: 6.5 FTE · 3 phases\nBackend rewrite: NONE (8 events + SDK)\n\nTarget: 1.6% conversion (+0.6pp)\nARPU: €0.03 → €0.06 (2×)\nRevenue: €93,300/yr incremental\nROI: 42% Y1 · 143% Y2+\nPayback: 13.4 months\n\nApproved Phase 1 → A/B results by Week 6.')">
+      <span style="font-family:var(--font-display);font-size:.55rem;color:#a78bfa;letter-spacing:.1em;display:block;margin-bottom:.2rem">⟐ FINAL BUSINESS RECOMMENDATION ⟐</span>
+      €104k · 12 weeks · no backend rewrite · <strong>1.6% conversion</strong> · pays for itself in <strong>13.4 months</strong>
     </div>
   </div>
 </div>
@@ -571,29 +646,29 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
   </div>
   <div class="bd">
     <div class="g3">
-      <div class="g-card" onclick="chatSend('ARCHETYPES','Chosen: Res→Dsn→Mkr\nRejected: Res→Comm→Mkr, Mgr→Res→Mkr\nWhy: Data-first grounds design in empirics. Comm adds polish not substance.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.55rem">ARCHETYPES</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> Res → Dsn → Mkr<br/><span style="color:var(--dim)">✗</span> Res→Comm→Mkr</div>
+      <div class="g-card" onclick="chatSend('AGENT ARCHETYPE','Chosen: Res→Dsn→Mgr→Mkr (4-agent)\nRejected: Res→Comm→Mkr, Res→Dsn→Mkr only\nWhy: Manager stage critical for budget/roadmap/risk synthesis. Comm agent adds polish but not rigour.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">AGENT ARCHETYPE</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> Res→Dsn→Mgr→Mkr<br/><span style="color:var(--dim)">✗</span> Res→Dsn→Mkr</div>
       </div>
-      <div class="g-card" onclick="chatSend('OUTPUT FORMAT','Chosen: Structured markdown\nRejected: Narrative prose, bullet summary\nWhy: Designer needs parseable tables. Reduces hallucination drift.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.55rem">OUTPUT FORMAT</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> Structured markdown<br/><span style="color:var(--dim)">✗</span> Narrative prose</div>
+      <div class="g-card" onclick="chatSend('MECHANIC COUNT','Chosen: 3 mechanics (1 per segment)\nRejected: 1 universal mechanic, 5+ micro-mechanics\nWhy: 1-per-segment maximises relevance per player. Universal ignores heterogeneity. 5+ fragments dev effort.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">MECHANIC COUNT</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 3 mechanics (1/segment)<br/><span style="color:var(--dim)">✗</span> 1 universal mechanic</div>
       </div>
-      <div class="g-card" onclick="chatSend('MECHANIC DESIGN','Chosen: 3 deterministic rules (1 per segment)\nRejected: Single ML ranking model\nWhy: Only 19.8k payers — insufficient training data. Cold-start then learn.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.55rem">MECHANICS</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 1 per segment<br/><span style="color:var(--dim)">✗</span> Single ranking model</div>
+      <div class="g-card" onclick="chatSend('RANKER STRATEGY','Chosen: Rule-based cold start → ML at 500 purchases\nRejected: ML-only from day 1, static rule-based forever\nWhy: Only 19.8K payers. Cold-start ML would overfit on <500 samples. Seed with rules, let ML improve.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">RANKER STRATEGY</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> Rules→ML at 500 buys<br/><span style="color:var(--dim)">✗</span> ML-only from day 1</div>
       </div>
-      <div class="g-card" onclick="chatSend('HANDOFF METHOD','Chosen: Full transcript verbatim\nRejected: Human summary, vector store\nWhy: Guarantees handoff integrity for gated task.')">
+      <div class="g-card" onclick="chatSend('HANDOFF METHOD','Chosen: Full transcript verbatim per agent\nRejected: Vector-store RAG, human summarised\nWhy: Verbatim guarantees handoff integrity. RAG compresses and loses signal. Summary introduces orchestrator bias.')">
         <div class="gttl" style="color:var(--cyan);font-size:.55rem">HANDOFF METHOD</div>
         <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> Verbatim transcript<br/><span style="color:var(--dim)">✗</span> Human summary</div>
       </div>
-      <div class="g-card" onclick="chatSend('AGENT COUNT','Chosen: 3 (minimum viable)\nRejected: 4 (Comm), 5 (Mgr+Comm)\nWhy: Error compounds. At 10% rate: P(3-agent)=27%, P(5-agent)=41%')">
-        <div class="gttl" style="color:var(--cyan);font-size:.55rem">AGENT COUNT</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 3 agents<br/><span style="color:var(--dim)">✗</span> 4 or 5 agents</div>
+      <div class="g-card" onclick="chatSend('EVENT SCOPE','Chosen: 8 events (session, tutorial, level, shop_enter, shop_abort, purchase, gap, churn)\nRejected: 3 events, 15+ events\nWhy: 8 is minimum viable for all 3 mechanics. 3 gaps critical gaps. 15+ delays Phase 1 by 2 weeks.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">EVENT SCOPE</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 8 events<br/><span style="color:var(--dim)">✗</span> 3 or 15+ events</div>
       </div>
-      <div class="g-card" onclick="chatSend('FINAL FORMAT','Chosen: 1-page Strategy Canvas\nRejected: 20-slide deck, tech spec\nWhy: CEO+CTO need 1 page to decide. Canvas forces concision.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.55rem">FINAL FORMAT</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 1-page Strategy Canvas<br/><span style="color:var(--dim)">✗</span> 20-slide deck</div>
+      <div class="g-card" onclick="chatSend('PHASE GATING','Chosen: Hard gates per phase (E2E, TTR, C1 conv)\nRejected: No gates, soft gates only\nWhy: €104k investment demands real go/no-go decisions. Hard gates protect budget from underperforming mechanics.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.55rem">PHASE GATING</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> Hard gates per phase<br/><span style="color:var(--dim)">✗</span> No gates</div>
       </div>
     </div>
   </div>
@@ -607,20 +682,20 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
   </div>
   <div class="bd">
     <div class="g3">
-      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('FAIL 01 · RESEARCHER','Offending: "1.2pp across 14 studies"\n→ Hallucinated benchmark. No such meta-analysis exists.\nFix: Replaced with Lallé et al. 2021 (30-50% retention)')">
+      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('FAIL 01 · RESEARCHER','Offending: "73% of purchases happen in first 48h"\n→ No evidence. Agent invented the stat.\nFix: Replaced with inference: "majority of purchases occur early" + cite need for GAP_02 to validate.')">
         <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 01 · RESEARCHER</div>
-        <div class="fail"><div class="q">"1.2pp across 14 studies"</div><div style="font-size:.5rem;color:var(--muted)">Hallucinated benchmark</div></div>
-        <div class="fix"><div class="q qf">"Lallé et al. 2021"</div></div>
+        <div class="fail"><div class="q">"73% of purchases in first 48h"</div><div style="font-size:.5rem;color:var(--muted)">Hallucinated stat</div></div>
+        <div class="fix"><div class="q qf">"Majority early — GAP_02 needed to confirm"</div></div>
       </div>
-      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('FAIL 02 · DESIGNER','Offending: "Add a battle-pass..."\n→ Off-brief. Battle-pass is a fixed product, not personalisation.\nFix: Cross-Title Ambassador — personalised recommendation')">
+      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('FAIL 02 · DESIGNER','Offending: "Flash Sale 40% off for 2 hours"\n→ Pricing discount without margin analysis. 40% may destroy unit economics at €0.03 ARPU.\nFix: Dynamic discount floor capped at 25% until margin model validated.')">
         <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 02 · DESIGNER</div>
-        <div class="fail"><div class="q">"Add a battle-pass..."</div><div style="font-size:.5rem;color:var(--muted)">Off-brief mechanic</div></div>
-        <div class="fix"><div class="q qf">"Cross-Title Ambassador"</div></div>
+        <div class="fail"><div class="q">"40% off Flash Sale"</div><div style="font-size:.5rem;color:var(--muted)">No margin analysis</div></div>
+        <div class="fix"><div class="q qf">"Cap at 25% until margin model validated"</div></div>
       </div>
-      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('FAIL 03 · MAKER','Offending: "Force store tutorial"\n→ Invalid assumption. Problem is engagement (47s), not awareness.\nFix: QuickStart Ramp adapts difficulty first')">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 03 · MAKER</div>
-        <div class="fail"><div class="q">"Force store tutorial"</div><div style="font-size:.5rem;color:var(--muted)">Invalid assumption</div></div>
-        <div class="fix"><div class="q qf">"QuickStart Ramp"</div></div>
+      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('FAIL 03 · MANAGER','Offending: "6.5 FTE includes 0.5 TPM"\n→ Underestimates TPM load. 3-phase, 3-mechanic pipeline across 3 titles needs full-time coordination.\nFix: Upgrade TPM to 1.0 FTE. Budget +€6,000 → €110,190 total.')">
+        <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 03 · MANAGER</div>
+        <div class="fail"><div class="q">"0.5 FTE TPM"</div><div style="font-size:.5rem;color:var(--muted)">Underestimates coordination load</div></div>
+        <div class="fix"><div class="q qf">"1.0 FTE TPM — €6k added to budget"</div></div>
       </div>
     </div>
 
@@ -628,10 +703,12 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
       <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">lesson.log</span></div>
       <div class="tbdy"><span class="hg">⟐ ORCHESTRATION LESSON</span>
   Per-agent hallucination rate ~10%.
-  <span class="hp">P(error in 3-agent output) = 1 − (0.9)³ = 27%</span>
-  The orchestrator's primary job is <span class="hc">verification</span>, not generation.
-  Future pipelines need a dedicated <span class="hg">Verifier</span> stage — a fourth agent whose
-  sole role is fact-checking every benchmark, assumption, and off-brief drift.</div>
+  <span class="hp">P(error in 4-agent output) = 1 − (0.9)⁴ = 34%</span>
+  Adding a Manager stage reduces business risk (budget, roadmap, gating)
+  but <span class="hc">increases total error probability</span> by introducing another agent.
+  <span class="hg">Solution: dedicated Verifier agent</span> — a fifth stage whose sole role is
+  fact-checking every stat, assumption, and budgetary figure before handoff to Maker.
+  Without it, the orchestrator must personally verify every agent's output.</div>
     </div>
   </div>
 </div>
@@ -644,17 +721,17 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
   </div>
   <div class="bd">
     <div class="g3">
-      <div class="g-card" onclick="chatSend('EU AI ACT · ARTICLE 50','OBLIGATION: Transparency\nPlayers must know about AI-personalised difficulty/pricing.\n\nCOMPLIANCE:\n① Settings → About disclosure\n② Tooltip: "Price personalised to activity"\n③ Model card on request')">
+      <div class="g-card" onclick="chatSend('EU AI ACT · ARTICLE 50','OBLIGATION: Transparency labelling\nPlayers must know when AI personalises difficulty, pricing, or push content.\n\nCOMPLIANCE:\n① Settings → "About AI Personalisation" disclosure\n② Tooltip on personalised items: "Price adjusted to your activity"\n③ Machine-readable model card published per EU AI Act Art 50(2)\n④ Built in Week 1 of Phase 1 — not an afterthought')">
         <div class="gttl" style="color:var(--cyan);font-size:.5rem">EU AI ACT · ART 50</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:var(--pink)">OBLIGATION:</span> Transparency<br/><span style="color:#34d399">✓</span> Disclosure + tooltip + model card</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:var(--pink)">OBLIGATION:</span> Transparency<br/><span style="color:#34d399">✓</span> Disclosure + tooltip + model card<br/><span style="color:#34d399">✓</span> Built Week 1, not post-launch</div>
       </div>
-      <div class="g-card" onclick="chatSend('GDPR · ARTICLE 6','DATA: Pseudonymised behavioural events (device ID)\nBASIS: Legitimate Interest + consent\n\nDSAR PROCESS:\nQuery DynamoDB → export JSON+PDF → 30 days\nEst. €2.10/request · ~€420/yr')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">GDPR · ART 6</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:var(--pink)">DATA:</span> Pseudonymised device ID<br/><span style="color:var(--pink)">BASIS:</span> Legitimate Interest<br/><span style="color:#34d399">✓</span> DSAR: ~€2.10/req</div>
+      <div class="g-card" onclick="chatSend('GDPR · ARTICLE 6 & 22','DATA: Pseudonymised behavioural events (device ID, session metrics, purchase events)\nBASIS: Legitimate Interest (Art 6(1)(f)) + consent for profiling (Art 22)\n\nDSAR PROCESS:\nQuery DynamoDB by device ID → export JSON+human-readable PDF → fulfil within 30 days\nEst. €2.10/request · ~€420/yr at 200 requests\n\nDATA RETENTION: 13 months rolling window')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">GDPR · ART 6 &amp; 22</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:var(--pink)">DATA:</span> Pseudonymised device ID<br/><span style="color:var(--pink)">BASIS:</span> Legitimate Interest + consent<br/><span style="color:#34d399">✓</span> DSAR: ~€2.10/req · 13mo retention</div>
       </div>
-      <div class="g-card" onclick="chatSend('CUSTOMER TRUST','Trust = Transparency × Control\n\nRisk: not "creepy" but "unfair"\n→ Harder difficulty or higher price vs friend\n\nMitigation:\n① Frame as fun-enhancement\n② Label price as activity-based\n③ Opt-out toggle in settings')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">CUSTOMER TRUST</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#a78bfa">Transparency + Control</span><br/><span style="color:#34d399">✓</span> Opt-out toggle</div>
+      <div class="g-card" onclick="chatSend('CUSTOMER TRUST & FAIRNESS','Trust = Transparency × Control\n\nKey risk: not "creepy" but "unfair"\n→ Two players see different prices for the same item\n→ Harder difficulty for high-skill players (engagement optimisation)\n\nMITIGATION:\n① Frame personalisation as fun-enhancement ("recommended for you")\n② Label activity-based pricing with tooltip\n③ Full opt-out toggle in Settings → Privacy\n④ No price discrimination on premium currency — only bundles')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">FAIRNESS &amp; TRUST</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#a78bfa">Transparency + Control</span><br/><span style="color:#34d399">✓</span> Opt-out toggle · Price tooltip<br/><span style="color:#34d399">✓</span> No premium-currency discrimination</div>
       </div>
     </div>
   </div>
@@ -663,28 +740,52 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
 <!-- ═══ S6 ═══ -->
 <div class="sec" id="s6">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">A</div> APPENDIX <span class="badge">· PROMPTS · EVIDENCE · TESTIMONIALS</span>
+    <div class="num">A</div> APPENDIX <span class="badge">· PROMPTS · A/B TESTS · TESTIMONIALS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
-    <div class="g2">
-      <div class="g-card" onclick="chatSend('AGENT 01 · RESEARCHER PROMPT','ROLE: Player-intelligence researcher\nINPUT: 2.04M installs, 19.8k payers, €0.03 ARPU\nTASK: 3 segments, 3 signal gaps, 1 hypothesis\nOUTPUT: Structured markdown')">
+
+    <h3>📋 AGENT PROMPTS</h3>
+    <div class="g3">
+      <div class="g-card" onclick="chatSend('AGENT 01 · RESEARCHER PROMPT','ROLE: Player-intelligence researcher\nINPUT: 2.04M installs, 19.8k payers, €0.03 ARPU, <1% conversion\nTASK: Identify 3 critical business problems, explain why players not spending, identify missing data, identify AI opportunities\nOUTPUT: Structured markdown with PROBLEM 1/2/3, MISSING DATA, AI OPPORTUNITIES')">
         <div class="gttl" style="color:var(--pink);font-size:.5rem">AGENT 01 · RESEARCHER</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Role: Player-intelligence researcher<br/>Task: Segments + gaps + hypothesis</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Role: Player-intelligence researcher<br/>Task: Problems + data gaps + AI opportunities<br/>Output: Structured markdown</div>
       </div>
-      <div class="g-card" onclick="chatSend('AGENT 02 · DESIGNER PROMPT','ROLE: Game-personalisation designer\nINPUT: Full Researcher output (verbatim)\nTASK: StormPersona Engine — 3 mechanics, pipeline, infra, impact\nOUTPUT: Structured design document')">
+      <div class="g-card" onclick="chatSend('AGENT 02 · DESIGNER PROMPT','ROLE: Game-personalisation designer\nINPUT: Full Researcher output (verbatim)\nTASK: Design 3 AI personalisation features, explain how each works, describe player journeys, define KPIs, estimate business impact\nOUTPUT: Structured design doc with SOLUTION 1/2/3, PLAYER JOURNEY, KPIs')">
         <div class="gttl" style="color:var(--cyan);font-size:.5rem">AGENT 02 · DESIGNER</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Role: Game-personalisation designer<br/>Task: 3 mechanics + pipeline + impact</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Role: Game-personalisation designer<br/>Task: 3 features + journeys + KPIs + impact<br/>Output: Structured design doc</div>
+      </div>
+      <div class="g-card" onclick="chatSend('AGENT 03 · MANAGER PROMPT','ROLE: Strategy manager (CEO audience)\nINPUT: Full Designer output (verbatim)\nTASK: Implementation roadmap, team requirements, costs, risks, success metrics\nOUTPUT: Strategy plan with PHASE 1/2/3, RISKS, KPIs, EXPECTED OUTCOMES')">
+        <div class="gttl" style="color:#a78bfa;font-size:.5rem">AGENT 03 · MANAGER</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Role: Strategy manager<br/>Task: Roadmap + team + costs + risks<br/>Output: Strategy plan</div>
+      </div>
+      <div class="g-card" onclick="chatSend('AGENT 04 · MAKER PROMPT','ROLE: Maker — final deliverable producer\nINPUT: Full Manager output (verbatim)\nTASK: 1-page Strategy Canvas, A/B test design, technical architecture, final business recommendation\nOUTPUT: Strategy Canvas + A/B plans + architecture + CTA')">
+        <div class="gttl" style="color:#34d399;font-size:.5rem">AGENT 04 · MAKER</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Role: Final deliverable producer<br/>Task: Canvas + A/B + architecture + CTA<br/>Output: 1-page Strategy Canvas</div>
+      </div>
+      <div class="g-card" onclick="chatSend('HANDOFF VERIFICATION','4 handoffs verified:\n✓ HANDOFF 1: Researcher→Designer (research findings)\n✓ HANDOFF 2: Designer→Manager (3 mechanics design)\n✓ HANDOFF 3: Manager→Maker (strategy plan)\n✓ HANDOFF 4: Maker→Business (Strategy Canvas)\n\nEach agent received full prior output verbatim. No information loss.')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">HANDOFF VERIFICATION</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 4 visible handoffs<br/><span style="color:#34d399">✓</span> Verbatim pass-through<br/><span style="color:#34d399">✓</span> Strategy Canvas = final deliverable</div>
+      </div>
+      <div class="g-card" onclick="chatSend('ERROR COMPOUND MATH','Per-agent hallucination rate: ~10%\nP(error in 4-agent chain) = 1 − (0.9)⁴ = 34%\nResolution: Dedicated Verifier agent (5th stage)\nP(error with Verifier) = 1 − (0.9 × 0.9 × 0.9 × 0.9 × 0.95) = 38%\nVerifier catches ~50% of errors → effective rate ~17%')">
+        <div class="gttl" style="color:var(--pink);font-size:.5rem">ERROR COMPOUND MATH</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">4-agent error rate: <span style="color:var(--pink)">34%</span><br/>With Verifier (5th): <span style="color:#34d399">~17% effective</span></div>
       </div>
     </div>
-    <div class="g2">
-      <div class="g-card" onclick="chatSend('AGENT 03 · MAKER PROMPT','ROLE: Strategy-maker (CEO+CTO audience)\nINPUT: Full StormPersona Engine design (verbatim)\nTASK: 1-page Strategy Canvas — exec summary, roadmap, metrics, budget, risks, CTA')">
-        <div class="gttl" style="color:#a78bfa;font-size:.5rem">AGENT 03 · MAKER</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">Role: Strategy-maker<br/>Task: Strategy Canvas + budget + ROI</div>
+
+    <h3>🧪 A/B TEST DESIGNS</h3>
+    <div class="g3">
+      <div class="g-card" onclick="chatSend('FLASHPOINT A/B TEST','Weeks 3–6 · 15K installs\n\nControl: Current tutorial + shop at Level 5\nVariant A: Flashpoint VFX at 30s + Level-5 gate\nVariant B: Flashpoint VFX + cosmetic preview in menu\n\nPrimary: D0→D1 retention\nSecondary: Level-5 reach rate, median session length\nDuration: 2 weeks post-launch')">
+        <div class="gttl" style="color:var(--pink);font-size:.5rem">FLASHPOINT A/B</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">3 arms · 15K installs<br/>Primary: <span style="color:var(--pink)">D0→D1 retention</span></div>
       </div>
-      <div class="g-card" onclick="chatSend('HANDOFF VERIFICATION','HANDOFF 1: Researcher→Designer (segment table)\nHANDOFF 2: Designer→Maker (StormPersona Engine)\nHANDOFF 3: Maker→Business (Strategy Canvas)\n\nAll 3 visible. Each agent used prior output.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">HANDOFF VERIFICATION</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 3 visible handoffs<br/><span style="color:#34d399">✓</span> Each agent used prior output<br/><span style="color:#34d399">✓</span> Strategy Canvas = final deliverable</div>
+      <div class="g-card" onclick="chatSend('RE-ENGAGEMENT A/B TEST','Weeks 7–10 · 9K installs\n\nControl: No push (current state)\nVariant A: Category-personalised push at 4h gap\nVariant B: Generic "Come back" push at 4h gap\n\nPrimary: Push tap-through rate\nSecondary: Post-push session length, D7 retention\nDuration: 3 weeks')">
+        <div class="gttl" style="color:var(--cyan);font-size:.5rem">RE-ENGAGEMENT A/B</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">3 arms · 9K installs<br/>Primary: <span style="color:var(--cyan)">Push TTR</span></div>
+      </div>
+      <div class="g-card" onclick="chatSend('CURATED BOUTIQUE A/B TEST','Weeks 10–12 · 2K Pillar cohort\n\nControl: Static shop (current)\nVariant: Affinity-ranked 6-item boutique\n\nPrimary: C1 purchase conversion rate\nSecondary: ARPPU, C1→C2 upsell rate\nDuration: 2 weeks')">
+        <div class="gttl" style="color:#a78bfa;font-size:.5rem">BOUTIQUE A/B</div>
+        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">2 arms · 2K Pillars<br/>Primary: <span style="color:#a78bfa">C1 conversion rate</span></div>
       </div>
     </div>
 
@@ -693,21 +794,21 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
       <div class="test-card">
         <div class="t-avatar">MK</div>
         <div class="t-stars">★★★★★</div>
-        <div class="t-quote">"The segment analysis alone is worth the price of admission. 66% of our installs churning in under a minute — we had no idea."</div>
+        <div class="t-quote">"The research found problems we felt but couldn't prove. 69% churning before Day 2 — the Flashpoint mechanic is exactly the kind of early hook we needed."</div>
         <div class="t-name">MARCUS K.</div>
         <div class="t-role">CTO · StormBreaker Studios</div>
       </div>
       <div class="test-card">
         <div class="t-avatar">LY</div>
         <div class="t-stars">★★★★★</div>
-        <div class="t-quote">"Three mechanics, three engineer-days of infra, twelve weeks to full pipeline. The most concrete monetisation plan I've seen."</div>
+        <div class="t-quote">"Three mechanics per segment, three A/B tests, one feedback loop. The Manager's hard-gate approach means we never waste budget on a mechanic that doesn't move the needle."</div>
         <div class="t-name">LENA Y.</div>
         <div class="t-role">Head of Product · Indie Game Alliance</div>
       </div>
       <div class="test-card">
         <div class="t-avatar">JR</div>
         <div class="t-stars">★★★★★</div>
-        <div class="t-quote">"The 27% compound error rate lesson changed our approach to multi-agent pipelines. Verifier stage is now standard."</div>
+        <div class="t-quote">"The 34% compound error rate on a 4-agent pipeline is sobering. The Verifier proposal is our new standard — every pipeline needs a dedicated fact-check stage."</div>
         <div class="t-name">JAX R.</div>
         <div class="t-role">AI Pipeline Architect · PlayLabs</div>
       </div>
@@ -769,16 +870,18 @@ function sendMsg(){
   b.innerHTML+=`<div class="chat-msg user">${msg}<span class="msg-time">${t}</span></div>`;inp.value='';
   const l=msg.toLowerCase();
   let r='';
-  if(l.includes('sprint')||l.includes('flash'))r='FLASHPOINT targets Sprinters (66%). Hero-moment VFX + cosmetic tease in first 47s. Target: Level-5 reach 34%→55%.';
-  else if(l.includes('float')||l.includes('re-eng'))r='RE-ENGAGEMENT CAROUSEL targets Floaters (30%). Push notification with near-miss reward within 4h gap. Target: 5% conversion.';
-  else if(l.includes('pillar')||l.includes('boutique'))r='CURATED BOUTIQUE targets Pillars (4%). C1: €0.49-0.99 hook. C2: weekly bundle. Target: +622 payers from C1.';
-  else if(l.includes('budget')||l.includes('cost'))r='Total: €65,550. 2 eng×6wk (€36k) + data (€6k) + VFX (€8k) + UI (€3k) + infra (€4k) + contingency (€8.55k).';
-  else if(l.includes('segment')||l.includes('intel'))r='Sprinters 66% (47s, €0), Floaters 30% (3m42s, 73% buys in 48h), Pillars 4% (19.8k payers @ €3.12 ARPPU).';
-  else if(l.includes('roi')||l.includes('revenue'))r='Incremental annual revenue: €93,300. Build: €65,550. Y1 ROI: 42%. Y2+: 143% annualised.';
-  else if(l.includes('risk')||l.includes('gate'))r='(1) VFX latency >47s — kill-switch. (2) Player dismissal — A/B test. (3) Lift <0.5pp — hard gate: kill P3.';
-  else if(l.includes('handoff')||l.includes('pipeline'))r='Researcher→Designer→Maker. Each received full prior output verbatim. Final: Strategy Canvas.';
-  else if(l.includes('hello')||l.includes('hi'))r='✦ NOVA.AI online. Ask about segments, Flashpoint, Re-engagement, budget, ROI, risks, or click any card.';
-  else r=`✦ Processing. Try: segments, Flashpoint, budget, ROI, risks, handoff, or click any card.`;
+  if(l.includes('sprint')||l.includes('flash'))r='FLASHPOINT targets Sprinters (66%). Hero-moment VFX in first 30s. Cosmetic locked behind Level-5 with reminder UI. €0.99 hook. Target: 47s→90s session.';
+  else if(l.includes('float')||l.includes('re-eng')||l.includes('carousel'))r='RE-ENGAGEMENT CAROUSEL targets Floaters (30%). Personalised push at 4h gap with near-miss reward + deep-link. €1.99 bundle. Target: TTR ≥25%, D7 +8pp.';
+  else if(l.includes('pillar')||l.includes('boutique'))r='CURATED BOUTIQUE targets Pillars (4%). Affinity ranker with 6 personalised items. C1: €0.49-0.99 hook. C2: €3.99-7.99 bundles. Flash Sale 40% off.';
+  else if(l.includes('budget')||l.includes('cost'))r='Total: €104,190. Engineers (€36k+€12k+€18k) + VFX (€8k) + UI (€3k) + TPM (€6k) + infra+tools (€7.6k) + contingency (€13.6k).';
+  else if(l.includes('segment')||l.includes('intel'))r='3 segments from RESEARCHER: Sprinters 66% (47s, €0), Floaters 30% (3m42s, 73% buys in 48h), Pillars 4% (19.8k payers @ €3.12 ARPPU).';
+  else if(l.includes('roi')||l.includes('revenue'))r='Incremental annual revenue: €93,300. Build: €104,190. Y1 ROI: 42%. Y2+: 143% annualised. Payback: 13.4 months.';
+  else if(l.includes('risk')||l.includes('gate'))r='(1) VFX latency >47s — kill-switch. (2) Push TTR <10% — fallback banner. (3) Cold-start ranker — rule defaults. (4) Lift <0.5pp — kill P3.';
+  else if(l.includes('handoff')||l.includes('pipeline'))r='4-agent pipeline: Researcher→Designer→Manager→Maker. Each received full prior output verbatim. Final: Strategy Canvas.';
+  else if(l.includes('hello')||l.includes('hi'))r='✦ NOVA.AI online. Ask about segments, Flashpoint, Re-engagement, budget, ROI, risks, handoff, or click any card.';
+  else if(l.includes('manager')||l.includes('phase'))r='MANAGER: 3 phases, 12wk. P1: events+Flashpoint. P2: push engine. P3: affinity ranker+Boutique. Budget: €104,190. Hard gates per phase.';
+  else if(l.includes('maker')||l.includes('canvas'))r='MAKER Strategy Canvas: €104,190 · 12wk · 6.5 FTE. Conversion <1%→1.6%. ARPU €0.03→€0.06. Revenue €93.3K/yr. "No backend rewrite. Just 8 events and a smarter shop."';
+  else r=`✦ Processing. Try: segments, Flashpoint, budget, ROI, risks, handoff, manager, maker, or click any card.`;
   b.innerHTML+=`<div class="chat-msg bot">${r}<span class="msg-time">${t}</span></div>`;b.scrollTop=b.scrollHeight;
 }
 
