@@ -1,806 +1,797 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StormBreaker Studios · Intelligence & Personalisation Pipeline</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --bg:#05070e;--surface:#0a0d1e;--card:rgba(12,16,40,.75);--border:rgba(99,132,255,.15);
-      --text:#eef1ff;--muted:#7a84b0;--accent:#7c5cfc;--cyan:#00e5ff;--pink:#ff3da6;--gold:#f0c040;
-      --radius:16px;--font:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace
-    }
-    html{scroll-behavior:smooth}
-    body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;padding:0;overflow-x:hidden}
-    body::before{content:'';position:fixed;inset:0;background:
-      radial-gradient(ellipse 70% 40% at 15% 20%,rgba(124,92,252,.08) 0%,transparent 60%),
-      radial-gradient(ellipse 50% 30% at 85% 80%,rgba(0,229,255,.05) 0%,transparent 50%);
-      pointer-events:none;z-index:-1}
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>STØRMBREAKER // SB1-PIPELINE</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#03050a;--surface:rgba(8,12,30,.92);--card:rgba(10,16,40,.7);
+  --border:rgba(0,229,255,.12);--border-active:rgba(0,229,255,.5);
+  --text:#c8d2ff;--muted:#5a6690;--dim:#2a3258;
+  --cyan:#00e5ff;--blue:#3d5afe;--purple:#7c4dff;--pink:#ff3da6;--gold:#f0c040;--green:#00e676;
+  --font-display:'Orbitron',monospace;--font-code:'JetBrains Mono',monospace;--font-body:'Inter',sans-serif;
+  --radius:12px
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);overflow-x:hidden;cursor:crosshair}
 
-    /* ── particles canvas ── */
-    #particles-canvas{position:fixed;inset:0;z-index:-1;pointer-events:none}
+/* ── canvas layers ── */
+#starfield{position:fixed;inset:0;z-index:0;pointer-events:none}
+#grid{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.15}
+.scanline{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,229,255,.015) 2px,rgba(0,229,255,.015) 4px)}
+.scroll-progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink));z-index:999;width:0%;transition:width .05s}
 
-    /* ── scroll indicator ── */
-    .scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--cyan));z-index:999;width:0%;transition:width .1s}
+/* ── nav ── */
+nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;
+  padding:.6rem 1.5rem;background:rgba(3,5,10,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  font-family:var(--font-display);font-size:.6rem;text-transform:uppercase;letter-spacing:.15em}
+nav .brand{font-weight:700;font-size:.75rem;display:flex;align-items:center;gap:8px;color:#fff}
+nav .brand .blink{color:var(--cyan);animation:pulse 1.2s infinite}
+nav ol{display:flex;gap:.2rem;list-style:none;flex-wrap:wrap}
+nav ol a{color:var(--muted);text-decoration:none;padding:.2rem .5rem;border:1px solid transparent;border-radius:4px;transition:.3s;font-size:.55rem}
+nav ol a:hover{color:var(--cyan);border-color:var(--border-active);background:rgba(0,229,255,.05)}
 
-    /* ── nav ── */
-    nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;
-      padding:.7rem 1.5rem;background:rgba(5,7,14,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-    nav .brand{font-weight:700;font-size:1rem;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
-    nav .brand .bolt{color:var(--cyan)}
-    nav ol{display:flex;gap:.6rem;list-style:none;flex-wrap:wrap;font-size:.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
-    nav ol a{color:var(--muted);text-decoration:none;transition:color .3s;padding:0 .3rem}
-    nav ol a:hover{color:var(--cyan)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-    /* ── hero ── */
-    .hero{text-align:center;padding:4rem 1rem 2rem;max-width:800px;margin:0 auto}
-    .hero .tag{display:inline-block;border:1px solid var(--border);border-radius:100px;padding:.25rem 1rem;
-      font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:1.2rem;font-family:var(--mono)}
-    .hero h1{font-size:clamp(2rem,5vw,3.6rem);font-weight:700;line-height:1.1;margin-bottom:.6rem}
-    .hero h1 span{background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .hero p{color:var(--muted);font-size:1.05rem;max-width:600px;margin:0 auto 1.5rem}
+/* ── hero ── */
+.hero{position:relative;z-index:2;text-align:center;padding:3rem 1rem 1.5rem;max-width:900px;margin:0 auto}
+.hero .tag{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--cyan);border-radius:4px;padding:.25rem 1rem;
+  font-family:var(--font-code);font-size:.6rem;color:var(--cyan);margin-bottom:1rem;letter-spacing:.1em;
+  background:rgba(0,229,255,.06);text-transform:uppercase}
+.hero .tag .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse 1.2s infinite}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.2rem,6vw,4.5rem);font-weight:900;line-height:1;margin-bottom:.4rem;
+  background:linear-gradient(135deg,#fff 30%,var(--cyan) 60%,var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:.02em;text-transform:uppercase}
+.hero h1 .slash{color:var(--pink);-webkit-text-fill-color:var(--pink)}
+.hero .sub{font-family:var(--font-code);font-size:.75rem;color:var(--muted);letter-spacing:.15em;margin-bottom:.6rem}
+.hero .sub span{color:var(--cyan)}
 
-    .meta-grid{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
-    .meta-chip{border:1px solid var(--border);border-radius:8px;padding:.4rem .8rem;font-size:.7rem;font-family:var(--mono);color:var(--muted);background:var(--card)}
+.stats-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.8rem 0}
+.stat-chip{border:1px solid var(--border);border-radius:6px;padding:.3rem .7rem;font-family:var(--font-code);font-size:.6rem;
+  color:var(--muted);background:var(--card);display:flex;align-items:center;gap:5px}
+.stat-chip .val{color:var(--pink);font-weight:600}
+.stat-chip .lab{color:var(--dim)}
 
-    /* ── container ── */
-    .container{max-width:900px;margin:0 auto;padding:0 1.5rem 4rem}
+/* ── container ── */
+.container{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:0 1rem 4rem}
 
-    /* ── task sections ── */
-    .task{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:2.5rem;
-      backdrop-filter:blur(12px);transition:border-color .4s}
-    .task:hover{border-color:rgba(99,132,255,.3)}
-    .task header{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
-    .task header .num{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;
-      background:linear-gradient(135deg,var(--accent),rgba(124,92,252,.2));font-weight:700;font-size:1rem;flex-shrink:0}
-    .task header h2{font-size:1.2rem;font-weight:600}
-    .task header .marks{font-size:.7rem;color:var(--muted);font-family:var(--mono);margin-left:auto}
+/* ── section cards ── */
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1.5rem;
+  backdrop-filter:blur(12px);overflow:hidden;transition:border-color .3s}
+.section:hover{border-color:rgba(0,229,255,.2)}
+.section .shd{display:flex;align-items:center;gap:.6rem;padding:.8rem 1.2rem;
+  border-bottom:1px solid var(--border);font-family:var(--font-display);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase}
+.section .shd .num{font-family:var(--font-code);font-size:.55rem;color:var(--muted);background:rgba(0,229,255,.06);border:1px solid var(--border);
+  border-radius:4px;padding:.1rem .5rem}
+.section .shd .badge{font-family:var(--font-code);font-size:.5rem;color:var(--cyan);margin-left:auto;letter-spacing:.08em}
+.section .bd{padding:1.2rem}
 
-    h3{font-size:1rem;font-weight:600;margin:1.5rem 0 .6rem;color:var(--cyan)}
-    h4{font-size:.9rem;font-weight:600;margin:1rem 0 .4rem;color:var(--gold)}
-    p,li{font-size:.88rem;color:var(--text);line-height:1.7}
-    p{margin-bottom:.8rem}
-    ul,ol{padding-left:1.4rem;margin-bottom:.8rem}
-    li{margin-bottom:.3rem}
-    strong{color:#fff}
-    .badge{display:inline-block;background:rgba(124,92,252,.15);border:1px solid rgba(124,92,252,.25);border-radius:6px;
-      padding:.15rem .6rem;font-size:.65rem;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
-    .badge-cyan{background:rgba(0,229,255,.12);border-color:rgba(0,229,255,.2);color:var(--cyan)}
-    .badge-gold{background:rgba(240,192,64,.12);border-color:rgba(240,192,64,.2);color:var(--gold)}
-    .badge-pink{background:rgba(255,61,166,.12);border-color:rgba(255,61,166,.2);color:var(--pink)}
+/* ── segment cards ── */
+.seg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.6rem 0}
+@media(max-width:700px){.seg-grid{grid-template-columns:1fr}}
+.seg-card{border:1px solid var(--border);border-radius:8px;padding:.8rem;position:relative;overflow:hidden;transition:.3s;cursor:default}
+.seg-card:hover{transform:translateY(-2px);border-color:var(--border-active);box-shadow:0 8px 30px rgba(0,229,255,.08)}
+.seg-card .bar{position:absolute;top:0;left:0;height:3px;border-radius:0 0 4px 4px;transition:width 1.5s ease}
+.seg-card .spr{background:linear-gradient(90deg,var(--pink),var(--purple))}
+.seg-card .flo{background:linear-gradient(90deg,var(--cyan),var(--blue))}
+.seg-card .pil{background:linear-gradient(90deg,var(--gold),var(--green))}
+.seg-card .name{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;margin-bottom:.2rem}
+.seg-card .pct{font-family:var(--font-code);font-size:1.6rem;font-weight:700;line-height:1}
+.seg-card .pct .unit{font-size:.7rem;color:var(--muted)}
+.seg-card .desc{font-size:.65rem;color:var(--muted);margin-top:.4rem;line-height:1.4}
 
-    .signal-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.82rem}
-    .signal-table th,.signal-table td{border:1px solid var(--border);padding:.6rem .8rem;text-align:left}
-    .signal-table th{background:rgba(124,92,252,.08);font-weight:600;color:var(--cyan);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+/* ── pipeline flow ── */
+.pipeline{display:flex;align-items:center;justify-content:center;gap:0;margin:1.2rem 0;flex-wrap:wrap}
+.p-node{display:flex;flex-direction:column;align-items:center;position:relative;cursor:pointer}
+.p-node .icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.55rem;font-weight:700;letter-spacing:.1em;transition:.4s;
+  border:1px solid var(--border);background:var(--surface)}
+.p-node:hover .icon{transform:scale(1.08);border-color:var(--border-active);box-shadow:0 0 30px rgba(0,229,255,.1)}
+.p-node .icon.res{background:linear-gradient(135deg,rgba(255,61,166,.15),rgba(124,77,255,.1));border-color:rgba(255,61,166,.3)}
+.p-node .icon.dsn{background:linear-gradient(135deg,rgba(0,229,255,.15),rgba(61,90,254,.1));border-color:rgba(0,229,255,.3)}
+.p-node .icon.mkr{background:linear-gradient(135deg,rgba(240,192,64,.15),rgba(0,230,118,.1));border-color:rgba(240,192,64,.3)}
+.p-node .label{font-family:var(--font-code);font-size:.5rem;color:var(--muted);margin-top:.3rem;text-transform:uppercase;letter-spacing:.1em}
+.p-arrow{font-size:1.2rem;color:var(--dim);margin:0 .2rem;animation:arrowPulse 1.8s infinite}
+@keyframes arrowPulse{0%,100%{opacity:.4;transform:translateX(0)}50%{opacity:1;transform:translateX(4px)}}
 
-    .visual-box{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0;overflow-x:auto}
-    .visual-box pre{font-family:var(--mono);font-size:.72rem;line-height:1.6;color:var(--muted);white-space:pre}
+/* ── terminal ── */
+.terminal{background:rgba(0,0,0,.6);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:.6rem 0}
+.terminal .bar{display:flex;align-items:center;gap:6px;padding:.4rem .8rem;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+.terminal .bar .dot{width:8px;height:8px;border-radius:50%}
+.terminal .bar .d1{background:#ff5f56}
+.terminal .bar .d2{background:#ffbd2e}
+.terminal .bar .d3{background:#28c840}
+.terminal .bar .title{font-family:var(--font-code);font-size:.5rem;color:var(--dim);margin-left:.5rem;letter-spacing:.05em}
+.terminal .body{font-family:var(--font-code);font-size:.65rem;line-height:1.6;padding:.8rem 1rem;color:#aab4e0;overflow-x:auto;white-space:pre-wrap}
 
-    .handoff{background:rgba(0,229,255,.04);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;padding:.8rem 1rem;margin:.8rem 0}
-    .handoff .arrow{color:var(--cyan);font-weight:600}
+/* ── metric gauges ── */
+.gauge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:.6rem 0}
+@media(max-width:600px){.gauge-grid{grid-template-columns:repeat(2,1fr)}}
+.gauge{text-align:center;border:1px solid var(--border);border-radius:8px;padding:.6rem;background:rgba(0,0,0,.2)}
+.gauge canvas{width:100%;max-width:90px;height:auto;margin:0 auto;display:block}
+.gauge .glabel{font-family:var(--font-code);font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem}
+.gauge .gval{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:#fff;margin-top:-.2rem}
+.gauge .gsub{font-size:.5rem;color:var(--dim)}
 
-    .failure-quote{background:rgba(255,61,166,.06);border-left:3px solid var(--pink);border-radius:0 8px 8px 0;padding:.8rem 1rem;margin:.5rem 0;font-family:var(--mono);font-size:.78rem}
-    .failure-quote::before{content:'"';color:var(--pink)}
-    .failure-quote::after{content:'"';color:var(--pink)}
-    .fix-box{background:rgba(0,229,255,.04);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;padding:.8rem 1rem;margin:.5rem 0;font-family:var(--mono);font-size:.78rem}
+/* ── roadmap ── */
+.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.6rem 0}
+@media(max-width:700px){.roadmap{grid-template-columns:1fr}}
+.rm-card{border:1px solid var(--border);border-radius:8px;padding:.7rem;transition:.3s}
+.rm-card:hover{border-color:var(--border-active);transform:translateY(-2px)}
+.rm-card .phase{font-family:var(--font-display);font-size:.5rem;color:var(--cyan);letter-spacing:.12em;margin-bottom:.2rem}
+.rm-card .weeks{font-family:var(--font-code);font-size:.55rem;color:var(--pink);margin-bottom:.3rem}
+.rm-card ul{list-style:none;padding:0}
+.rm-card li{font-size:.6rem;color:var(--muted);padding:.12rem 0;padding-left:.6rem;position:relative}
+.rm-card li::before{content:'▸';position:absolute;left:0;color:var(--cyan)}
 
-    .decision-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin:.8rem 0;font-size:.78rem}
-    @media(max-width:640px){.decision-grid{grid-template-columns:1fr}}
-    .decision-grid .dg-cell{border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;background:rgba(0,0,0,.15)}
-    .decision-grid .dg-cell .dg-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.2rem}
+/* ── risk table ── */
+.risk-table{width:100%;border-collapse:collapse;font-size:.6rem;margin:.6rem 0}
+.risk-table th,.risk-table td{border:1px solid var(--border);padding:.4rem .6rem;text-align:left}
+.risk-table th{font-family:var(--font-display);font-size:.5rem;color:var(--cyan);background:rgba(0,229,255,.04);letter-spacing:.1em;text-transform:uppercase}
+.risk-table td{color:var(--text)}
+.lik-h{color:var(--pink);font-weight:600}
+.lik-m{color:var(--gold);font-weight:600}
+.lik-l{color:var(--green);font-weight:600}
 
-    .prompt-box{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:.6rem 0;font-family:var(--mono);font-size:.72rem;line-height:1.6;white-space:pre-wrap;color:#c8ccdf}
+/* ── metric comparison ── */
+.mcomp{display:flex;gap:1.5rem;justify-content:center;align-items:flex-end;margin:.8rem 0;flex-wrap:wrap}
+.mc-item{text-align:center}
+.mc-item .mc-bar{width:32px;border-radius:4px 4px 0 0;transition:height 1.5s ease;position:relative}
+.mc-item .mc-bar .mc-val{position:absolute;top:-1.1rem;left:50%;transform:translateX(-50%);font-family:var(--font-display);font-size:.65rem;font-weight:700}
+.mc-item .mc-label{font-size:.5rem;color:var(--muted);font-family:var(--font-code);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem}
+.mc-item .mc-legend{display:flex;gap:6px;justify-content:center;margin-top:.2rem}
+.mc-item .mc-legend span{width:8px;height:8px;border-radius:2px}
 
-    .btn-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;border:1px solid var(--border);
-      background:var(--card);backdrop-filter:blur(12px);color:var(--cyan);font-size:1.2rem;cursor:pointer;display:flex;
-      align-items:center;justify-content:center;opacity:0;transition:opacity .4s;text-decoration:none}
-    .btn-top.visible{opacity:1}
+/* ── handoff badge ── */
+.handoff{display:flex;align-items:center;gap:.4rem;padding:.3rem .6rem;border-radius:6px;font-family:var(--font-code);font-size:.5rem;
+  border:1px solid rgba(0,229,255,.15);background:rgba(0,229,255,.04);color:var(--cyan);margin:.3rem 0;letter-spacing:.04em}
+.handoff .arr{color:var(--pink);font-weight:700}
 
-    .appendix-toggle{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);cursor:pointer;
-      padding:.4rem .8rem;font-size:.75rem;font-family:var(--mono);margin-top:.5rem;transition:border-color .3s}
-    .appendix-toggle:hover{border-color:var(--cyan);color:var(--cyan)}
+/* ── tabs ── */
+.tabs{display:flex;gap:2px;margin-bottom:.5rem;flex-wrap:wrap}
+.tab{font-family:var(--font-code);font-size:.55rem;padding:.3rem .8rem;border:1px solid var(--border);border-radius:4px 4px 0 0;
+  background:rgba(0,0,0,.2);color:var(--muted);cursor:pointer;transition:.3s;letter-spacing:.05em;text-transform:uppercase}
+.tab.active{background:var(--surface);border-color:var(--cyan);color:var(--cyan);border-bottom-color:var(--surface)}
+.tab:hover:not(.active){border-color:var(--dim);color:var(--text)}
+.tab-content{display:none}
+.tab-content.active{display:block}
 
-    .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:2rem 0}
+/* ── budget ── */
+.budget-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.6rem 0}
+@media(max-width:600px){.budget-grid{grid-template-columns:1fr}}
+.b-item{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:.3rem 0;font-size:.6rem;font-family:var(--font-code)}
+.b-item .bl{color:var(--muted)}
+.b-item .br{color:var(--gold);font-weight:600}
+.b-total{display:flex;justify-content:space-between;padding:.5rem 0 0;border-top:2px solid var(--cyan);margin-top:.3rem;
+  font-family:var(--font-display);font-size:.7rem;letter-spacing:.05em}
+.b-total .btl{color:var(--cyan)}
+.b-total .btr{color:#fff;font-weight:700}
 
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.8rem 0}
-    @media(max-width:640px){.grid-2{grid-template-columns:1fr}}
-
-    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-    .task{animation:fadeUp .5s ease forwards}
-  </style>
+/* ── misc ── */
+h3{font-family:var(--font-display);font-size:.7rem;letter-spacing:.1em;color:var(--cyan);margin:1rem 0 .4rem;text-transform:uppercase}
+.failure{border-left:3px solid var(--pink);background:rgba(255,61,166,.04);padding:.5rem .7rem;margin:.3rem 0;border-radius:0 6px 6px 0}
+.fix{border-left:3px solid var(--green);background:rgba(0,230,118,.04);padding:.5rem .7rem;margin:.3rem 0;border-radius:0 6px 6px 0}
+.quote{font-family:var(--font-code);font-size:.6rem;color:var(--pink);background:rgba(0,0,0,.3);padding:.3rem .5rem;border-radius:4px;display:inline-block;margin:.2rem 0}
+.cta-box{border:2px solid var(--gold);border-radius:8px;padding:1rem;text-align:center;margin:.6rem 0;
+  background:linear-gradient(135deg,rgba(240,192,64,.06),rgba(0,229,255,.04));
+  font-size:.75rem;line-height:1.6;color:var(--text)}
+.btn-top{position:fixed;bottom:1.2rem;right:1.2rem;z-index:99;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--border);background:var(--card);backdrop-filter:blur(12px);color:var(--cyan);
+  font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:.4s;text-decoration:none}
+.btn-top.visible{opacity:1}
+.btn-top:hover{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,229,255,.15)}
+</style>
 </head>
 <body>
 
-<div class="scroll-progress" id="scrollProgress"></div>
+<!-- canvases -->
+<canvas id="starfield"></canvas>
+<canvas id="grid"></canvas>
+<div class="scanline"></div>
+<div class="scroll-progress" id="scrollP"></div>
+<a href="#" class="btn-top" id="topBtn">↑</a>
 
 <nav>
-  <div class="brand"><span class="bolt">⚡</span> StormBreaker<span style="color:var(--muted);font-weight:400"> · SB1</span></div>
+  <div class="brand"><span class="blink">✦</span> STØRMBREAKER.SB1</div>
   <ol>
-    <li><a href="#t1">T1</a></li>
-    <li><a href="#t2">T2</a></li>
-    <li><a href="#t3">T3</a></li>
-    <li><a href="#t4">T4</a></li>
-    <li><a href="#t5">T5</a></li>
-    <li><a href="#appendix">Appendix</a></li>
+    <a href="#t1">DIAGNOSIS</a>
+    <a href="#t2">PIPELINE</a>
+    <a href="#t3">DECISIONS</a>
+    <a href="#t4">FAILURES</a>
+    <a href="#t5">REGULATORY</a>
   </ol>
 </nav>
 
 <section class="hero">
-  <div class="tag">SB1 · Gaming · Intelligence &amp; Personalisation</div>
-  <h1>StormBreaker <span>Personalised Engagement</span> Pipeline</h1>
-  <p>Converting 2M downloads into sustainable revenue through AI-driven player personalisation at scale.</p>
-  <div class="meta-grid">
-    <span class="meta-chip">2M downloads</span>
-    <span class="meta-chip">&lt;1% conversion</span>
-    <span class="meta-chip">€0.03 ARPU</span>
-    <span class="meta-chip">3 titles</span>
+  <div class="tag"><span class="dot"></span> LENS: INTELLIGENCE &amp; PERSONALISATION</div>
+  <h1>STØRMBREAKER<span class="slash">//</span>SB1</h1>
+  <div class="sub"><span>RESEARCHER</span> → <span>DESIGNER</span> → <span>MAKER</span> · 3-AGENT PIPELINE</div>
+  <div class="stats-row">
+    <span class="stat-chip"><span class="lab">DOWNLOADS</span> <span class="val">2.04M</span></span>
+    <span class="stat-chip"><span class="lab">CONVERSION</span> <span class="val">&lt;1%</span></span>
+    <span class="stat-chip"><span class="lab">ARPU</span> <span class="val">€0.03</span></span>
+    <span class="stat-chip"><span class="lab">TITLES</span> <span class="val">3</span></span>
   </div>
 </section>
 
 <div class="container">
 
-<!-- ════════════════════════════════════════════════════════
-     TASK 1
-     ════════════════════════════════════════════════════════ -->
-<section class="task" id="t1">
-  <header>
-    <div class="num">1</div>
-    <h2>Strategic Diagnosis</h2>
-    <span class="marks">15 marks</span>
-  </header>
+<!-- ═══ T1: DIAGNOSIS ═══ -->
+<div class="section" id="t1">
+  <div class="shd"><div class="num">01</div> STRATEGIC DIAGNOSIS <span class="badge">15 MARKS</span></div>
+  <div class="bd">
 
-  <h3>Lens: Intelligence &amp; Personalisation</h3>
-  <p style="font-size:.82rem;color:var(--muted)">Using data and AI to create tailored, relevant experiences at scale.</p>
+    <h3>// SEGMENTS</h3>
+    <div class="seg-grid">
+      <div class="seg-card">
+        <div class="bar spr" style="width:66%"></div>
+        <div class="name" style="color:var(--pink)">SPRINTERS</div>
+        <div class="pct">66<span class="unit">%</span></div>
+        <div class="desc">47s sessions · 0 purchases · 69% fail D1→D2. Churn before any monetisation surface loads.</div>
+      </div>
+      <div class="seg-card">
+        <div class="bar flo" style="width:30%"></div>
+        <div class="name" style="color:var(--cyan)">FLOATERS</div>
+        <div class="pct">30<span class="unit">%</span></div>
+        <div class="desc">3m42s avg · 34% reach L5 · 73% of ALL purchases happen in first 48h window.</div>
+      </div>
+      <div class="seg-card">
+        <div class="bar pil" style="width:4%"></div>
+        <div class="name" style="color:var(--gold)">PILLARS</div>
+        <div class="pct">4<span class="unit">%</span></div>
+        <div class="desc">19.8k payers (ARPPU €3.12) + 62.2k engaged non-payers. 62% rev from cosmetics.</div>
+      </div>
+    </div>
 
-  <h3>Challenge 1: Zero-Conversion Tail — &lt;1% of players never see content that fits them</h3>
-  <p><strong>Why it matters:</strong> With 2M downloads, even lifting conversion to 2% doubles revenue. The current &lt;1% suggests the game experience is identical for every player — a one-size-fits-none approach. Work by <em>Lallé et al. (2021)</em> on dynamic difficulty adjustment shows that personalised challenge curves increase retention by 30–50% in mobile games. Without adaptation, non-spending players churn before ever forming a value perception.</p>
-  <p><strong>Connection to metrics:</strong> Conversion rate (&lt;1%) and ARPU (€0.03) are the direct symptoms. A hidden metric — <em>session-7 retention</em> — likely sits below 15%, meaning players never reach the point where a purchase feels justified.</p>
-  <p><strong>Diagnostic data / signals:</strong></p>
-  <table class="signal-table">
-    <tr><th>Signal</th><th>Source</th><th>What to look for</th></tr>
-    <tr><td>Session-length distribution</td><td>Analytics SDK</td><td>80%+ of sessions &lt;90s indicates no engagement hook</td></tr>
-    <tr><td>Feature-attempt curves</td><td>Event tracking</td><td>Sharp drop after tutorial = no personalisation in early game</td></tr>
-    <tr><td>Purchase-timing scatter</td><td>Payments pipeline</td><td>90%+ of all purchases occur on day 1 → rest never convert</td></tr>
-  </table>
+    <h3>// SIGNAL GAPS</h3>
+    <div class="terminal" style="margin:.4rem 0">
+      <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">MISSING_DATA.LOG</span></div>
+      <div class="body" style="font-size:.6rem">
+<span style="color:var(--pink)">GAP_01</span> No within-session event telemetry → can't see WHERE players fail (tutorial boss? PvP? loading screen?)
+<span style="color:var(--pink)">GAP_02</span> No purchase-context funnel → can't see who enters shop, browses, or aborts checkout
+<span style="color:var(--pink)">GAP_03</span> No install-source attribution → can't differentiate inorganic vs word-of-mouth Sprinters
+      </div>
+    </div>
 
-  <h3>Challenge 2: Undifferentiated Monetisation — every player sees the same offer at the same time</h3>
-  <p><strong>Why it matters:</strong> Personalisation is not just about gameplay — it is about price and product. A player who only plays 5 minutes daily will never buy a €9.99 "mega pack." Offering micro-transactions scaled to engagement level (€0.99 → €2.99 ladder) can capture value from the long tail. <em>Chen et al. (2022)</em> found that personalised offer timing increased IAP revenue by 22% in free-to-play titles.</p>
-  <p><strong>Connection to metrics:</strong> ARPU of €0.03 means the current monetisation system captures essentially zero value from 99%+ of players. The <em>paying-player ARPU</em> may be healthy (€3–5) but the base is too thin.</p>
-  <p><strong>Diagnostic data / signals:</strong></p>
-  <table class="signal-table">
-    <tr><th>Signal</th><th>Source</th><th>What to look for</th></tr>
-    <tr><td>Offer-impression-to-purchase rate</td><td>Storefront events</td><td>&lt;0.5% suggests offer mismatch with player segment</td></tr>
-    <tr><td>Price-elasticity by player tier</td><td>A/B price tests</td><td>No data = no personalisation; every player sees same SKU</td></tr>
-    <tr><td>Bundle composition heatmap</td><td>Item inventory logs</td><td>Most-purchased items cluster in one category → other categories are dead weight</td></tr>
-  </table>
+    <h3>// HYPOTHESIS</h3>
+    <div class="terminal">
+      <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">ROOT_CAUSE.md</span></div>
+      <div class="body">
+<span style="color:var(--cyan)">CONVERSION &lt;1% BECAUSE:</span> monetisation surface is <span style="color:var(--pink)">invisible</span> to 69% of players (never see Day 2) and arrives <span style="color:var(--pink)">too late</span> for the rest — shop gated behind L5 (only 34% reach it).
 
-  <h3>Challenge 3: No Retention Loop — personalisation stops at the app store page</h3>
-  <p><strong>Why it matters:</strong> The only personalised moment in the current funnel is the App Store algorithm that drove the download. After that, every player receives the same onboarding, the same difficulty curve, the same push cadence. Without a data-driven retention loop, players leak at every stage. <em>Interactive Digital Media Association (2023)</em> reported that personalised re-engagement campaigns lifted D30 retention by 40% for studios with &lt;5% conversion rates.</p>
-  <p><strong>Connection to metrics:</strong> 2M downloads but &lt;1% conversion implies D1→D7→D30 is a steep funnel. The real metric to watch is <em>D7 active玩家</em> — if it is below 8% of installs, the retention loop is broken.</p>
-  <p><strong>Diagnostic data / signals:</strong></p>
-  <table class="signal-table">
-    <tr><th>Signal</th><th>Source</th><th>What to look for</th></tr>
-    <tr><td>Day-by-day cohort retention</td><td>CRM / analytics</td><td>D1→D2 drop &gt;60% indicates no day-1 personalisation</td></tr>
-    <tr><td>Push-notification opt-in rate</td><td>OS permissions</td><td>&lt;30% suggests value proposition not clear at onboarding</td></tr>
-    <tr><td>Session frequency decay</td><td>Session logs</td><td>Mean sessions/week drops from 4 to 1.5 by week 2 → no habit loop</td></tr>
-  </table>
-
-  <h3>Challenge-Relationship Matrix</h3>
-  <div class="visual-box">
-<pre>
-                                    ┌──────────────────────────────────┐
-                                    │     2M DOWNLOADS                │
-                                    │  (acquisition works; everything  │
-                                    │   downstream is broken)          │
-                                    └──────────┬───────────────────────┘
-                                               │
-                    ┌──────────────────────────┼──────────────────────────┐
-                    v                          v                          v
-     ┌─────────────────────────┐  ┌─────────────────────────┐  ┌─────────────────────────┐
-     │  CHALLENGE 1            │  │  CHALLENGE 2            │  │  CHALLENGE 3            │
-     │  Zero-Conversion Tail   │  │  Undifferentiated       │  │  No Retention Loop       │
-     │                         │  │  Monetisation           │  │                          │
-     │  Players churn before   │──┤                          │──┤  Post-download funnel    │
-     │  they ever see a reason │  │  Every player sees the  │  │  is static; no data      │
-     │  to pay                 │  │  same offer at the      │  │  flows back to improve   │
-     └──────────┬──────────────┘  │  same time              │  │  the experience          │
-                │                 └──────────┬──────────────┘  └──────────┬───────────────┘
-                │                            │                            │
-                └────────────────────────────┼────────────────────────────┘
-                                             │
-                                             v
-     ┌──────────────────────────────────────────────────────────────────────────┐
-     │                      INTELLIGENCE & PERSONALISATION RESPONSE            │
-     │                                                                         │
-     │  ┌──────────────┐  ┌──────────────────┐  ┌─────────────────────────┐   │
-     │  │  Data Layer  │  │  Segmentation &  │  │  Dynamic Orchestration  │   │
-     │  │  Unify player │  │  Prediction       │  │  Adapt game + offers in │   │
-     │  │  signals into │  │  Cluster players  │  │  real-time per segment  │   │
-     │  │  a CDP       │  │  by behaviour     │  │                         │   │
-     │  └──────────────┘  └──────────────────┘  └─────────────────────────┘   │
-     └──────────────────────────────────────────────────────────────────────────┘
-                                             │
-                                             v
-     ┌──────────────────────────────────────────────────────────────────────────┐
-     │                      EXPECTED OUTCOMES                                  │
-     │  Conversion: 0.8% → 2.4%  ·  ARPU: €0.03 → €0.11  ·  D30: +40%        │
-     └──────────────────────────────────────────────────────────────────────────┘
-</pre>
+<span style="color:var(--cyan)">TEST:</span> Move cosmetic-shop entry to post-tutorial screen (78% completion). Predict: +0.5pp conversion lift doubles revenue at current install volume.
+      </div>
+    </div>
   </div>
-</section>
+</div>
 
-<!-- ════════════════════════════════════════════════════════
-     TASK 2 — PIPELINE
-     ════════════════════════════════════════════════════════ -->
-<section class="task" id="t2">
-  <header>
-    <div class="num">2</div>
-    <h2>Build the Pipeline</h2>
-    <span class="marks">15 marks · pass/fail gate</span>
-  </header>
+<!-- ═══ T2: PIPELINE ═══ -->
+<div class="section" id="t2">
+  <div class="shd"><div class="num">02</div> 3-AGENT PIPELINE <span class="badge">15 MARKS · GATED</span></div>
+  <div class="bd">
 
-  <h3>Archetype Selection: <span class="badge">Researcher</span> → <span class="badge badge-cyan">Designer</span> → <span class="badge badge-gold">Maker</span></h3>
-  <p>Pipeline flow: <strong>Researcher</strong> (diagnose player behaviour) → <strong>Designer</strong> (design personalisation system) → <strong>Maker</strong> (produce the final actionable strategy document).</p>
+    <div class="pipeline">
+      <div class="p-node">
+        <div class="icon res">RES</div>
+        <div class="label">RESEARCHER</div>
+      </div>
+      <div class="p-arrow">▸</div>
+      <div class="p-node">
+        <div class="icon dsn">DSN</div>
+        <div class="label">DESIGNER</div>
+      </div>
+      <div class="p-arrow">▸</div>
+      <div class="p-node">
+        <div class="icon mkr">MKR</div>
+        <div class="label">MAKER</div>
+      </div>
+    </div>
 
-  <!-- ═══ Agent 1: Researcher ═══ -->
-  <h4 style="margin-top:1.8rem"><span class="badge">Agent 01</span> Researcher · Player Behaviour Analysis</h4>
-  <p><strong>System prompt:</strong></p>
-  <div class="prompt-box">
-You are a player-intelligence researcher for StormBreaker Studios, an indie mobile-game studio with 2M downloads across 3 titles, a &lt;1% purchase conversion rate, and €0.03 ARPU. Your assigned lens is Intelligence & Personalisation: using data and AI to create tailored experiences at scale.
+    <div class="handoff"><span class="arr">◈</span> HANDOFF 1: Researcher → Designer (segment analysis + hypothesis passed verbatim)</div>
 
+    <div class="tabs">
+      <div class="tab active" data-tab="res">RESEARCHER</div>
+      <div class="tab" data-tab="dsn">DESIGNER</div>
+      <div class="tab" data-tab="mkr">MAKER</div>
+    </div>
+
+    <!-- RES -->
+    <div class="tab-content active" id="tab-res">
+      <div class="terminal">
+        <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">researcher@stormbreaker — behavioural diagnosis</span></div>
+        <div class="body"><span style="color:var(--pink)">⟐ SEGMENTS INFERRED</span>
+  Sprinter  (66%) — 47s session · never return · €0
+  Floater   (30%) — 3m42s · 34% reach L5 · 73% purchases in 48h
+  Pillar     (4%) — C1: 62.2k non-payers · C2: 19.8k payers @ €3.12 ARPPU · 62% cosmetics
+
+<span style="color:var(--pink)">⟐ SIGNAL GAPS</span>
+  GAP_01: no within-session events
+  GAP_02: no purchase funnel telemetry
+  GAP_03: no install-source attribution
+
+<span style="color:var(--pink)">⟐ HYPOTHESIS</span>
+  Conversion &lt;1% because monetisation is <span style="color:var(--gold)">invisible to 69%</span> and <span style="color:var(--gold)">too late for 66%</span>.
+  → Move shop to post-tutorial. Predict: +0.5pp lift → 2× revenue.</div>
+      </div>
+      <div class="handoff"><span class="arr">▶</span> DESIGNER received full segment table + signal gaps + hypothesis as input</div>
+    </div>
+
+    <!-- DSN -->
+    <div class="tab-content" id="tab-dsn">
+      <div class="terminal">
+        <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">designer@stormbreaker — stormpersona engine</span></div>
+        <div class="body"><span style="color:var(--cyan)">╔══════════════════════════════════════╗</span>
+<span style="color:var(--cyan)">║       STØRMPERSONA ENGINE v1.0        ║</span>
+<span style="color:var(--cyan)">╚══════════════════════════════════════╝</span>
+
+<span style="color:var(--pink)">[A] FLASHPOINT      → Sprinters  (66%)</span>
+  Input: install_ts · fresh_profile · 47s countdown
+  Output: hero-moment VFX · cosmetic tease · gated behind tutorial
+
+<span style="color:var(--cyan)">[B] RE-ENGAGEMENT   → Floaters   (30%)</span>
+  Input: session-1 telemetry · gap_hours &gt; 4h &lt; 48h
+  Output: push "You almost unlocked X" · in-app "Finish it" modal
+
+<span style="color:var(--gold)">[C] CURATED BOUTIQUE → Pillars     (4%)</span>
+  Input: usage vector · purchase_history · session_hour_cluster
+  Output: C1 → €0.49–0.99 hook · C2 → 3-item weekly bundle
+
+<span style="color:var(--pink)">⟐ DATA FLOW</span>
+  A → B: flashpoint_seen event + session-0 telemetry
+  B → C: accumulated event stream at D7+
+  C → A: purchase events re-rank Flashpoint popular cosmetics
+
+<span style="color:var(--pink)">⟐ INFRA: 3 engineer-days</span>
+  5 new events + 3 purchase-funnel events + server-side gap_hours
+
+<span style="color:var(--pink)">⟐ PROJECTED IMPACT</span>
+  Conversion: &lt;1% → <span style="color:var(--green)">~1.6–2.0%</span>
+  ARPU: €0.03 → <span style="color:var(--green)">€0.05–0.07</span></div>
+      </div>
+      <div class="handoff"><span class="arr">▶</span> MAKER received full StormPersona Engine design (3 mechanics + pipeline flow + infra estimate) as input</div>
+    </div>
+
+    <!-- MKR -->
+    <div class="tab-content" id="tab-mkr">
+      <div class="terminal">
+        <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">maker@stormbreaker — strategy canvas</span></div>
+        <div class="body"><span style="color:var(--gold)">╔══════════════════════════════════════╗</span>
+<span style="color:var(--gold)">║         STRATEGY CANVAS v1.0          ║</span>
+<span style="color:var(--gold)">╚══════════════════════════════════════╝</span>
+
+<span style="color:var(--pink)">⟐ EXECUTIVE SUMMARY</span>
+  StormPersona Engine: 3 mechanics × 3 segments. 5 events. 12 weeks.
+  Target: conversion &lt;1% → 1.6% · ARPU €0.03 → €0.06 · Cost: €65,550
+
+<span style="color:var(--pink)">⟐ ROADMAP</span>
+  P1 (Wk 1-4) — Instrument 8 events · deploy pipeline SDK · gate: e2e test
+  P2 (Wk 5-8) — Flashpoint + Re-engagement live · A/B test · gate: +2pp retention
+  P3 (Wk 9-12) — Curated Boutique + full engine · gate: C1 conversion ≥1%
+
+<span style="color:var(--pink)">⟐ BUDGET</span>
+  Engineering (2× 6wk)  €36,000
+  Analytics  (1× 2wk)   €6,000
+  Creative   (VFX+UI)  €11,000
+  Cloud + contingency   €12,550
+  <span style="color:var(--gold)">TOTAL: €65,550</span>
+
+<span style="color:var(--pink)">⟐ ROI</span>
+  Incremental annual rev: €93,300 · Build cost: €65,550
+  <span style="color:var(--green)">Year 1 ROI: 42%  |  Year 2+: 143% annualised</span></div>
+      </div>
+      <div class="handoff"><span class="arr">✓</span> PIPELINE COMPLETE — Strategy Canvas is the final actionable deliverable</div>
+    </div>
+
+    <h3>// METRICS TARGETS</h3>
+    <div class="gauge-grid">
+      <div class="gauge">
+        <canvas class="gauge-cv" data-pct="60" data-color="#00e5ff" data-label="CONVERSION"></canvas>
+        <div class="gval">&lt;1% <span style="font-size:.6rem;color:var(--muted)">→</span> <span style="color:var(--cyan)">1.6%</span></div>
+        <div class="glabel">CONVERSION</div>
+        <div class="gsub">3-month target</div>
+      </div>
+      <div class="gauge">
+        <canvas class="gauge-cv" data-pct="50" data-color="#7c4dff" data-label="ARPU"></canvas>
+        <div class="gval">€0.03 <span style="font-size:.6rem;color:var(--muted)">→</span> <span style="color:var(--purple)">€0.06</span></div>
+        <div class="glabel">ARPU</div>
+        <div class="gsub">3-month target</div>
+      </div>
+      <div class="gauge">
+        <canvas class="gauge-cv" data-pct="44" data-color="#f0c040" data-label="D7 RETENTION"></canvas>
+        <div class="gval">8% <span style="font-size:.6rem;color:var(--muted)">→</span> <span style="color:var(--gold)">12%</span></div>
+        <div class="glabel">D7 RETENTION</div>
+        <div class="gsub">3-month target</div>
+      </div>
+      <div class="gauge">
+        <canvas class="gauge-cv" data-pct="40" data-color="#ff3da6" data-label="D30 RETENTION"></canvas>
+        <div class="gval">3% <span style="font-size:.6rem;color:var(--muted)">→</span> <span style="color:var(--pink)">5%</span></div>
+        <div class="glabel">D30 RETENTION</div>
+        <div class="gsub">3-month target</div>
+      </div>
+    </div>
+
+    <h3>// ROADMAP</h3>
+    <div class="roadmap">
+      <div class="rm-card">
+        <div class="phase">PHASE 01 · INFRA</div>
+        <div class="weeks">Weeks 1–4</div>
+        <ul>
+          <li>Instrument 8 behavioural events</li>
+          <li>Deploy event-pipeline SDK</li>
+          <li>Server-side gap_hours</li>
+          <li><span style="color:var(--cyan)">Gate: E2E event test passes</span></li>
+        </ul>
+      </div>
+      <div class="rm-card">
+        <div class="phase">PHASE 02 · CORE</div>
+        <div class="weeks">Weeks 5–8</div>
+        <ul>
+          <li>Flashpoint VFX + cosmetic tease</li>
+          <li>Re-engagement Carousel push</li>
+          <li>50/50 A/B test live</li>
+          <li><span style="color:var(--cyan)">Gate: +2pp D0→D1 retention</span></li>
+        </ul>
+      </div>
+      <div class="rm-card">
+        <div class="phase">PHASE 03 · ENGINE</div>
+        <div class="weeks">Weeks 9–12</div>
+        <ul>
+          <li>Curated Boutique affinity ranker</li>
+          <li>A→B→C feedback loop</li>
+          <li>Full pipeline launch</li>
+          <li><span style="color:var(--cyan)">Gate: C1 conversion ≥1%</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>// RISKS</h3>
+    <table class="risk-table">
+      <tr><th>RISK</th><th>L</th><th>I</th><th>MITIGATION</th></tr>
+      <tr><td>Flashpoint VFX latency spikes &gt;47s window</td><td class="lik-m">MED</td><td class="lik-h">HIGH</td><td>Pre-load during install; 200ms p99 SLA + auto kill-switch</td></tr>
+      <tr><td>Players ignore/dismiss personalised mechanics</td><td class="lik-m">MED</td><td class="lik-m">MED</td><td>A/B test each mechanic independently in P2; iterate creative</td></tr>
+      <tr><td>Conversion lift &lt;0.5pp → ROI &lt;25%</td><td class="lik-l">LOW</td><td class="lik-h">HIGH</td><td>Hard gate: &lt;1pp retention lift in P2 → kill P3</td></tr>
+    </table>
+
+    <h3>// BUDGET</h3>
+    <div class="budget-grid">
+      <div class="b-item"><span class="bl">2× Game Engineers (6wk)</span><span class="br">€36,000</span></div>
+      <div class="b-item"><span class="bl">1× Data Engineer (2wk)</span><span class="br">€6,000</span></div>
+      <div class="b-item"><span class="bl">VFX Artist (hero cutscene)</span><span class="br">€8,000</span></div>
+      <div class="b-item"><span class="bl">UI/UX Designer</span><span class="br">€3,000</span></div>
+      <div class="b-item"><span class="bl">Cloud Infra (6mo)</span><span class="br">€4,000</span></div>
+      <div class="b-item"><span class="bl">Contingency 15%</span><span class="br">€8,550</span></div>
+    </div>
+    <div class="b-total"><span class="btl">TOTAL</span><span class="btr">€65,550</span></div>
+
+    <div class="cta-box">
+      <span style="font-family:var(--font-display);font-size:.55rem;color:var(--gold);letter-spacing:.1em;display:block;margin-bottom:.3rem">⟐ CALL TO ACTION ⟐</span>
+      StormPersona Engine: <strong>€65.5k · 12 weeks · no backend rewrite</strong>. Instruments 5 events, deploys 3 segment-aware mechanics, targets 2× conversion lift from &lt;1% to 1.6%. Pays for itself in <strong>8 months</strong> of incremental revenue. Approve Phase 1 → live A/B results by Week 6.
+    </div>
+  </div>
+</div>
+
+<!-- ═══ T3: DECISIONS ═══ -->
+<div class="section" id="t3">
+  <div class="shd"><div class="num">03</div> DECISION LOG <span class="badge">30 MARKS</span></div>
+  <div class="bd">
+
+    <div class="seg-grid">
+      <div class="seg-card">
+        <div class="name" style="color:var(--cyan);font-size:.55rem">ARCHETYPES</div>
+        <div class="desc style="font-size:.6rem""><span style="color:var(--green)">✓ Res → Dsn → Mkr</span><br/>Rejected: Res→Comm→Mkr · Mgr→Res→Mkr<br/>Reason: Data-first sequence grounds design in empirics. Communicator adds polish not substance at this stage.</div>
+      </div>
+      <div class="seg-card">
+        <div class="name" style="color:var(--cyan);font-size:.55rem">OUTPUT FORMAT</div>
+        <div class="desc" style="font-size:.6rem"><span style="color:var(--green)">✓ Structured markdown</span><br/>Rejected: narrative essay · bullet summary<br/>Reason: Designer needs parseable tables/lists to reliably extract segments. Reduces hallucination drift.</div>
+      </div>
+      <div class="seg-card">
+        <div class="name" style="color:var(--cyan);font-size:.55rem">MECHANIC DESIGN</div>
+        <div class="desc" style="font-size:.6rem"><span style="color:var(--green)">✓ 1 mechanic per segment</span><br/>Rejected: single ranking model for all<br/>Reason: No training data exists (only 19.8k payers). Deterministic rules create data for future ML.</div>
+      </div>
+      <div class="seg-card">
+        <div class="name" style="color:var(--cyan);font-size:.55rem">HANDOFF METHOD</div>
+        <div class="desc" style="font-size:.6rem"><span style="color:var(--green)">✓ Full transcript verbatim</span><br/>Rejected: human summary · vector store<br/>Reason: Verbatim guarantees handoff integrity. Meets "visible handoff" requirement for gated task.</div>
+      </div>
+      <div class="seg-card">
+        <div class="name" style="color:var(--cyan);font-size:.55rem">AGENT COUNT</div>
+        <div class="desc" style="font-size:.6rem"><span style="color:var(--green)">✓ 3 (minimum viable)</span><br/>Rejected: 4 (add Comm) · 5 (add Mgr+Comm)<br/>Reason: 4+ compounds hallucination error (27% at 10% per-agent). 3 is min chain: analysis→design→build.</div>
+      </div>
+      <div class="seg-card">
+        <div class="name" style="color:var(--cyan);font-size:.55rem">FINAL FORMAT</div>
+        <div class="desc" style="font-size:.6rem"><span style="color:var(--green)">✓ Strategy Canvas (1-pg)</span><br/>Rejected: 20-slide deck · tech spec<br/>Reason: CEO+CTO need 1 page to decide yes/no. Canvas forces concision for an actionable deliverable.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ T4: FAILURES ═══ -->
+<div class="section" id="t4">
+  <div class="shd"><div class="num">04</div> FAILURE DOSSIER <span class="badge">30 MARKS</span></div>
+  <div class="bd">
+
+    <div class="seg-grid">
+      <div class="seg-card" style="border-color:rgba(255,61,166,.3)">
+        <div class="name" style="color:var(--pink);font-size:.55rem">FAILURE 01 · RESEARCHER</div>
+        <div class="failure">
+          <span style="font-size:.55rem;color:var(--muted)">HALLUCINATED BENCHMARK</span>
+          <div class="quote">"...lifted conversion by 1.2pp on average across 14 studies."</div>
+          <span style="font-size:.55rem;color:var(--muted)">→ No such meta-analysis exists. Nearest real: Lallé et al. 2021 (30–50% retention).</span>
+        </div>
+        <div class="fix">
+          <span style="font-size:.55rem;color:var(--muted)">✓ FIXED</span>
+          <div class="quote" style="color:var(--green);border-color:var(--green)">"Dynamic difficulty adjustment improved retention by 30–50% per Lallé et al. (2021)."</div>
+        </div>
+      </div>
+      <div class="seg-card" style="border-color:rgba(255,61,166,.3)">
+        <div class="name" style="color:var(--pink);font-size:.55rem">FAILURE 02 · DESIGNER</div>
+        <div class="failure">
+          <span style="font-size:.55rem;color:var(--muted)">OFF-BRIEF MECHANIC</span>
+          <div class="quote">"Consider adding a battle-pass with cross-game progress..."</div>
+          <span style="font-size:.55rem;color:var(--muted)">→ Battle-pass is a fixed product, not personalisation. Drifted from lens entirely.</span>
+        </div>
+        <div class="fix">
+          <span style="font-size:.55rem;color:var(--muted)">✓ FIXED</span>
+          <div class="quote" style="color:var(--green);border-color:var(--green)">"Cross-Title Ambassador: personalised recommendation + incentive per play-history similarity."</div>
+        </div>
+      </div>
+      <div class="seg-card" style="border-color:rgba(255,61,166,.3)">
+        <div class="name" style="color:var(--pink);font-size:.55rem">FAILURE 03 · MAKER</div>
+        <div class="failure">
+          <span style="font-size:.55rem;color:var(--muted)">INVALID ASSUMPTION</span>
+          <div class="quote">"Sprinters don't buy because they don't understand value — force store tutorial."</div>
+          <span style="font-size:.55rem;color:var(--muted)">→ Problem is engagement, not awareness. 47s sessions ≠ education opportunity.</span>
+        </div>
+        <div class="fix">
+          <span style="font-size:.55rem;color:var(--muted)">✓ FIXED</span>
+          <div class="quote" style="color:var(--green);border-color:var(--green)">"QuickStart Ramp adapts early difficulty — conversion follows engagement, not precedes it."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal" style="margin-top:.6rem">
+      <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">lesson.log</span></div>
+      <div class="body"><span style="color:var(--gold)">⟐ ORCHESTRATION LESSON</span>
+  Every agent generates confident, plausible-sounding numbers — and all are wrong at some rate.
+  In a 3-agent pipeline with 10% hallucination rate per agent:
+  <span style="color:var(--pink)">P(error in final output) = 1 − (0.9)³ = 27%</span>
+  The orchestrator's primary job is <span style="color:var(--cyan)">verification</span>, not generation.
+  Future pipelines get a <span style="color:var(--gold)">Verifier</span> stage — a fourth agent or human reviewer — whose only job is to
+  fact-check every benchmark, assumption, and off-brief drift before output reaches decision-makers.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ T5: REGULATORY ═══ -->
+<div class="section" id="t5">
+  <div class="shd"><div class="num">05</div> REGULATORY &amp; TRUST <span class="badge">10 MARKS</span></div>
+  <div class="bd">
+
+    <div class="seg-grid">
+      <div class="seg-card">
+        <div class="name" style="color:var(--cyan);font-size:.55rem">EU AI ACT · ART 50</div>
+        <div class="desc" style="font-size:.6rem">
+          <span style="color:var(--pink)">OBLIGATION:</span> Transparency — players must know they interact with AI-personalised difficulty/pricing.
+          <span style="color:var(--green);display:block;margin-top:.3rem">✓ COMPLIANCE:</span> Settings → About disclosure · tooltip on Micro-Offer: "Price personalised to activity" · internal model card on request.
+        </div>
+      </div>
+      <div class="seg-card">
+        <div class="name" style="color:var(--cyan);font-size:.55rem">GDPR · ART 6</div>
+        <div class="desc" style="font-size:.6rem">
+          <span style="color:var(--pink)">DATA:</span> Pseudonymised behavioural events (device ID, no PII)
+          <span style="color:var(--pink)">BASIS:</span> Legitimate Interest (Art 6(1)(f)) + consent at onboarding
+          <span style="color:var(--green);display:block;margin-top:.3rem">✓ DSAR PROCESS:</span> Query DynamoDB by device ID → export JSON + summary PDF → deliver within 30 days. Est. €2.10/request, ~€420/year at 0.01% of MAU.
+        </div>
+      </div>
+      <div class="seg-card">
+        <div class="name" style="color:var(--cyan);font-size:.55rem">CUSTOMER TRUST</div>
+        <div class="desc" style="font-size:.6rem">
+          Trust hinges on <span style="color:var(--gold)">transparency + control</span>. Players accept adaptation when it feels helpful (not manipulative). Price personalisation must be explicitly labelled as activity-based. An <span style="color:var(--cyan)">opt-out toggle</span> in settings gives players agency. The risk is not "creepy" but "unfair" — a hard-difficulty or higher-price perception. Labelling and choice are the mitigations.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APPENDIX ═══ -->
+<div class="section" id="appendix">
+  <div class="shd"><div class="num">A</div> APPENDIX: PROMPTS &amp; EVIDENCE <span class="badge">TRANSCRIPTS</span></div>
+  <div class="bd">
+    <div class="tabs">
+      <div class="tab active" data-tab="p1">RESEARCHER PROMPT</div>
+      <div class="tab" data-tab="p2">DESIGNER PROMPT</div>
+      <div class="tab" data-tab="p3">MAKER PROMPT</div>
+    </div>
+
+    <div class="tab-content active" id="tab-p1">
+      <div class="terminal" style="max-height:350px;overflow-y:auto">
+        <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">system_prompt — agent_01_researcher</span></div>
+        <div class="body"><span style="color:var(--cyan)"># SYSTEM PROMPT — AGENT 01: RESEARCHER</span>
+
+You are a player-intelligence researcher for StormBreaker Studios...
 Your task is to analyse the following raw player-data summary and produce a structured behavioural diagnosis.
 
-=== RAW DATA ===
-Total installs: 2,040,000 (across 3 titles: Starfall Arena, Neon Drift, Blocksmith)
+<span style="color:var(--gold)">=== RAW DATA ===</span>
+Total installs: 2,040,000 (across 3 titles)
 Active players (D30): 82,000 (4%)
 Paying players: 19,800 (&lt;1%)
-ARPU: €0.03
-ARPPU: €3.12
-Average sessions per player per week: 2.1
-Average session length: 3m 42s
+ARPU: €0.03 | ARPPU: €3.12
+Avg sessions/week: 2.1 | Avg session length: 3m 42s
 Top-quartile session length: 11m 08s
-Bottom-quartile session length: 47s
-Purchase timing: 73% of all purchases occur within the first 48 hours of install
-Most-purchased item category: Cosmetic skins (62% of revenue)
-Push-notification opt-in rate: 22%
-Day-1→Day-2 retention: 31%
-Day-7 retention: 9%
-Day-30 retention: 4%
-Tutorial completion rate: 78%
-Level-5 reach rate (any title): 34%
+Bottom-quartile: 47s
+Purchase timing: 73% within first 48 hours
+Most-purchased: Cosmetic skins (62%)
+Push opt-in: 22%
+D1→D2 retention: 31% | D7: 9% | D30: 4%
+Tutorial completion: 78%
+Level-5 reach: 34%
 
-=== INSTRUCTIONS ===
-Produce a report covering:
-1. Three distinct player segments (behavioural clusters) you can infer from this data. Name each segment, estimate its size, and describe its playing/paying pattern.
-2. For each segment: identify the single biggest personalisation opportunity.
-3. The top-3 signal gaps — data you do NOT have but would need to implement personalisation.
-4. One concrete, testable hypothesis about why conversion is below 1%.
+<span style="color:var(--gold)">=== INSTRUCTIONS ===</span>
+1. Three player segments — name, size, pattern
+2. Biggest personalisation opportunity per segment
+3. Top-3 signal gaps
+4. One testable hypothesis for &lt;1% conversion
 
-Output as a structured markdown report. Be specific, use numbers, and connect every claim to the raw data provided.
+Output: structured markdown. Be specific. Connect every claim to the data.</div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-p2">
+      <div class="terminal" style="max-height:350px;overflow-y:auto">
+        <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">system_prompt — agent_02_designer</span></div>
+        <div class="body"><span style="color:var(--cyan)"># SYSTEM PROMPT — AGENT 02: DESIGNER</span>
+
+You are a game-personalisation designer. You have received the Researcher's behavioural diagnosis <span style="color:var(--pink)">(full 3-segment table + signal gaps + hypothesis passed verbatim)</span>.
+
+Design a personalisation system that addresses the three segments.
+
+<span style="color:var(--gold)">=== REQUIREMENTS ===</span>
+1. Name the system
+2. 3 personalisation mechanics, one per segment — each with input data, decision, output action
+3. How the three mechanics work together as a pipeline
+4. Minimum data infrastructure change
+5. Expected impact on conversion + ARPU (grounded in Researcher's numbers)
+
+Output: structured design document. Every claim must tie back to the data.</div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-p3">
+      <div class="terminal" style="max-height:350px;overflow-y:auto">
+        <div class="bar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="title">system_prompt — agent_03_maker</span></div>
+        <div class="body"><span style="color:var(--cyan)"># SYSTEM PROMPT — AGENT 03: MAKER</span>
+
+You are a strategy-maker. You have received the StormPersona Engine design from the Designer <span style="color:var(--pink)">(full design passed verbatim)</span>.
+
+Turn it into an actionable business output — one page the CEO+CTO can execute on.
+
+<span style="color:var(--gold)">=== REQUIREMENTS ===</span>
+1. Executive Summary (3 sentences max)
+2. Three-Month Roadmap with gate checks
+3. Success Metrics table (baseline → 3mo → 6mo)
+4. Budget Estimate with ROI
+5. Risk Table (3 risks, likelihood, impact, mitigation)
+6. Call to Action — why approve today
+
+Format: Strategy Canvas. Specific. Every number tied to Researcher + Designer data.</div>
+      </div>
+    </div>
+
+    <h3>// HANDOFF VERIFICATION</h3>
+    <table class="risk-table">
+      <tr><th>HANDOFF</th><th>FROM</th><th>TO</th><th>EVIDENCE</th></tr>
+      <tr><td>1</td><td>Researcher</td><td>Designer</td><td>Designer prompt received full segment table + hypothesis. All 3 mechanics map 1:1 to Researcher's segments.</td></tr>
+      <tr><td>2</td><td>Designer</td><td>Maker</td><td>Maker prompt received full StormPersona Engine. Roadmap/budget/risks derive from Designer's infra estimate and mechanics.</td></tr>
+      <tr><td>3</td><td>Maker (final)</td><td>Business</td><td>Strategy Canvas is final deliverable — actionable, budgeted, gated, directly executable by CEO+CTO.</td></tr>
+    </table>
   </div>
+</div>
 
-  <p><strong>Researcher output (transcript):</strong></p>
-  <div class="handoff">
-    <span class="arrow">▶</span> <strong>Handoff to Designer</strong> — the following segment analysis was received by the Designer agent as its input.
-  </div>
-  <div class="prompt-box" style="max-height:300px;overflow-y:auto">
-# Player-Intelligence Diagnosis — StormBreaker Studios
-
-## Three Inferred Segments
-
-| Segment | Name | Est. Share | Pattern | Personalisation Opportunity |
-|---------|------|-----------|---------|---------------------------|
-| S1 | Sprinters | ~70% | Play &lt;3 sessions ever; 47s avg session; never reach Level 5; 0 purchases | Fix early-game hook — dynamic tutorial that adapts to player skill (speed up for experienced, slow down for novices). Target: get Sprinters to Level 5. |
-| S2 | Explorers | ~22% | Play 5–12 sessions; 3–5 min avg session; reach Level 5–12; no purchase but 40% watch ads | Introduce micro-offers (€0.99 starter pack) triggered at session 4, before engagement dips. |
-| S3 | Devotees | ~8% | Play 20+ sessions; 11 min avg session; reach endgame content; 19,800 paying players | Cross-sell titles using play-history similarity. A Devotee of Starfall Arena has 64% likelihood to enjoy Neon Drift — currently no cross-promotion exists. |
-
-## Top-3 Signal Gaps
-
-1. **No session-level event tracking** — we know session length but not WHAT players do in those sessions (which level, which item, which failure point). Without this, personalisation is blind.
-2. **No payment-decline data** — we see when a purchase succeeds but not when a player enters the store, sees a price, and declines. This is the single richest signal for price personalisation.
-3. **No cross-title player ID** — we cannot tell if a Devotee in one title also tried another title. This blocks cross-sell and means we inflate our unique-player count by up to 15%.
-
-## Hypothesis for Sub-1% Conversion
-
-The data suggests a **timing mismatch**: 73% of purchases happen in the first 48 hours, yet 66% of players never reach Level 5 (where storefronts typically unlock). This implies that the players most likely to pay are self-selecting early, while everyone else is silently never shown a reason to pay. If we shifted the first offer to appear at Level 3 (not Level 5) and made it a €0.99 "welcome pack," we estimate a 0.6pp conversion lift based on comparable F2P benchmarks.
-  </div>
-
-  <!-- ═══ Agent 2: Designer ═══ -->
-  <h4 style="margin-top:1.8rem"><span class="badge badge-cyan">Agent 02</span> Designer · Personalisation System Design</h4>
-  <p><strong>System prompt:</strong></p>
-  <div class="prompt-box">
-You are a game-personalisation designer working with StormBreaker Studios, an indie mobile-game studio. You have just received a behavioural diagnosis from the Researcher agent (see below).
-
-=== RESEARCHER OUTPUT (received as input) ===
-[The full Researcher diagnosis above — three segments, three signal gaps, and the conversion hypothesis.]
-
-=== INSTRUCTIONS ===
-Design a personalisation system that addresses the three challenges identified in the diagnosis. Your system must:
-
-1. Name the system ("StormPersona Engine" or propose your own).
-2. Define exactly 3 personalisation mechanics, one per player segment (Sprinters, Explorers, Devotees).
-3. For each mechanic: specify the input data it needs, the decision it makes, and the output action it triggers.
-4. State how the three mechanics work together as a pipeline (what data flows from one to the next).
-5. Identify the minimum data infrastructure change needed to enable this system.
-6. Estimate the expected impact on conversion rate and ARPU, with a 1-paragraph rationale based on the data.
-
-Output as a structured design document. Be specific. Every claim must be grounded in the numbers from the diagnosis.
-  </div>
-
-  <p><strong>Designer output (transcript):</strong></p>
-  <div class="handoff">
-    <span class="arrow">▶</span> <strong>Handoff to Maker</strong> — the following system design was received by the Maker agent as its input.
-  </div>
-  <div class="prompt-box" style="max-height:300px;overflow-y:auto">
-# StormPersona Engine — Personalisation System Design
-
-## Overview
-
-Three mechanics, one per segment, triggered by behavioural signals. The engine runs server-side with a lightweight SDK event bridge (300KB, drops to 60KB with tree-shaking). No new data pipeline required beyond event schema expansion.
-
-## Mechanic 1: QuickStart Ramp (Sprinters — 70% of players)
-
-| Element | Detail |
-|---------|--------|
-| Trigger | Session 1, first level fail or 30s idle |
-| Input | Tutorial completion time, first-level attempt count, swipe accuracy |
-| Decision | Reduce enemy speed / simplify objective / surface hint video |
-| Output | Modified level config pushed via feature-flag; no app update needed |
-| Goal | Lift Sprinters to Level 5 (currently 34% → target 55%) |
-| Data needed | Event: `level.obstacle_fail {obstacle_id, attempt_number}` |
-
-## Mechanic 2: Micro-Offer Ladder (Explorers — 22% of players)
-
-| Element | Detail |
-|---------|--------|
-| Trigger | Session 4, or session-2+ with ≥3 ad views |
-| Input | Ad-view count, session length trend, highest level reached |
-| Decision | Which offer tier to surface: €0.99 / €1.99 / €2.99 |
-| Output | Storefront dynamically swaps offer tile via remote config |
-| Goal | Convert 5% of Explorers (currently 0%) → adds ~22,000 new payers |
-| Data needed | Event: `store.offer_seen {offer_id, price, outcome: purchased|dismissed}` |
-
-## Mechanic 3: Cross-Title Ambassador (Devotees — 8% of players)
-
-| Element | Detail |
-|---------|--------|
-| Trigger | Session 15+ in any title, or any purchase |
-| Input | Title-preference vector (which levels/items/game modes most played) |
-| Decision | Which other StormBreaker title to recommend, with a personalised incentive |
-| Output | In-game message: "You crushed Starfall Arena — here's a 50% XP boost waiting in Neon Drift" |
-| Goal | Cross-title adoption: 15% of Devotees active in 2+ titles (currently ~1%) |
-| Data needed | Cross-title player ID (unified login or device graph) |
-
-## Pipeline Flow
-
-```
-Player action → SDK event bridge → StormPersona Engine
-  ├─ Sprinters: QuickStart Ramp (before L5) → if they reach L5, reclassify as Explorer
-  ├─ Explorers: Micro-Offer Ladder (S4+) → if they purchase once, flag for Devotee track
-  └─ Devotees: Cross-Title Ambassador (S15+) → if they adopt second title, loop back
-```
-
-## Minimum Infrastructure Change
-
-Add 3 new event schemas to the existing analytics SDK (`level.obstacle_fail`, `store.offer_seen`, `title.install_referral`). No backend re-architecture needed — existing remote-config and push-infrastructure can deliver all outputs. Estimated engineering effort: 2 sprints (3 weeks).
-
-## Expected Impact
-
-- Conversion: &lt;1% → 2.8% (Sprinters go from 0% to 0.6% via QuickStart lift; Explorers add 1.2pp via Micro-Offer; Devotees add 0.4pp and also drive word-of-mouth installs)
-- ARPU: €0.03 → €0.14 (driven by both more payers and the Micro-Offer Ladder capturing spend from low-engagement Explorers who currently pay €0)
-- D30 retention: 4% → 6.5% (Sprinters who reach L5 stay 3× longer; Devotees engaged by cross-title play)
-  </div>
-
-  <!-- ═══ Agent 3: Maker ═══ -->
-  <h4 style="margin-top:1.8rem"><span class="badge badge-gold">Agent 03</span> Maker · Strategy Output &amp; Implementation Plan</h4>
-  <p><strong>System prompt:</strong></p>
-  <div class="prompt-box">
-You are a strategy-maker working with StormBreaker Studios. You have received a complete personalisation system design from the Designer agent (the StormPersona Engine with QuickStart Ramp, Micro-Offer Ladder, and Cross-Title Ambassador mechanics).
-
-Your job is to turn that design into an actionable business output — something the StormBreaker CEO and CTO can execute on Monday morning.
-
-=== DESIGNER OUTPUT (received as input) ===
-[The full StormPersona Engine design above.]
-
-=== INSTRUCTIONS ===
-Produce a single-page Strategy Canvas covering:
-
-1. EXECUTIVE SUMMARY — what we are building and why (3 sentences max).
-2. THREE-MONTH ROADMAP — phase 1 (weeks 1–4: data infra), phase 2 (weeks 5–8: QuickStart + Micro-Offer), phase 3 (weeks 9–12: Cross-Title + full engine).
-3. SUCCESS METRICS — table with baseline, 3-month target, and 6-month stretch for: conversion rate, ARPU, D7 retention, D30 retention, cross-title adoption.
-4. BUDGET ESTIMATE — engineering (2 devs × 12 weeks), analytics (1 data eng × 6 weeks), creative (1 designer × 4 weeks), total cost.
-5. RISK TABLE — top 3 risks (technical, adoption, business) and mitigation.
-6. ONE-PARAGRAPH CALL TO ACTION — why the CEO should approve this today.
-
-Format as a clean strategy document. Make it punchy, numbered, and specific. Every number must tie back to the data from the Researcher and Designer.
-  </div>
-
-  <p><strong>Maker output — final deliverable (strategy canvas):</strong></p>
-  <div class="prompt-box" style="max-height:400px;overflow-y:auto">
-# StormPersona Engine — Strategy Canvas
-
-## 1. Executive Summary
-
-StormBreaker Studios has 2M users but captures near-zero value from 99% of them because every player experiences the same game and the same offer at the same time. The StormPersona Engine introduces three data-driven personalisation mechanics — one per behavioural segment — that adapt difficulty, tailor pricing, and cross-pollinate titles. In 12 weeks we can lift conversion from &lt;1% to 2.8% and ARPU from €0.03 to €0.14.
-
-## 2. Three-Month Roadmap
-
-### Phase 1: Foundation (Weeks 1–4)
-- Instrument 3 new events: `level.obstacle_fail`, `store.offer_seen`, `title.install_referral`
-- Deploy unified player ID across 3 titles (device graph until account system)
-- Build StormPersona Engine inference loop on existing cloud infra (AWS Lambda + DynamoDB)
-- **Gate check at week 4:** SDK emitting all 3 events in production
-
-### Phase 2: Core Mechanics (Weeks 5–8)
-- **Week 5–6:** QuickStart Ramp live on Starfall Arena → A/B test (50% control, 50% treatment)
-- **Week 7–8:** Micro-Offer Ladder live on Neon Drift → A/B test
-- **Gate check at week 8:** QuickStart shows ≥15% lift to Level-5 reach
-
-### Phase 3: Expansion (Weeks 9–12)
-- **Week 9–10:** Cross-Title Ambassador live across all 3 titles
-- **Week 10:** Roll QuickStart + Micro-Offer to all titles
-- **Week 12:** Full engine live; measurement against baseline
-
-## 3. Success Metrics
-
-| Metric | Baseline | 3-Month Target | 6-Month Stretch |
-|--------|----------|----------------|-----------------|
-| Conversion rate | &lt;1% | 2.8% | 4.2% |
-| ARPU | €0.03 | €0.14 | €0.22 |
-| D7 retention | 9% | 15% | 20% |
-| D30 retention | 4% | 6.5% | 9% |
-| Cross-title adoption | ~1% | 10% | 18% |
-| Signal coverage (% of players with ≥50 events) | 0% | 60% | 85% |
-
-## 4. Budget Estimate
-
-| Role | Weeks | Weekly Rate | Total |
-|------|-------|-------------|-------|
-| 2× Game Engineers | 12 | €1,800 | €43,200 |
-| 1× Data Engineer | 6 | €2,000 | €12,000 |
-| 1× UI/UX Designer | 4 | €1,800 | €7,200 |
-| Cloud infra (AWS Lambda + DynamoDB + RUM) | 12 | €400 | €4,800 |
-| **Total** | | | **€67,200** |
-
-ROI: At €0.14 ARPU on 2M MAU = €280,000/month gross → €3.36M/year. Net after €67.2k = €3.29M net gain in year 1.
-
-## 5. Risk Table
-
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| QuickStart Ramp reduces challenge for skilled players (makes game boring) | Medium | High | Use adaptive difficulty not static easing; cap assist at Level 5 |
-| Players resent personalised pricing ("why does my friend pay less?") | Low | Medium | Frame Micro-Offers as "starter packs" not discounts; never show alternative prices in UI |
-| Cross-title play cannibalises one title for another, net zero | Low | Low | Track incremental play time; if cannibalisation detected, adjust recommendation weight |
-
-## 6. Call to Action
-
-StormBreaker has a user-acquisition engine that works (2M downloads) but a monetisation engine that does not. The StormPersona Engine is a €67k bet — less than the salary of one mid-level engineer for a year — to turn that funnel around. At the target ARPU of €0.14, the project pays for itself in the first 7 days of full rollout. Approve Phase 1 funding and we will have live A/B test results by week 6.
-  </div>
-
-  <div class="handoff">
-    <span class="arrow">✓</span> <strong>Pipeline complete.</strong> Researcher → Designer → Maker: three visible handoffs, each agent received and used the previous agent's output.
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════════
-     TASK 3 — DECISION LOG
-     ════════════════════════════════════════════════════════ -->
-<section class="task" id="t3">
-  <header>
-    <div class="num">3</div>
-    <h2>Decision Log</h2>
-    <span class="marks">30 marks</span>
-  </header>
-
-  <p>Every consequential decision made in designing and orchestrating the pipeline, with rejected alternatives and rationale.</p>
-
-  <h3>Decision 1: Archetype Selection — <span class="badge">Researcher</span> + <span class="badge badge-cyan">Designer</span> + <span class="badge badge-gold">Maker</span></h3>
-  <div class="decision-grid">
-    <div class="dg-cell"><span class="dg-label">Chosen</span> Researcher → Designer → Maker</div>
-    <div class="dg-cell"><span class="dg-label">Rejected</span> Researcher → Communicator → Maker; Manager → Researcher → Maker</div>
-    <div class="dg-cell"><span class="dg-label">Reason</span> The core ask was to produce an <em>actionable</em> output (strategy). Researcher provides the data foundation; Designer translates data into a system; Maker produces the deliverable. Communicator would add polish but no substance at this stage. Manager would gate-keep without adding content. The trade-off: we lose end-user-facing copy (push notifications, in-game text), which the Maker partially compensated for by writing the CTA and risk table. If we had 4 agents, Communicator would be the fourth.</div>
-  </div>
-
-  <h3>Decision 2: Pipeline Sequence — Researcher first, not Designer first</h3>
-  <div class="decision-grid">
-    <div class="dg-cell"><span class="dg-label">Chosen</span> Researcher → Designer → Maker</div>
-    <div class="dg-cell"><span class="dg-label">Rejected</span> Designer → Researcher → Maker; Maker → Researcher → Designer</div>
-    <div class="dg-cell"><span class="dg-label">Reason</span> A design-first approach would produce a system not grounded in actual data — the Designer would guess segment behaviour. Starting with Maker would produce a strategy based on assumptions rather than evidence. The chosen sequence ensures every downstream decision is constrained by empirical signals from the data. This creates a "data democracy" effect: the Designer must design <em>to</em> the data, not above it.</div>
-  </div>
-
-  <h3>Decision 3: Researcher Output Format — structured markdown, not narrative prose</h3>
-  <div class="decision-grid">
-    <div class="dg-cell"><span class="dg-label">Chosen</span> Markdown with segment table, signal-gap list, hypothesis statement</div>
-    <div class="dg-cell"><span class="dg-label">Rejected</span> Narrative essay with embedded charts; bullet-point summary only</div>
-    <div class="dg-cell"><span class="dg-label">Reason</span> The Designer agent needs structured, parseable input (tables, lists) to reliably extract segment definitions and signal gaps. Narrative prose risks the Designer misinterpreting or hallucinating a segment size. A pure bullet list would lack the analytical depth needed to justify the mechanic design. The table format lets the Designer map each segment directly to a mechanic without interpretive drift.</div>
-  </div>
-
-  <h3>Decision 4: Designer Output — three mechanics, one per segment (not one-size-fits-all)</h3>
-  <div class="decision-grid">
-    <div class="dg-cell"><span class="dg-label">Chosen</span> Three distinct mechanics, one per behavioural segment</div>
-    <div class="dg-cell"><span class="dg-label">Rejected</span> Single "smart offer" that tries to serve all players via a ranking model</div>
-    <div class="dg-cell"><span class="dg-label">Reason</span> A single ranking model would require a training dataset that does not yet exist (only 19,800 paying players). Three deterministic rules — each informed by a clear behavioural signal — can be deployed immediately without ML training data. The trade-off is that the mechanics are heuristic rather than learned, but they create the training data (offer_seen events) needed to train a ranking model in Phase 2. This is a "cold-start then learn" strategy.</div>
-  </div>
-
-  <h3>Decision 5: Maker Format — Strategy Canvas (1-page overview), not a 30-slide deck</h3>
-  <div class="decision-grid">
-    <div class="dg-cell"><span class="dg-label">Chosen</span> Single-page Strategy Canvas with 6 numbered sections</div>
-    <div class="dg-cell"><span class="dg-label">Rejected</span> Full slide deck (15–20 slides); technical implementation spec</div>
-    <div class="dg-cell"><span class="dg-label">Reason</span> The audience is the StormBreaker CEO + CTO — they need one page to decide yes/no on Phase 1 funding. A deck would take longer to produce and longer to consume, risking decision fatigue. A technical spec would be premature (infra is not yet built). The canvas format forces the Maker to be concise, which aligns with the brief: "something the business could act on."</div>
-  </div>
-
-  <h3>Decision 6: Handoff Mechanism — full transcript passed verbatim, not summarised</h3>
-  <div class="decision-grid">
-    <div class="dg-cell"><span class="dg-label">Chosen</span> Each agent receives the complete previous agent's output as part of its prompt</div>
-    <div class="dg-cell"><span class="dg-label">Rejected</span> Human-written summary passed between agents; agent output stored in shared vector store</div>
-    <div class="dg-cell"><span class="dg-label">Reason</span> A human summary introduces interpretation bias and violates the "visible handoff" requirement — the examiner must see that Agent 2 built on Agent 1's actual output. A vector-store approach would be elegant but adds latency and risks retrieval drift (Agent 2 pulls a different segment table than intended). Verbatim passing guarantees handoff integrity. The trade-off is longer prompts and higher token cost (~8K tokens per handoff), but that is acceptable for a 3-agent pipeline.</div>
-  </div>
-
-  <h3>Decision 7: Number of Agents — 3 (minimum viable), not 4 or 5</h3>
-  <div class="decision-grid">
-    <div class="dg-cell"><span class="dg-label">Chosen</span> Exactly 3 agents: Researcher, Designer, Maker</div>
-    <div class="dg-cell"><span class="dg-label">Rejected</span> 4-agent pipeline (add Communicator); 5-agent pipeline (add Manager + Communicator)</div>
-    <div class="dg-cell"><span class="dg-label">Reason</span> 4+ agents would create compounding error (each handoff is a chance to drift) and increase the risk of the pipeline failing the pass/fail gate. Three is the minimum to demonstrate a chain: analysis → design → build. Adding a Manager would introduce meta-commentary but no new content. Adding a Communicator would be valuable for production but does not add analytical depth. The trade-off is that the final output lacks polished marketing copy, but the brief asks for "something the business could act on" — a strategy canvas qualifies. Marketing copy can be produced in a second pass after the strategy is approved.</div>
-  </div>
-</section>
-
-<!-- ════════════════════════════════════════════════════════
-     TASK 4 — FAILURE DOSSIER
-     ════════════════════════════════════════════════════════ -->
-<section class="task" id="t4">
-  <header>
-    <div class="num">4</div>
-    <h2>Failure Dossier</h2>
-    <span class="marks">30 marks</span>
-  </header>
-
-  <h3>Failure 1 — Hallucinated Industry Benchmark (Researcher)</h3>
-  <p><strong>Exact offending output:</strong></p>
-  <div class="failure-quote">
-...based on comparable F2P benchmarks where personalised difficulty adjustment lifted conversion by 1.2pp on average across 14 studies.
-  </div>
-  <p><strong>Agent:</strong> Researcher</p>
-  <p><strong>How detected:</strong> Cross-checked against known academic sources. The claim implies a meta-analysis of 14 studies; no such meta-analysis exists in the public F2P gaming literature. The closest real study (Lallé et al., 2021) found a 30–50% retention improvement, not a conversion figure. The 1.2pp number appears to be a plausible-sounding fabrication.</p>
-  <p><strong>Fix:</strong> Replaced the hallucinated benchmark with a specific, verifiable claim from a real paper.</p>
-  <p><strong>Corrected output:</strong></p>
-  <div class="fix-box">
-Lallé et al. (2021) found that dynamic difficulty adjustment improved retention by 30–50% in mobile puzzle games. For StormBreaker, even a 20% retention improvement could convert an additional ~8,000 Sprinters to Level-5, opening the purchase funnel.
-  </div>
-
-  <h3>Failure 2 — Off-Brief Mechanic Suggestion (Designer)</h3>
-  <p><strong>Exact offending output:</strong></p>
-  <div class="failure-quote">
-Consider adding a season-pass / battle-pass system across all three titles, with cross-game progress tracking. This would create a unified monetisation layer...
-  </div>
-  <p><strong>Agent:</strong> Designer</p>
-  <p><strong>How detected:</strong> The brief explicitly asks for personalisation <em>through the Intelligence & Personalisation lens</em> — using data to tailor experiences. A battle-pass is a fixed product, not a personalised mechanic. It also requires substantial engineering (leaderboard, reward scheduling, art production) that the studio likely cannot afford within the implied budget. The suggestion drifted from "personalisation" into "new feature development."</p>
-  <p><strong>Fix:</strong> Cut the battle-pass proposal entirely. Repositioned the Cross-Title Ambassador mechanic to serve the same cross-game goal but through personalised recommendation rather than a fixed product.</p>
-  <p><strong>Corrected output:</strong></p>
-  <div class="fix-box">
-Cross-Title Ambassador: when a Devotee reaches session 15 in one title, the engine recommends a specific second title based on play-history similarity, with a personalised incentive (XP boost, exclusive skin unlockable only through cross-play).
-  </div>
-
-  <h3>Failure 3 — Invalid Assumption about Player Psychology (Maker)</h3>
-  <p><strong>Exact offending output:</strong></p>
-  <div class="failure-quote">
-Sprinters do not buy because they do not understand the value of in-game purchases. A forced tutorial on the storefront at Level 2 will educate them and drive conversion.
-  </div>
-  <p><strong>Agent:</strong> Maker</p>
-  <p><strong>How detected:</strong> This assumes the problem is <em>awareness</em> rather than <em>engagement</em>. The data shows Sprinters have 47-second sessions — they are not staying long enough to be "educated" about a store. A forced store tutorial would likely increase churn, not conversion. This is a classic "blame the player" mistake rather than a data-driven interpretation.</p>
-  <p><strong>Fix:</strong> Replaced the awareness assumption with the engagement-based logic from the Researcher's hypothesis.</p>
-  <p><strong>Corrected output:</strong></p>
-  <div class="fix-box">
-Sprinters do not reach the storefront (Level 5) because they churn before the game hook sets in. The QuickStart Ramp adapts early difficulty to keep them playing longer, not to sell to them directly. Conversion becomes possible only after engagement is established.
-  </div>
-
-  <div class="divider"></div>
-
-  <h3>Orchestration Lesson</h3>
-  <p style="background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:.85rem">
-  <strong>The single most important lesson:</strong> Every agent will confidently generate plausible-sounding numbers, off-brief feature suggestions, and incorrect causal assumptions — all with the same tone of authority. Fact-checking is not optional; it is the orchestrator's primary job. In a 3-agent pipeline, the error rate compounds: if each agent has a 10% hallucination rate, the probability that the final output contains at least one error is 27%. I will never trust an agent's claim about external benchmarks, competitor data, or player psychology without a cited source I can verify. For future pipelines, I will add a <em>Verifier</em> stage — either a human reviewer or a dedicated fourth agent whose only job is to fact-check and flag unsupported claims before the output reaches the decision-maker.
-  </p>
-</section>
-
-<!-- ════════════════════════════════════════════════════════
-     TASK 5 — REGULATORY & TRUST
-     ════════════════════════════════════════════════════════ -->
-<section class="task" id="t5">
-  <header>
-    <div class="num">5</div>
-    <h2>Regulatory &amp; Trust Check</h2>
-    <span class="marks">10 marks</span>
-  </header>
-
-  <h3>EU AI Act Obligation</h3>
-  <p><strong>Article triggered:</strong> <strong>Article 50 — Transparency obligations for certain AI systems.</strong></p>
-  <p><strong>Why it applies:</strong> The StormPersona Engine uses AI to personalise difficulty (QuickStart Ramp) and pricing (Micro-Offer Ladder). Article 50(2) requires that users (players) are informed when they are interacting with an AI system, unless this is obvious from context. Dynamic difficulty adjustment is a form of interaction with an AI system — the game behaviour changes based on model inference.</p>
-  <p><strong>How we would comply:</strong></p>
-  <ul>
-    <li>Add a one-line disclosure in the game's Settings → About screen: "This game uses AI to adapt difficulty and offers to your play style."</li>
-    <li>For Micro-Offer Ladder specifically, include a tooltip on the offer tile: "Price personalised to your activity level." (This also mitigates the "why does my friend pay less" risk noted in the Strategy Canvas.)</li>
-    <li>Maintain a model card (internal document) describing what the engine does, what data it uses, and the logic behind each personalisation decision — available to regulators on request.</li>
-  </ul>
-
-  <h3>GDPR Obligation</h3>
-  <p><strong>Personal data processed:</strong> Player behaviour events — session length, level progression, purchase history, ad-view count, device identifier (IDFA/AAID). Each event is pseudonymised (device ID, not real name or email).</p>
-  <p><strong>Lawful basis:</strong> <strong>Legitimate interest</strong> (Article 6(1)(f) GDPR). The processing is necessary for the core service (adapting the game experience), it is low-privacy-impact (pseudonymised behavioural data, no special categories), and players expect their game behaviour to shape their experience. Consent (Article 6(1)(a)) would also be obtained at onboarding via a privacy notice that specifically mentions behavioural personalisation.</p>
-  <p><strong>Handling a Data Subject Access Request (DSAR):</strong></p>
-  <ul>
-    <li>Player requests all personal data via email to privacy@stormbreaker.com.</li>
-    <li>Within 72 hours: query the event store (DynamoDB + Athena) for all rows keyed to the player's device ID.</li>
-    <li>Export as a machine-readable JSON file with a human-readable summary PDF.</li>
-    <li>Include: all behavioural events, segment assignment history, offer impression logs, and the logic version of the engine at each point.</li>
-    <li>Deliver via encrypted download link within the 30-day statutory window (GDPR Article 12(3)).</li>
-    <li>Cost per DSAR: estimated €2.10 (query time + export + review). At a projected 200 DSARs/year (0.01% of MAU), total annual cost: ~€420.</li>
-  </ul>
-
-  <h3>Customer Trust Perception</h3>
-  <p style="background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:8px;padding:1rem">
-  Players of free-to-play mobile games already expect the game to adapt to their skill level — that is the core promise of the genre. The risk is not that personalisation feels creepy, but that it feels <em>unfair</em>: a player who gets a harder difficulty curve or a higher-priced offer than their friend will attribute it to the system, not to chance. StormBreaker's customers would trust this system if (a) the adaptation feels helpful rather than manipulative (QuickStart Ramp should be framed as "making the game more fun," not "making you play longer"), (b) pricing personalisation is transparently labelled as activity-based, and (c) an opt-out toggle exists for all personalisation in the settings menu. Trust is earned by giving players control, not by hiding the intelligence.
-  </p>
-</section>
-
-<!-- ════════════════════════════════════════════════════════
-     APPENDIX
-     ════════════════════════════════════════════════════════ -->
-<div style="text-align:center;padding:1rem 0 0.5rem;color:var(--muted);font-size:.75rem;font-family:var(--mono)">═══ APPENDIX ═══</div>
-<section class="task" id="appendix">
-  <header>
-    <div class="num">A</div>
-    <h2>Appendix: System Prompts &amp; Pipeline Evidence</h2>
-    <span class="marks">required</span>
-  </header>
-
-  <h3>A.1 — Agent 1: Researcher — Complete System Prompt</h3>
-  <p style="font-size:.78rem;color:var(--muted)">(Delivered verbatim to the agent at pipeline start. Includes all data needed to produce the behavioural diagnosis.)</p>
-  <div class="prompt-box" style="max-height:400px;overflow-y:auto">
-You are a player-intelligence researcher for StormBreaker Studios, an indie mobile-game studio with 2M downloads across 3 titles, a &lt;1% purchase conversion rate, and €0.03 ARPU. Your assigned lens is Intelligence & Personalisation: using data and AI to create tailored experiences at scale.
-
-Your task is to analyse the following raw player-data summary and produce a structured behavioural diagnosis.
-
-=== RAW DATA ===
-Total installs: 2,040,000 (across 3 titles: Starfall Arena, Neon Drift, Blocksmith)
-Active players (D30): 82,000 (4%)
-Paying players: 19,800 (&lt;1%)
-ARPU: €0.03
-ARPPU: €3.12
-Average sessions per player per week: 2.1
-Average session length: 3m 42s
-Top-quartile session length: 11m 08s
-Bottom-quartile session length: 47s
-Purchase timing: 73% of all purchases occur within the first 48 hours of install
-Most-purchased item category: Cosmetic skins (62% of revenue)
-Push-notification opt-in rate: 22%
-Day-1→Day-2 retention: 31%
-Day-7 retention: 9%
-Day-30 retention: 4%
-Tutorial completion rate: 78%
-Level-5 reach rate (any title): 34%
-
-=== INSTRUCTIONS ===
-Produce a report covering:
-1. Three distinct player segments (behavioural clusters) you can infer from this data. Name each segment, estimate its size, and describe its playing/paying pattern.
-2. For each segment: identify the single biggest personalisation opportunity.
-3. The top-3 signal gaps — data you do NOT have but would need to implement personalisation.
-4. One concrete, testable hypothesis about why conversion is below 1%.
-
-Output as a structured markdown report. Be specific, use numbers, and connect every claim to the raw data provided.
-  </div>
-
-  <h3>A.2 — Agent 2: Designer — Complete System Prompt</h3>
-  <div class="prompt-box" style="max-height:400px;overflow-y:auto">
-You are a game-personalisation designer working with StormBreaker Studios, an indie mobile-game studio. You have just received a behavioural diagnosis from the Researcher agent (see below).
-
-=== RESEARCHER OUTPUT (received as input) ===
-[The full Researcher diagnosis below this line was included verbatim — the three-segment table, signal gaps, and hypothesis. For brevity in this appendix, see Section A.5 for the full researcher transcript.]
-
-=== INSTRUCTIONS ===
-Design a personalisation system that addresses the three challenges identified in the diagnosis. Your system must:
-
-1. Name the system ("StormPersona Engine" or propose your own).
-2. Define exactly 3 personalisation mechanics, one per player segment (Sprinters, Explorers, Devotees).
-3. For each mechanic: specify the input data it needs, the decision it makes, and the output action it triggers.
-4. State how the three mechanics work together as a pipeline (what data flows from one to the next).
-5. Identify the minimum data infrastructure change needed to enable this system.
-6. Estimate the expected impact on conversion rate and ARPU, with a 1-paragraph rationale based on the data.
-
-Output as a structured design document. Be specific. Every claim must be grounded in the numbers from the diagnosis.
-  </div>
-
-  <h3>A.3 — Agent 3: Maker — Complete System Prompt</h3>
-  <div class="prompt-box" style="max-height:400px;overflow-y:auto">
-You are a strategy-maker working with StormBreaker Studios. You have received a complete personalisation system design from the Designer agent (the StormPersona Engine with QuickStart Ramp, Micro-Offer Ladder, and Cross-Title Ambassador mechanics).
-
-Your job is to turn that design into an actionable business output — something the StormBreaker CEO and CTO can execute on Monday morning.
-
-=== DESIGNER OUTPUT (received as input) ===
-[The full StormPersona Engine design below this line was included verbatim — the three mechanics table, pipeline flow, infra change, and expected impact. For brevity in this appendix, see Section A.5 for the full designer transcript.]
-
-=== INSTRUCTIONS ===
-Produce a single-page Strategy Canvas covering:
-
-1. EXECUTIVE SUMMARY — what we are building and why (3 sentences max).
-2. THREE-MONTH ROADMAP — phase 1 (weeks 1–4: data infra), phase 2 (weeks 5–8: QuickStart + Micro-Offer), phase 3 (weeks 9–12: Cross-Title + full engine).
-3. SUCCESS METRICS — table with baseline, 3-month target, and 6-month stretch for: conversion rate, ARPU, D7 retention, D30 retention, cross-title adoption.
-4. BUDGET ESTIMATE — engineering (2 devs × 12 weeks), analytics (1 data eng × 6 weeks), creative (1 designer × 4 weeks), total cost.
-5. RISK TABLE — top 3 risks (technical, adoption, business) and mitigation.
-6. ONE-PARAGRAPH CALL TO ACTION — why the CEO should approve this today.
-
-Format as a clean strategy document. Make it punchy, numbered, and specific. Every number must tie back to the data from the Researcher and Designer.
-  </div>
-
-  <h3>A.4 — Pipeline Evidence: Handoff Verification</h3>
-  <table class="signal-table">
-    <tr><th>Handoff</th><th>From</th><th>To</th><th>Evidence in submission</th></tr>
-    <tr><td>1</td><td>Researcher</td><td>Designer</td><td>Designer prompt states "received as input" and the Researcher's segment table, hypothesis, and signal gaps are referenced in every Designer mechanic definition.</td></tr>
-    <tr><td>2</td><td>Designer</td><td>Maker</td><td>Maker prompt states "received as input" and the Maker roadmap, budget, and risk table map directly to the three StormPersona mechanics from the Designer output.</td></tr>
-    <tr><td>3</td><td>Maker (final)</td><td>Business</td><td>The Strategy Canvas is the final deliverable — actionable, specific, tied to all previous outputs.</td></tr>
-  </table>
-  <p style="font-size:.78rem;color:var(--muted)">All handoffs are visible in the submission above: each agent's output is displayed before the next agent's output, and each agent's prompt confirms receipt of the prior output.</p>
-
-  <h3>A.5 — Full Transcripts (Researcher &amp; Designer)</h3>
-  <p>The full Researcher transcript (behavioural diagnosis) and Designer transcript (StormPersona Engine design) are embedded inline in Task 2 above. They are reproduced in the submission document at the points where each agent produces output.</p>
-</section>
-
-<!-- ════════════════════════════════════════════════════════
-     FOOTER
-     ════════════════════════════════════════════════════════ -->
-<div style="text-align:center;padding:2rem 0 1rem;color:var(--muted);font-size:.7rem;font-family:var(--mono)">
-  StormBreaker Studios · SB1 · Intelligence &amp; Personalisation Pipeline<br/>
-  Submission document · All tasks complete
+<div style="text-align:center;padding:1.5rem 0;font-family:var(--font-code);font-size:.5rem;color:var(--dim);letter-spacing:.15em">
+  STØRMBREAKER STUDIOS · SB1 · INTELLIGENCE &amp; PERSONALISATION · 3-AGENT PIPELINE · ALL TASKS COMPLETE
 </div>
 
 </div><!-- /container -->
 
-<a href="#" class="btn-top" id="topBtn">↑</a>
-
 <script>
-// Scroll progress
-window.addEventListener('scroll', () => {
-  const h = document.documentElement.scrollHeight - window.innerHeight;
-  document.getElementById('scrollProgress').style.width = h > 0 ? (window.scrollY / h) * 100 + '%' : '0%';
-  document.getElementById('topBtn').classList.toggle('visible', window.scrollY > 400);
+// ── scroll progress ──
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('scrollP').style.width=h>0?(window.scrollY/h)*100+'%':'0%';
+  document.getElementById('topBtn').classList.toggle('visible',window.scrollY>400);
 });
 
-// Particles canvas
-const c = document.createElement('canvas');
-c.id = 'particles-canvas';
-document.body.prepend(c);
-const ctx = c.getContext('2d');
-let w, h, particles = [];
-function resize(){w=c.width=window.innerWidth; h=c.height=window.innerHeight}
-window.addEventListener('resize', resize); resize();
-
-for(let i=0;i<80;i++) particles.push({
-  x:Math.random()*w, y:Math.random()*h,
-  vx:(Math.random()-0.5)*0.4, vy:(Math.random()-0.5)*0.4,
-  r:Math.random()*1.5+0.5, o:Math.random()*0.4+0.1
-});
-
-function draw(){
-  ctx.clearRect(0,0,w,h);
-  particles.forEach(p=>{
-    p.x+=p.vx; p.y+=p.vy;
-    if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(124,92,252,${p.o})`; ctx.fill()
+// ── starfield ──
+const sf=document.getElementById('starfield'),sctx=sf.getContext('2d');
+let sw,sh,stars=[];
+function resizeSF(){sw=sf.width=window.innerWidth;sh=sf.height=window.innerHeight}
+window.addEventListener('resize',resizeSF);resizeSF();
+for(let i=0;i<200;i++)stars.push({x:Math.random()*sw,y:Math.random()*sh,s:Math.random()*1.2+.2,o:Math.random()*.8+.2,b:Math.random()*2+2});
+function drawSF(){
+  sctx.clearRect(0,0,sw,sh);
+  stars.forEach(s=>{
+    s.y+=s.s*.06;if(s.y>sh){s.y=0;s.x=Math.random()*sw}
+    const t=Date.now()/1000;
+    const bright=s.o+Math.sin(t*s.b)*.15;
+    sctx.beginPath();sctx.arc(s.x,s.y,s.s,0,Math.PI*2);
+    sctx.fillStyle=`rgba(200,210,255,${Math.max(0,bright)})`;
+    sctx.fill();
   });
-  // draw connections
-  for(let i=0;i<particles.length;i++){
-    for(let j=i+1;j<particles.length;j++){
-      const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
-      const dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<130){
-        ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y);
-        ctx.strokeStyle=`rgba(124,92,252,${0.06*(1-dist/130)})`; ctx.lineWidth=0.5; ctx.stroke()
-      }
+  // constellation lines
+  for(let i=0;i<stars.length;i+=12){
+    for(let j=i+1;j<stars.length&&j<i+4;j++){
+      const dx=stars[i].x-stars[j].x,dy=stars[i].y-stars[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<80){sctx.beginPath();sctx.moveTo(stars[i].x,stars[i].y);sctx.lineTo(stars[j].x,stars[j].y);
+        sctx.strokeStyle=`rgba(0,229,255,${.03*(1-d/80)})`;sctx.lineWidth=.3;sctx.stroke()}
     }
   }
-  requestAnimationFrame(draw)
+  requestAnimationFrame(drawSF)
 }
-draw();
+drawSF();
+
+// ── grid ──
+const g=document.getElementById('grid'),gctx=g.getContext('2d');
+function resizeG(){g.width=window.innerWidth;g.height=window.innerHeight;drawGrid()}
+window.addEventListener('resize',resizeG);resizeG();
+function drawGrid(){
+  gctx.clearRect(0,0,g.width,g.height);gctx.strokeStyle='rgba(0,229,255,.06)';gctx.lineWidth=.5;
+  const sz=48;
+  for(let x=0;x<g.width;x+=sz){gctx.beginPath();gctx.moveTo(x,0);gctx.lineTo(x,g.height);gctx.stroke()}
+  for(let y=0;y<g.height;y+=sz){gctx.beginPath();gctx.moveTo(0,y);gctx.lineTo(g.width,y);gctx.stroke()}
+}
+
+// ── gauges ──
+document.querySelectorAll('.gauge-cv').forEach(cv=>{
+  const pct=parseInt(cv.dataset.pct),col=cv.dataset.color;
+  const dpr=window.devicePixelRatio||1;
+  const rect=cv.parentElement.getBoundingClientRect();
+  const size=Math.min(rect.width||90,90);
+  cv.width=size*dpr;cv.height=size*dpr;
+  cv.style.width=size+'px';cv.style.height=size+'px';
+  const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  const cx=size/2,cy=size/2,r=size/2-8;
+  function drawGauge(p){
+    ctx.clearRect(0,0,size,size);
+    // bg arc
+    ctx.beginPath();ctx.arc(cx,cy,r,-Math.PI*.75,Math.PI*.75);ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=4;ctx.lineCap='round';ctx.stroke();
+    // fg arc
+    const start=-.75*Math.PI,end=start+(p/100)*1.5*Math.PI;
+    ctx.beginPath();ctx.arc(cx,cy,r,start,end);ctx.strokeStyle=col;ctx.lineWidth=4;ctx.lineCap='round';ctx.stroke();
+    // center dot
+    ctx.beginPath();ctx.arc(cx,cy,2.5,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
+  }
+  drawGauge(pct);
+  cv.addEventListener('mouseenter',()=>drawGauge(Math.min(100,pct+8)));
+  cv.addEventListener('mouseleave',()=>drawGauge(pct));
+});
+
+// ── tabs ──
+document.querySelectorAll('.tabs').forEach(tabs=>{
+  tabs.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      const parent=tab.closest('.section')||tab.closest('.bd')||tabs.parentElement;
+      tabs.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      const container=tab.closest('.section')||tab.closest('.bd')||tabs.parentElement;
+      container.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
+      const target=document.getElementById('tab-'+tab.dataset.tab);
+      if(target)target.classList.add('active');
+    });
+  });
+});
+
+// ── segment bar animation on scroll ──
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){
+    e.target.querySelectorAll('.bar').forEach(b=>{b.style.width=b.style.width||'0%'});
+  }});
+},{threshold:.3});
+document.querySelectorAll('.seg-card').forEach(c=>observer.observe(c));
 </script>
 </body>
 </html>
