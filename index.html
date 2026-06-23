@@ -164,6 +164,28 @@ nav ol a:hover{color:var(--cyan);border-color:rgba(6,182,212,.15);background:rgb
 .sec .bd.open{display:block;animation:ff .35s ease}
 @keyframes ff{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 
+/* ── flip cards ── */
+.flip-card{perspective:1000px;height:260px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;transition:transform .6s ease;transform-style:preserve-3d}
+.flip-card:hover .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-front,.flip-card-back{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;overflow:hidden;
+  display:flex;flex-direction:column}
+.flip-card-front{background:rgba(255,255,255,.02);backdrop-filter:blur(12px);border:1px solid var(--glass-border);
+  align-items:center;justify-content:flex-end;padding:0}
+.flip-card-front img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.35) saturate(.7);transition:transform .5s}
+.flip-card:hover .flip-card-front img{transform:scale(1.05)}
+.flip-card-front .fc-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(13,17,23,.95) 0%,transparent 50%);z-index:1}
+.flip-card-front .fc-label{position:relative;z-index:2;padding:.8rem;text-align:center;width:100%}
+.flip-card-front .fc-label .fc-name{font-family:var(--font-display);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:#fff}
+.flip-card-front .fc-label .fc-role{font-family:var(--font-code);font-size:.5rem;color:var(--muted);margin-top:.1rem}
+.flip-card-front .fc-hint{position:absolute;top:.5rem;right:.5rem;z-index:2;font-family:var(--font-code);font-size:.4rem;color:var(--dim);background:rgba(0,0,0,.4);padding:.15rem .4rem;border-radius:4px}
+.flip-card-back{background:rgba(13,17,23,.97);backdrop-filter:blur(20px) saturate(1.5);border:1px solid var(--glass-border);
+  transform:rotateY(180deg);padding:.8rem;justify-content:center}
+.flip-card-back .fcb-ttl{font-family:var(--font-display);font-size:.55rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem}
+.flip-card-back .fcb-item{font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.4;padding:.1rem 0}
+.flip-card-back .fcb-item strong{color:var(--text)}
+.flip-card-back .fcb-div{height:1px;background:var(--glass-border);margin:.25rem 0}
+
 /* ── glass cards ── */
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:700px){.g3{grid-template-columns:1fr}}
@@ -487,38 +509,74 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
     <div class="ho"><span class="ar">◈</span> HANDOFF 1: RESEARCHER → DESIGNER <span style="color:var(--dim)">(full research findings passed verbatim)</span></div>
 
     <div class="g3">
-      <div class="g-card" style="border-color:rgba(236,72,153,.15)" onclick="chatSend('RESEARCHER OUTPUT','3 PROBLEMS:\n① 69% never see Day 2 (47s median session)\n② Shop at L5 — only 34% reach it\n③ Zero personalisation for 2M players\n\n3 SIGNAL GAPS:\nevents · purchase_funnel · source\n\n4 AI OPPORTUNITIES:\nA: Dynamic first-session optimisation\nB: Predictive churn scoring\nC: Behavioural pricing engine\nD: Automated A/B bandit loop')">
-        <div class="gttl" style="color:var(--pink);font-size:.55rem">⟐ RESEARCHER</div>
-        <div class="term" style="margin:.2rem 0">
-          <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">res@stormbreaker</span></div>
-          <div class="tbdy" style="font-size:.5rem"><span class="hp">● 3 PROBLEMS</span>
-  69% churn D1 · Shop invisible · Zero personalisation
-  <span class="hp">● 3 SIGNAL GAPS</span>
-  events · purchase_funnel · source
-  <span class="hp">● 4 AI OPPORTUNITIES</span>
-  Dyn session · Churn scoring · Pricing · Bandit</div>
+      <div class="flip-card" onclick="chatSend('RESEARCHER OUTPUT','3 PROBLEMS:\n① 69% never see Day 2 (47s median session)\n② Shop at L5 — only 34% reach it\n③ Zero personalisation for 2M players\n\n3 SIGNAL GAPS:\nevents · purchase_funnel · source\n\n4 AI OPPORTUNITIES:\nA: Dynamic first-session optimisation\nB: Predictive churn scoring\nC: Behavioural pricing engine\nD: Automated A/B bandit loop')">
+        <div class="flip-card-inner">
+          <div class="flip-card-front" style="border-color:rgba(236,72,153,.3)">
+            <div class="fc-hint" style="color:var(--pink)">⟐ AGENT 1</div>
+            <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&h=500&fit=crop" alt="" loading="lazy">
+            <div class="fc-overlay"></div>
+            <div class="fc-label">
+              <div class="fc-name" style="color:var(--pink)">Researcher</div>
+              <div class="fc-role">Player-Intelligence Agent</div>
+              <div class="fc-role" style="color:var(--dim);font-size:.45rem;margin-top:.15rem">INPUT: 2.04M installs · 19.8k payers</div>
+            </div>
+          </div>
+          <div class="flip-card-back" style="border-color:rgba(236,72,153,.3)">
+            <div class="fcb-ttl" style="color:var(--pink)">◈ RESEARCH OUTPUT</div>
+            <div class="fcb-item"><strong style="color:var(--pink)">3 PROBLEMS</strong><br>69% D1 churn · Shop at L5 · Zero personalisation</div>
+            <div class="fcb-div"></div>
+            <div class="fcb-item"><strong style="color:var(--pink)">3 SIGNAL GAPS</strong><br>events · purchase_funnel · source</div>
+            <div class="fcb-div"></div>
+            <div class="fcb-item"><strong style="color:var(--pink)">4 AI OPPORTUNITIES</strong><br>Dyn session · Churn scoring · Pricing · Bandit</div>
+            <div class="fcb-item" style="margin-top:.2rem;font-size:.45rem;color:var(--dim)">→ Full research to Designer</div>
+          </div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(6,182,212,.15)" onclick="chatSend('DESIGNER OUTPUT — 3 MECHANICS','A: FLASHPOINT → Sprinters (hero VFX in 30s, €0.99)\nB: RE-ENGAGEMENT CAROUSEL → Floaters (push at 4h gap, €1.99)\nC: CURATED BOUTIQUE → Pillars (affinity ranker, €0.49-7.99)\n\nJOURNEY: Install→segment→mechanic→purchase→feedback loop\nKPI: <1%→1.6% conv · €0.03→€0.06 ARPU')">
-        <div class="gttl" style="color:var(--cyan);font-size:.55rem">⟐ DESIGNER</div>
-        <div class="term" style="margin:.2rem 0">
-          <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">dsn@stormbreaker</span></div>
-          <div class="tbdy" style="font-size:.5rem"><span class="hc">● STØRMPERSONA ENGINE</span>
-  A: Flashpoint → Sprinters · €0.99
-  B: Re-engagement → Floaters · €1.99
-  C: Curated Boutique → Pillars · €0.49-7.99
-  <span class="hc">● 3 segments · 3 mechanics</span></div>
+      <div class="flip-card" onclick="chatSend('DESIGNER OUTPUT — 3 MECHANICS','A: FLASHPOINT → Sprinters (hero VFX in 30s, €0.99)\nB: RE-ENGAGEMENT CAROUSEL → Floaters (push at 4h gap, €1.99)\nC: CURATED BOUTIQUE → Pillars (affinity ranker, €0.49-7.99)\n\nJOURNEY: Install→segment→mechanic→purchase→feedback loop\nKPI: <1%→1.6% conv · €0.03→€0.06 ARPU')">
+        <div class="flip-card-inner">
+          <div class="flip-card-front" style="border-color:rgba(6,182,212,.3)">
+            <div class="fc-hint" style="color:var(--cyan)">⟐ AGENT 2</div>
+            <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&h=500&fit=crop" alt="" loading="lazy">
+            <div class="fc-overlay"></div>
+            <div class="fc-label">
+              <div class="fc-name" style="color:var(--cyan)">Designer</div>
+              <div class="fc-role">Game-Personalisation Agent</div>
+              <div class="fc-role" style="color:var(--dim);font-size:.45rem;margin-top:.15rem">3 segments → 3 mechanics</div>
+            </div>
+          </div>
+          <div class="flip-card-back" style="border-color:rgba(6,182,212,.3)">
+            <div class="fcb-ttl" style="color:var(--cyan)">◈ STØRMPERSONA ENGINE</div>
+            <div class="fcb-item"><strong style="color:var(--cyan)">A: Flashpoint</strong> → Sprinters · €0.99</div>
+            <div class="fcb-div"></div>
+            <div class="fcb-item"><strong style="color:var(--cyan)">B: Re-engagement</strong> → Floaters · €1.99</div>
+            <div class="fcb-div"></div>
+            <div class="fcb-item"><strong style="color:var(--cyan)">C: Curated Boutique</strong> → Pillars · €0.49–7.99</div>
+            <div class="fcb-item" style="margin-top:.2rem;font-size:.45rem;color:var(--dim)">KPI: &lt;1%→1.6% conv · €0.03→€0.06 ARPU</div>
+          </div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(124,58,237,.15)" onclick="chatSend('MANAGER OUTPUT — STRATEGY PLAN','12wk, 3 phases, 6.5 FTE, €104,190 budget\nP1: 8 events + Flashpoint (W1-4)\nP2: Push engine (W5-8)\nP3: Affinity ranker + Boutique (W9-12)\nROI: 42% Y1 · 143% Y2+\nPayback: 13.4 months\n\nFinal deliverable of 3-agent pipeline.')">
-        <div class="gttl" style="color:#a78bfa;font-size:.55rem">⟐ MANAGER</div>
-        <div class="term" style="margin:.2rem 0">
-          <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">mgr@stormbreaker</span></div>
-          <div class="tbdy" style="font-size:.5rem"><span class="hg">● STRATEGY PLAN</span>
-  12wk · 3 phases · 6.5 FTE
-  Budget: <span class="hl">€104,190</span>
-  ROI: <span class="hg">42% Y1 · 143% Y2+</span>
-  <span class="hp">← FINAL DELIVERABLE</span></div>
+      <div class="flip-card" onclick="chatSend('MANAGER OUTPUT — STRATEGY PLAN','12wk, 3 phases, 6.5 FTE, €104,190 budget\nP1: 8 events + Flashpoint (W1-4)\nP2: Push engine (W5-8)\nP3: Affinity ranker + Boutique (W9-12)\nROI: 42% Y1 · 143% Y2+\nPayback: 13.4 months\n\nFinal deliverable of 3-agent pipeline.')">
+        <div class="flip-card-inner">
+          <div class="flip-card-front" style="border-color:rgba(124,58,237,.3)">
+            <div class="fc-hint" style="color:#a78bfa">⟐ AGENT 3</div>
+            <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=500&fit=crop" alt="" loading="lazy">
+            <div class="fc-overlay"></div>
+            <div class="fc-label">
+              <div class="fc-name" style="color:#a78bfa">Manager</div>
+              <div class="fc-role">Strategy &amp; Planning Agent</div>
+              <div class="fc-role" style="color:var(--dim);font-size:.45rem;margin-top:.15rem">12wk roadmap · €104,190 budget</div>
+            </div>
+          </div>
+          <div class="flip-card-back" style="border-color:rgba(124,58,237,.3)">
+            <div class="fcb-ttl" style="color:#a78bfa">◈ STRATEGY PLAN</div>
+            <div class="fcb-item"><strong style="color:#a78bfa">12wk</strong> · 3 phases · 6.5 FTE</div>
+            <div class="fcb-div"></div>
+            <div class="fcb-item"><strong>P1</strong> 8 events + Flashpoint (W1–4)</div>
+            <div class="fcb-item"><strong>P2</strong> Push engine (W5–8)</div>
+            <div class="fcb-item"><strong>P3</strong> Affinity ranker + Boutique (W9–12)</div>
+            <div class="fcb-div"></div>
+            <div class="fcb-item">ROI: <strong style="color:#a78bfa">42% Y1 · 143% Y2+</strong> · Payback 13.4mo</div>
+          </div>
         </div>
       </div>
     </div>
