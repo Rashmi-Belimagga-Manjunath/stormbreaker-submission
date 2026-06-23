@@ -769,52 +769,10 @@ h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.08em;color:#
 <!-- ═══ S6 ═══ -->
 <div class="sec" id="s6">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">A</div> APPENDIX <span class="badge">· PROMPTS · A/B TESTS · TESTIMONIALS</span>
+    <div class="num">✦</div> TESTIMONIALS <span class="badge">· PEER REVIEW</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
-
-    <h3>📋 AGENT PROMPTS</h3>
-    <div class="g3">
-      <div class="g-card" onclick="chatSend('AGENT 01 · RESEARCHER PROMPT','ROLE: Player-intelligence researcher\nINPUT: 2.04M installs, 19.8k payers, €0.03 ARPU, <1% conversion\nTASK: Identify 3 critical business problems, explain why players not spending, identify missing data, identify AI opportunities\nOUTPUT: Structured markdown with PROBLEM 1/2/3, MISSING DATA, AI OPPORTUNITIES')">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">AGENT 01 · RESEARCHER</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Role: Player-intelligence researcher<br/>Task: Problems + data gaps + AI opportunities<br/>Output: Structured markdown</div>
-      </div>
-      <div class="g-card" onclick="chatSend('AGENT 02 · DESIGNER PROMPT','ROLE: Game-personalisation designer\nINPUT: Full Researcher output (verbatim)\nTASK: Design 3 AI personalisation features, explain how each works, describe player journeys, define KPIs, estimate business impact\nOUTPUT: Structured design doc with SOLUTION 1/2/3, PLAYER JOURNEY, KPIs')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">AGENT 02 · DESIGNER</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Role: Game-personalisation designer<br/>Task: 3 features + journeys + KPIs + impact<br/>Output: Structured design doc</div>
-      </div>
-      <div class="g-card" onclick="chatSend('AGENT 03 · MANAGER PROMPT','ROLE: Strategy manager (CEO audience)\nINPUT: Full Designer output (verbatim)\nTASK: Implementation roadmap, team requirements, costs, risks, success metrics\nOUTPUT: Strategy plan with PHASE 1/2/3, RISKS, KPIs, EXPECTED OUTCOMES')">
-        <div class="gttl" style="color:#a78bfa;font-size:.5rem">AGENT 03 · MANAGER</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">Role: Strategy manager<br/>Task: Roadmap + team + costs + risks<br/>Output: Strategy plan</div>
-      </div>
-      <div class="g-card" onclick="chatSend('HANDOFF VERIFICATION','3 handoffs verified:\n✓ HANDOFF 1: Researcher→Designer (research findings)\n✓ HANDOFF 2: Designer→Manager (3 mechanics design)\n✓ HANDOFF 3: Manager→Business (strategy plan + canvas)\n\nEach agent received full prior output verbatim. No information loss. Manager strategy plan is the final deliverable.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">HANDOFF VERIFICATION</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5"><span style="color:#34d399">✓</span> 3 visible handoffs<br/><span style="color:#34d399">✓</span> Verbatim pass-through<br/><span style="color:#34d399">✓</span> Manager = final deliverable</div>
-      </div>
-      <div class="g-card" onclick="chatSend('ERROR COMPOUND MATH','Per-agent hallucination rate: ~10%\nP(error in 3-agent chain) = 1 − (0.9)³ = 27%\nResolution: Dedicated Verifier agent (4th stage)\nP(error with Verifier) = 1 − (0.9 × 0.9 × 0.9 × 0.95) ≈ 31%\nVerifier catches ~50% of errors → effective rate ~15%')">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">ERROR COMPOUND MATH</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">3-agent error rate: <span style="color:var(--pink)">27%</span><br/>With Verifier (4th): <span style="color:#34d399">~15% effective</span></div>
-      </div>
-    </div>
-
-    <h3>🧪 A/B TEST DESIGNS</h3>
-    <div class="g3">
-      <div class="g-card" onclick="chatSend('FLASHPOINT A/B TEST','Weeks 3–6 · 15K installs\n\nControl: Current tutorial + shop at Level 5\nVariant A: Flashpoint VFX at 30s + Level-5 gate\nVariant B: Flashpoint VFX + cosmetic preview in menu\n\nPrimary: D0→D1 retention\nSecondary: Level-5 reach rate, median session length\nDuration: 2 weeks post-launch')">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">FLASHPOINT A/B</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">3 arms · 15K installs<br/>Primary: <span style="color:var(--pink)">D0→D1 retention</span></div>
-      </div>
-      <div class="g-card" onclick="chatSend('RE-ENGAGEMENT A/B TEST','Weeks 7–10 · 9K installs\n\nControl: No push (current state)\nVariant A: Category-personalised push at 4h gap\nVariant B: Generic "Come back" push at 4h gap\n\nPrimary: Push tap-through rate\nSecondary: Post-push session length, D7 retention\nDuration: 3 weeks')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">RE-ENGAGEMENT A/B</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">3 arms · 9K installs<br/>Primary: <span style="color:var(--cyan)">Push TTR</span></div>
-      </div>
-      <div class="g-card" onclick="chatSend('CURATED BOUTIQUE A/B TEST','Weeks 10–12 · 2K Pillar cohort\n\nControl: Static shop (current)\nVariant: Affinity-ranked 6-item boutique\n\nPrimary: C1 purchase conversion rate\nSecondary: ARPPU, C1→C2 upsell rate\nDuration: 2 weeks')">
-        <div class="gttl" style="color:#a78bfa;font-size:.5rem">BOUTIQUE A/B</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">2 arms · 2K Pillars<br/>Primary: <span style="color:#a78bfa">C1 conversion rate</span></div>
-      </div>
-    </div>
-
-    <h3>⭐ TESTIMONIALS</h3>
     <div class="test-grid">
       <div class="test-card">
         <div class="t-avatar">MK</div>
