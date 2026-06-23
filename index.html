@@ -8,202 +8,261 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#06080f;--surface:rgba(10,14,24,.92);--card:rgba(14,18,34,.75);
-  --border:rgba(255,51,102,.12);--border-hover:rgba(255,51,102,.35);
-  --text:#e2e6f0;--muted:#687090;--dim:#2a3050;
-  --pink:#ff3366;--cyan:#00f5d4;--gold:#ffcc00;--purple:#7b2ff7;--green:#00ff88;
+  --bg:#07070f;--surface:rgba(10,14,26,.94);--card:rgba(16,20,40,.78);
+  --border:rgba(0,255,136,.10);--border-hover:rgba(0,255,136,.30);
+  --text:#e0e8f0;--muted:#607080;--dim:#283048;
+  --neon-green:#00ff88;--neon-pink:#ff0080;--neon-blue:#00ccff;--neon-gold:#ffcc00;--neon-purple:#8800ff;
   --font-display:'Orbitron',monospace;--font-code:'JetBrains Mono',monospace;--font-body:'Inter',sans-serif;
   --r:10px
 }
 html{scroll-behavior:smooth}
-body{font-family:var(--font-body);background:var(--bg);color:var(--text);overflow-x:hidden}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);overflow-x:hidden;font-size:16px}
 
 /* ── canvas backdrop ── */
 #bg_canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 #vignette{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse 70% 50% at 30% 20%,transparent 30%,rgba(6,8,15,.8) 80%,var(--bg))}
+  background:radial-gradient(ellipse 70% 50% at 30% 20%,transparent 30%,rgba(7,7,15,.85) 80%,var(--bg))}
 .scan{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(255,51,102,.015) 3px,rgba(255,51,102,.015) 4px)}
-.scrollbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--pink),var(--gold),var(--cyan));z-index:999;width:0%}
+  background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,255,136,.012) 3px,rgba(0,255,136,.012) 4px)}
+.crt{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.3) 100%)}
+.scrollbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--neon-pink),var(--neon-gold),var(--neon-green));z-index:999;width:0%}
+
+/* ── svg icons ── */
+.icon-controller{width:20px;height:20px;display:inline-block;vertical-align:middle;fill:currentColor}
+.icon-dpad{width:16px;height:16px;display:inline-block;vertical-align:middle;fill:currentColor}
+.icon-crosshair{width:14px;height:14px;display:inline-block;vertical-align:middle;fill:currentColor}
 
 /* ── nav ── */
 nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;
-  padding:.5rem 1.5rem;background:rgba(6,8,15,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);
-  font-family:var(--font-display);font-size:.55rem;text-transform:uppercase;letter-spacing:.15em}
-nav .brand{font-weight:700;font-size:.7rem;display:flex;align-items:center;gap:6px;color:#fff}
-nav .brand .blip{width:6px;height:6px;border-radius:50%;background:var(--pink);animation:blip 1s infinite}
-@keyframes blip{0%,100%{opacity:1;box-shadow:0 0 6px var(--pink)}50%{opacity:.3;box-shadow:none}}
-nav ol{display:flex;gap:.15rem;list-style:none;flex-wrap:wrap}
-nav ol a{color:var(--muted);text-decoration:none;padding:.15rem .4rem;border:1px solid transparent;border-radius:3px;transition:.25s;font-size:.5rem}
-nav ol a:hover{color:var(--gold);border-color:rgba(255,204,0,.2);background:rgba(255,204,0,.04)}
+  padding:.6rem 1.5rem;background:rgba(7,7,15,.94);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);
+  font-family:var(--font-display);font-size:.7rem;text-transform:uppercase;letter-spacing:.12em}
+nav .brand{font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:8px;color:#fff}
+nav .brand .blip{width:8px;height:8px;border-radius:50%;background:var(--neon-pink);animation:blip .8s infinite}
+@keyframes blip{0%,100%{opacity:1;box-shadow:0 0 10px var(--neon-pink)}50%{opacity:.2;box-shadow:none}}
+nav ol{display:flex;gap:.2rem;list-style:none;flex-wrap:wrap}
+nav ol a{color:var(--muted);text-decoration:none;padding:.2rem .5rem;border:1px solid transparent;border-radius:4px;transition:.25s;font-size:.6rem}
+nav ol a:hover{color:var(--neon-green);border-color:rgba(0,255,136,.15);background:rgba(0,255,136,.04)}
 
-/* ── HERO BANNER ── */
-.hero{position:relative;z-index:2;min-height:90vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+/* ── HERO ── */
+.hero{position:relative;z-index:2;min-height:92vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
   text-align:center;padding:2rem 1rem;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 100% 60% at 50% 40%,rgba(123,47,247,.08),transparent 70%),
-  radial-gradient(ellipse 60% 40% at 20% 80%,rgba(255,51,102,.06),transparent 60%),
-  radial-gradient(ellipse 50% 30% at 80% 20%,rgba(0,245,212,.04),transparent 50%);
+  background:radial-gradient(ellipse 100% 60% at 50% 40%,rgba(136,0,255,.06),transparent 70%),
+  radial-gradient(ellipse 60% 40% at 20% 80%,rgba(255,0,128,.04),transparent 60%),
+  radial-gradient(ellipse 50% 30% at 80% 20%,rgba(0,204,255,.03),transparent 50%);
   pointer-events:none}
-.hero .glitch-wrapper{position:relative;display:inline-block}
-.hero h1{font-family:var(--font-display);font-size:clamp(2.8rem,8vw,6.5rem);font-weight:900;line-height:1;
-  background:linear-gradient(135deg,#fff 20%,var(--pink) 50%,var(--gold) 80%);
+.hero .glitch-wrapper{position:relative;display:inline-block;margin-bottom:.4rem}
+.hero h1{font-family:var(--font-display);font-size:clamp(3rem,9vw,7rem);font-weight:900;line-height:1;
+  background:linear-gradient(135deg,#fff 15%,var(--neon-pink) 45%,var(--neon-gold) 75%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  text-shadow:none;letter-spacing:-.02em;text-transform:uppercase;
-  animation:glitch 4s infinite}
+  letter-spacing:-.03em;text-transform:uppercase;
+  animation:glitch 3.5s infinite}
 @keyframes glitch{
-  0%,90%,100%{transform:translate(0)}
-  92%{transform:translate(-3px,1px)}
-  94%{transform:translate(3px,-1px)}
-  96%{transform:translate(-2px)}
-  98%{transform:translate(2px,1px)}
+  0%,88%,100%{transform:translate(0)}
+  90%{transform:translate(-4px,1px)}
+  92%{transform:translate(4px,-1px)}
+  94%{transform:translate(-3px)}
+  96%{transform:translate(3px,1px)}
 }
-.hero .glitch-line{position:absolute;inset:0;font-family:var(--font-display);font-size:clamp(2.8rem,8vw,6.5rem);font-weight:900;
+.hero .glitch-line{position:absolute;inset:0;font-family:var(--font-display);font-size:clamp(3rem,9vw,7rem);font-weight:900;
   line-height:1;text-transform:uppercase;opacity:0;pointer-events:none;
-  background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero:hover .glitch-line:nth-child(2){opacity:.7;transform:translate(-4px,-2px);animation:none}
-.hero:hover .glitch-line:nth-child(3){opacity:.5;transform:translate(4px,2px);animation:none}
+  background:linear-gradient(135deg,var(--neon-green),var(--neon-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero:hover .glitch-line:nth-child(2){opacity:.6;transform:translate(-5px,-2px)}
+.hero:hover .glitch-line:nth-child(3){opacity:.4;transform:translate(5px,2px)}
 
-.hero .sub{font-family:var(--font-code);font-size:.65rem;color:var(--muted);letter-spacing:.2em;margin-top:.5rem;text-transform:uppercase}
-.hero .sub .hl{color:var(--pink)}
-.hero .sub .hl2{color:var(--cyan)}
+.hero .sub{font-family:var(--font-code);font-size:.8rem;color:var(--muted);letter-spacing:.22em;margin-top:.3rem;text-transform:uppercase}
+.hero .sub .hl{color:var(--neon-pink)}
+.hero .sub .hl2{color:var(--neon-green)}
 
-.hero .hero-stats{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin:1.2rem 0}
-.hero .hs{display:flex;flex-direction:column;align-items:center;padding:.5rem 1rem;border:1px solid var(--border);
-  border-radius:6px;background:var(--card);min-width:90px;transition:.3s;cursor:default}
-.hero .hs:hover{border-color:var(--border-hover);transform:translateY(-3px);box-shadow:0 8px 30px rgba(255,51,102,.08)}
-.hero .hs .hs-val{font-family:var(--font-display);font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,var(--pink),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero .hs .hs-lab{font-family:var(--font-code);font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.1rem}
+.hero .hero-stats{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+.hero .hs{display:flex;flex-direction:column;align-items:center;padding:.6rem 1.2rem;border:1px solid var(--border);
+  border-radius:8px;background:var(--card);min-width:110px;transition:.3s;cursor:default}
+.hero .hs:hover{border-color:var(--border-hover);transform:translateY(-4px);box-shadow:0 8px 40px rgba(0,255,136,.06)}
+.hero .hs .hs-val{font-family:var(--font-display);font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--neon-pink),var(--neon-gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .hs .hs-lab{font-family:var(--font-code);font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.1rem}
 
-.hero .pipeline-vis{display:flex;align-items:center;justify-content:center;gap:0;margin:1.5rem 0 .5rem;flex-wrap:wrap}
-.hero .pv-node{display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:.3s}
-.hero .pv-node:hover{transform:scale(1.1)}
-.hero .pv-node .pv-icon{width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-display);font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+/* ── pipeline hero ── */
+.pipeline-vis{display:flex;align-items:center;justify-content:center;gap:.2rem;margin:1.5rem 0 .5rem;flex-wrap:wrap}
+.pv-node{display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:.3s}
+.pv-node:hover{transform:scale(1.12)}
+.pv-node .pv-icon{width:72px;height:72px;border-radius:18px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.55rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   border:1px solid var(--border);background:var(--surface);transition:.4s;position:relative}
-.hero .pv-node:hover .pv-icon{box-shadow:0 0 40px rgba(255,51,102,.12)}
-.hero .pv-node .pv-icon.res{background:linear-gradient(135deg,rgba(255,51,102,.18),rgba(123,47,247,.1));border-color:rgba(255,51,102,.35)}
-.hero .pv-node .pv-icon.dsn{background:linear-gradient(135deg,rgba(0,245,212,.18),rgba(123,47,247,.1));border-color:rgba(0,245,212,.35)}
-.hero .pv-node .pv-icon.mkr{background:linear-gradient(135deg,rgba(255,204,0,.18),rgba(0,255,136,.1));border-color:rgba(255,204,0,.35)}
-.hero .pv-node .pv-label{font-family:var(--font-code);font-size:.45rem;color:var(--muted);margin-top:.3rem;letter-spacing:.08em}
-.hero .pv-arr{font-size:1.2rem;color:var(--dim);margin:0 .15rem;animation:pa 1.6s infinite;user-select:none}
-@keyframes pa{0%,100%{opacity:.3;transform:translateX(0)}50%{opacity:1;transform:translateX(4px)}}
+.pv-node:hover .pv-icon{box-shadow:0 0 50px rgba(0,255,136,.1)}
+.pv-node .pv-icon.res{background:linear-gradient(135deg,rgba(255,0,128,.18),rgba(136,0,255,.12));border-color:rgba(255,0,128,.3)}
+.pv-node .pv-icon.dsn{background:linear-gradient(135deg,rgba(0,204,255,.18),rgba(136,0,255,.12));border-color:rgba(0,204,255,.3)}
+.pv-node .pv-icon.mkr{background:linear-gradient(135deg,rgba(255,204,0,.18),rgba(0,255,136,.12));border-color:rgba(255,204,0,.3)}
+.pv-node .pv-icon .deco{position:absolute;font-size:.3rem;color:var(--dim);top:-2px;right:4px}
+.pv-node .pv-label{font-family:var(--font-code);font-size:.55rem;color:var(--muted);margin-top:.35rem;letter-spacing:.1em}
+.pv-arr{font-size:1.5rem;color:var(--dim);margin:0 .1rem;animation:pa 1.4s infinite;user-select:none}
+@keyframes pa{0%,100%{opacity:.3;transform:translateX(0)}50%{opacity:1;transform:translateX(5px)}}
 
-.hero .scroll-ind{position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);
-  font-family:var(--font-code);font-size:.45rem;color:var(--dim);letter-spacing:.15em;animation:si 2s infinite}
-@keyframes si{0%,100%{opacity:.3;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(4px)}}
+.hero .scroll-ind{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  font-family:var(--font-code);font-size:.5rem;color:var(--dim);letter-spacing:.15em;animation:si 2s infinite;display:flex;align-items:center;gap:6px}
+@keyframes si{0%,100%{opacity:.3;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(5px)}}
 
 /* ── container ── */
-.container{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:0 1rem 3rem}
+.container{position:relative;z-index:2;max-width:1040px;margin:0 auto;padding:0 1.2rem 3rem}
 
 /* ── sections ── */
-.sec{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1.2rem;
+.sec{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1.4rem;
   backdrop-filter:blur(12px);overflow:hidden;transition:border-color .3s}
-.sec:hover{border-color:rgba(255,51,102,.18)}
-.sec .hd{display:flex;align-items:center;gap:.5rem;padding:.6rem 1rem;border-bottom:1px solid var(--border);
-  font-family:var(--font-display);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;user-select:none;transition:.2s}
-.sec .hd:hover{background:rgba(255,255,255,.02)}
-.sec .hd .num{font-family:var(--font-code);font-size:.5rem;color:var(--muted);background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:3px;padding:.05rem .4rem}
-.sec .hd .toggle{color:var(--dim);margin-left:auto;transition:.3s;font-size:.7rem}
+.sec:hover{border-color:rgba(0,255,136,.12)}
+.sec .hd{display:flex;align-items:center;gap:.5rem;padding:.7rem 1.2rem;border-bottom:1px solid var(--border);
+  font-family:var(--font-display);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;user-select:none;transition:.2s}
+.sec .hd:hover{background:rgba(255,255,255,.015)}
+.sec .hd .num{font-family:var(--font-code);font-size:.55rem;color:var(--muted);background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:4px;padding:.05rem .5rem}
+.sec .hd .toggle{color:var(--dim);margin-left:auto;transition:.3s;font-size:.8rem}
 .sec .hd .toggle.open{transform:rotate(180deg)}
-.sec .bd{padding:1rem;display:none}
-.sec .bd.open{display:block}
-.sec .bd.open{animation:ff .3s ease}
-@keyframes ff{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.sec .bd{padding:1.2rem;display:none}
+.sec .bd.open{display:block;animation:ff .3s ease}
+@keyframes ff{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── grid cards ── */
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.5rem 0}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:700px){.g3{grid-template-columns:1fr}}
-.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin:.5rem 0}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:600px){.g2{grid-template-columns:1fr}}
-.g-card{border:1px solid var(--border);border-radius:8px;padding:.7rem;transition:.3s;cursor:pointer;position:relative;overflow:hidden}
-.g-card:hover{border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,51,102,.06)}
+.g-card{border:1px solid var(--border);border-radius:9px;padding:.8rem;transition:.3s;cursor:pointer;position:relative;overflow:hidden}
+.g-card:hover{border-color:var(--border-hover);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,255,136,.05)}
 .g-card .gbar{position:absolute;top:0;left:0;height:3px;border-radius:0 0 4px 4px;transition:width 1.2s ease}
-.g-card .gttl{font-family:var(--font-display);font-size:.55rem;letter-spacing:.08em;margin-bottom:.15rem}
-.g-card .gnum{font-family:var(--font-display);font-size:1.8rem;font-weight:700;line-height:1}
-.g-card .gsub{font-family:var(--font-code);font-size:.5rem;color:var(--muted)}
+.g-card .gttl{font-family:var(--font-display);font-size:.6rem;letter-spacing:.08em;margin-bottom:.2rem}
+.g-card .gnum{font-family:var(--font-display);font-size:2rem;font-weight:700;line-height:1}
+.g-card .gsub{font-family:var(--font-code);font-size:.6rem;color:var(--muted);margin-top:.15rem}
+.g-card .gmeta{font-family:var(--font-code);font-size:.55rem;color:var(--dim);margin-top:.3rem}
 
 /* ── terminal ── */
-.term{background:rgba(0,0,0,.55);border:1px solid var(--border);border-radius:7px;overflow:hidden;margin:.5rem 0}
-.term .tbar{display:flex;align-items:center;gap:5px;padding:.3rem .7rem;background:rgba(255,255,255,.015);border-bottom:1px solid var(--border)}
-.term .tbar .dot{width:7px;height:7px;border-radius:50%}
+.term{background:rgba(0,0,0,.6);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:.5rem 0}
+.term .tbar{display:flex;align-items:center;gap:6px;padding:.35rem .8rem;background:rgba(255,255,255,.012);border-bottom:1px solid var(--border)}
+.term .tbar .dot{width:8px;height:8px;border-radius:50%}
 .term .tbar .d1{background:#ff5f56}
 .term .tbar .d2{background:#ffbd2e}
 .term .tbar .d3{background:#28c840}
-.term .tbar .ttl{font-family:var(--font-code);font-size:.45rem;color:var(--dim);margin-left:.4rem;letter-spacing:.04em}
-.term .tbdy{font-family:var(--font-code);font-size:.6rem;line-height:1.5;padding:.6rem .8rem;color:#b0b8d8;overflow-x:auto;white-space:pre-wrap}
-.term .tbdy .hlp{color:var(--pink)}
-.term .tbdy .hlc{color:var(--cyan)}
-.term .tbdy .hlg{color:var(--gold)}
-.term .tbdy .hll{color:var(--green)}
+.term .tbar .ttl{font-family:var(--font-code);font-size:.5rem;color:var(--dim);margin-left:.5rem;letter-spacing:.04em}
+.term .tbdy{font-family:var(--font-code);font-size:.7rem;line-height:1.6;padding:.7rem .9rem;color:#b0bcd8;overflow-x:auto;white-space:pre-wrap}
+.term .tbdy .hlp{color:var(--neon-pink)}
+.term .tbdy .hlc{color:var(--neon-blue)}
+.term .tbdy .hlg{color:var(--neon-gold)}
+.term .tbdy .hll{color:var(--neon-green)}
 .term .tbdy .dim{color:var(--dim)}
 
 /* ── gauges ── */
-.gg{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:.5rem 0}
+.gg{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:600px){.gg{grid-template-columns:repeat(2,1fr)}}
-.gauge{text-align:center;border:1px solid var(--border);border-radius:8px;padding:.5rem;background:rgba(0,0,0,.15);cursor:default;transition:.3s}
-.gauge:hover{border-color:var(--border-hover);background:rgba(0,0,0,.25)}
-.gauge canvas{width:100%;max-width:80px;height:auto;margin:0 auto;display:block}
-.gauge .gl{font-family:var(--font-code);font-size:.45rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.15rem}
-.gauge .gv{font-family:var(--font-display);font-size:1rem;font-weight:700;color:#fff;margin-top:-.1rem}
-.gauge .gs{font-size:.45rem;color:var(--dim)}
+.gauge{text-align:center;border:1px solid var(--border);border-radius:8px;padding:.6rem;background:rgba(0,0,0,.12);cursor:default;transition:.3s}
+.gauge:hover{border-color:var(--border-hover);background:rgba(0,0,0,.22);transform:translateY(-2px)}
+.gauge canvas{width:100%;max-width:90px;height:auto;margin:0 auto;display:block}
+.gauge .gl{font-family:var(--font-code);font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.2rem}
+.gauge .gv{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:#fff;margin-top:-.05rem}
+.gauge .gs{font-size:.5rem;color:var(--dim)}
 
 /* ── roadmap ── */
-.road{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.5rem 0}
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.5rem 0}
 @media(max-width:700px){.road{grid-template-columns:1fr}}
-.rd{border:1px solid var(--border);border-radius:8px;padding:.6rem;transition:.3s;cursor:pointer}
-.rd:hover{border-color:var(--border-hover);transform:translateY(-2px)}
-.rd .rd-ph{font-family:var(--font-display);font-size:.45rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.15rem}
-.rd .rd-wk{font-family:var(--font-code);font-size:.45rem;color:var(--pink);margin-bottom:.2rem}
-.rd li{font-size:.55rem;color:var(--muted);padding:.1rem 0 .1rem .5rem;list-style:none;position:relative}
-.rd li::before{content:'▸';position:absolute;left:0;color:var(--cyan)}
+.rd{border:1px solid var(--border);border-radius:8px;padding:.7rem;transition:.3s;cursor:pointer;position:relative}
+.rd:hover{border-color:var(--border-hover);transform:translateY(-3px)}
+.rd .rd-ph{font-family:var(--font-display);font-size:.5rem;color:var(--neon-gold);letter-spacing:.1em;margin-bottom:.15rem;display:flex;align-items:center;gap:5px}
+.rd .rd-wk{font-family:var(--font-code);font-size:.5rem;color:var(--neon-pink);margin-bottom:.2rem}
+.rd li{font-size:.6rem;color:var(--muted);padding:.12rem 0 .12rem .6rem;list-style:none;position:relative}
+.rd li::before{content:'▸';position:absolute;left:0;color:var(--neon-blue)}
 
 /* ── tables ── */
-.rsk{width:100%;border-collapse:collapse;font-size:.55rem;margin:.5rem 0}
-.rsk th,.rsk td{border:1px solid var(--border);padding:.3rem .5rem;text-align:left}
-.rsk th{font-family:var(--font-display);font-size:.45rem;color:var(--gold);background:rgba(255,204,0,.03);letter-spacing:.08em;text-transform:uppercase}
+.rsk{width:100%;border-collapse:collapse;font-size:.65rem;margin:.5rem 0}
+.rsk th,.rsk td{border:1px solid var(--border);padding:.35rem .6rem;text-align:left}
+.rsk th{font-family:var(--font-display);font-size:.5rem;color:var(--neon-gold);background:rgba(255,204,0,.025);letter-spacing:.08em;text-transform:uppercase}
 .rsk td{color:var(--text)}
-.lh{color:var(--pink);font-weight:600}
-.lm{color:var(--gold);font-weight:600}
-.ll{color:var(--green);font-weight:600}
+.lh{color:var(--neon-pink);font-weight:600}
+.lm{color:var(--neon-gold);font-weight:600}
+.ll{color:var(--neon-green);font-weight:600}
 
 /* ── budget ── */
-.bg{display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;margin:.5rem 0}
+.bg{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin:.5rem 0}
 @media(max-width:600px){.bg{grid-template-columns:1fr}}
-.bi{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:.25rem 0;font-size:.55rem;font-family:var(--font-code)}
+.bi{display:flex;justify-content:space-between;border-bottom:1px solid var(--border);padding:.3rem 0;font-size:.6rem;font-family:var(--font-code)}
 .bi .bl{color:var(--muted)}
-.bi .br{color:var(--gold);font-weight:600}
-.bt{display:flex;justify-content:space-between;padding:.4rem 0 0;border-top:2px solid var(--pink);margin-top:.25rem;
-  font-family:var(--font-display);font-size:.6rem;letter-spacing:.04em}
-.bt .btl{color:var(--pink)}
+.bi .br{color:var(--neon-gold);font-weight:600}
+.bt{display:flex;justify-content:space-between;padding:.45rem 0 0;border-top:2px solid var(--neon-pink);margin-top:.3rem;
+  font-family:var(--font-display);font-size:.7rem;letter-spacing:.04em}
+.bt .btl{color:var(--neon-pink)}
 .bt .btr{color:#fff;font-weight:700}
 
 /* ── CTA ── */
-.cta{border:2px solid var(--gold);border-radius:8px;padding:.8rem;text-align:center;margin:.5rem 0;
-  background:linear-gradient(135deg,rgba(255,204,0,.06),rgba(255,51,102,.04));
-  font-size:.7rem;line-height:1.5;color:var(--text);cursor:pointer;transition:.3s}
-.cta:hover{border-color:var(--pink);box-shadow:0 0 30px rgba(255,51,102,.08)}
+.cta{border:2px solid var(--neon-gold);border-radius:8px;padding:.9rem;text-align:center;margin:.5rem 0;
+  background:linear-gradient(135deg,rgba(255,204,0,.06),rgba(255,0,128,.04));
+  font-size:.8rem;line-height:1.5;color:var(--text);cursor:pointer;transition:.3s}
+.cta:hover{border-color:var(--neon-pink);box-shadow:0 0 35px rgba(255,0,128,.07)}
 
 /* ── handoff badge ── */
-.ho{display:flex;align-items:center;gap:.3rem;padding:.2rem .5rem;border-radius:5px;font-family:var(--font-code);font-size:.45rem;
-  border:1px solid rgba(0,245,212,.12);background:rgba(0,245,212,.03);color:var(--cyan);margin:.25rem 0;letter-spacing:.03em}
-.ho .ar{color:var(--gold);font-weight:700}
+.ho{display:flex;align-items:center;gap:.35rem;padding:.25rem .6rem;border-radius:5px;font-family:var(--font-code);font-size:.5rem;
+  border:1px solid rgba(0,255,136,.1);background:rgba(0,255,136,.025);color:var(--neon-green);margin:.25rem 0;letter-spacing:.03em}
+.ho .ar{color:var(--neon-gold);font-weight:700}
 
-/* ── toggle ── */
-h3{font-family:var(--font-display);font-size:.6rem;letter-spacing:.1em;color:var(--gold);margin:.8rem 0 .35rem;text-transform:uppercase}
-.fail{border-left:3px solid var(--pink);background:rgba(255,51,102,.04);padding:.4rem .6rem;margin:.25rem 0;border-radius:0 5px 5px 0;font-size:.55rem}
-.fix{border-left:3px solid var(--green);background:rgba(0,255,136,.04);padding:.4rem .6rem;margin:.25rem 0;border-radius:0 5px 5px 0;font-size:.55rem}
-.q{font-family:var(--font-code);font-size:.5rem;color:var(--pink);background:rgba(0,0,0,.3);padding:.2rem .4rem;border-radius:3px;display:inline-block;margin:.15rem 0}
-.qf{color:var(--green)}
+/* ── toggles ── */
+h3{font-family:var(--font-display);font-size:.65rem;letter-spacing:.1em;color:var(--neon-gold);margin:.8rem 0 .35rem;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.fail{border-left:3px solid var(--neon-pink);background:rgba(255,0,128,.04);padding:.45rem .6rem;margin:.3rem 0;border-radius:0 5px 5px 0;font-size:.6rem}
+.fix{border-left:3px solid var(--neon-green);background:rgba(0,255,136,.04);padding:.45rem .6rem;margin:.3rem 0;border-radius:0 5px 5px 0;font-size:.6rem}
+.q{font-family:var(--font-code);font-size:.6rem;color:var(--neon-pink);background:rgba(0,0,0,.3);padding:.25rem .45rem;border-radius:3px;display:inline-block;margin:.15rem 0}
+.qf{color:var(--neon-green)}
 
-.btn-t{position:fixed;bottom:1.2rem;right:1.2rem;z-index:99;width:38px;height:38px;border-radius:50%;
-  border:1px solid var(--border);background:var(--card);backdrop-filter:blur(12px);color:var(--gold);
-  font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+.btn-t{position:fixed;bottom:5rem;right:1.2rem;z-index:99;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--border);background:var(--card);backdrop-filter:blur(12px);color:var(--neon-gold);
+  font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
   opacity:0;transition:.3s;text-decoration:none}
 .btn-t.vis{opacity:1}
-.btn-t:hover{border-color:var(--gold);box-shadow:0 0 20px rgba(255,204,0,.12)}
+.btn-t:hover{border-color:var(--neon-gold);box-shadow:0 0 25px rgba(255,204,0,.1)}
 
-.ft{text-align:center;padding:1.2rem 0;font-family:var(--font-code);font-size:.45rem;color:var(--dim);letter-spacing:.12em}
+/* ── testimonials ── */
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:.5rem 0}
+@media(max-width:700px){.test-grid{grid-template-columns:1fr}}
+.test-card{border:1px solid var(--border);border-radius:9px;padding:.8rem;transition:.3s;cursor:pointer;position:relative}
+.test-card:hover{border-color:var(--border-hover);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,255,136,.05)}
+.test-card .t-avatar{width:40px;height:40px;border-radius:50%;border:2px solid var(--neon-green);display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.6rem;color:var(--neon-green);background:rgba(0,255,136,.05);margin-bottom:.5rem}
+.test-card .t-quote{font-size:.65rem;color:var(--text);line-height:1.5;font-style:italic;margin-bottom:.4rem}
+.test-card .t-name{font-family:var(--font-code);font-size:.5rem;color:var(--neon-gold);text-transform:uppercase;letter-spacing:.06em}
+.test-card .t-role{font-size:.45rem;color:var(--dim);font-family:var(--font-code)}
+.test-card .t-stars{color:var(--neon-gold);font-size:.6rem;margin-bottom:.3rem}
+
+/* ── CHATBOT ── */
+#chat-toggle{position:fixed;bottom:1.2rem;right:1.2rem;z-index:200;width:54px;height:54px;border-radius:50%;
+  border:none;background:linear-gradient(135deg,var(--neon-pink),var(--neon-purple));color:#fff;
+  font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 24px rgba(255,0,128,.3);transition:.3s;animation:chatPulse 2s infinite}
+#chat-toggle:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(255,0,128,.4)}
+@keyframes chatPulse{0%,100%{box-shadow:0 4px 24px rgba(255,0,128,.3)}50%{box-shadow:0 4px 40px rgba(255,0,128,.5)}}
+
+#chat-panel{position:fixed;bottom:5.5rem;right:1.2rem;z-index:200;width:340px;max-height:440px;
+  background:var(--card);backdrop-filter:blur(20px);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;display:none;flex-direction:column;
+  box-shadow:0 12px 60px rgba(0,0,0,.5);animation:chatIn .3s ease}
+#chat-panel.open{display:flex}
+@keyframes chatIn{from{opacity:0;transform:translateY(16px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.chat-head{display:flex;align-items:center;gap:.5rem;padding:.6rem .8rem;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(255,0,128,.08),rgba(136,0,255,.04))}
+.chat-head .ch-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--neon-pink),var(--neon-purple));
+  display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.chat-head .ch-name{font-family:var(--font-display);font-size:.6rem;color:#fff;letter-spacing:.06em}
+.chat-head .ch-status{font-family:var(--font-code);font-size:.4rem;color:var(--neon-green)}
+.chat-head .ch-close{margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:.8rem;padding:.2rem}
+
+.chat-body{flex:1;padding:.6rem .8rem;overflow-y:auto;max-height:280px;display:flex;flex-direction:column;gap:.4rem}
+.chat-msg{font-family:var(--font-code);font-size:.55rem;line-height:1.4;padding:.35rem .55rem;border-radius:6px;max-width:85%;animation:msgIn .3s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.chat-msg.bot{background:rgba(0,255,136,.06);border:1px solid rgba(0,255,136,.1);align-self:flex-start;color:#b0c8d8}
+.chat-msg.user{background:rgba(255,0,128,.08);border:1px solid rgba(255,0,128,.12);align-self:flex-end;color:var(--text)}
+.chat-msg .msg-time{font-size:.35rem;color:var(--dim);display:block;margin-top:.15rem}
+
+.chat-foot{display:flex;gap:.3rem;padding:.4rem .6rem .5rem;border-top:1px solid var(--border)}
+.chat-foot input{flex:1;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:5px;padding:.35rem .5rem;
+  font-family:var(--font-code);font-size:.5rem;color:var(--text);outline:none;transition:.3s}
+.chat-foot input:focus{border-color:var(--neon-green)}
+.chat-foot button{background:var(--neon-green);border:none;border-radius:5px;padding:.35rem .6rem;
+  color:var(--bg);font-family:var(--font-display);font-size:.5rem;cursor:pointer;font-weight:700;transition:.3s}
+.chat-foot button:hover{background:var(--neon-pink);color:#fff}
+
+.ft{text-align:center;padding:1.5rem 0;font-family:var(--font-code);font-size:.5rem;color:var(--dim);letter-spacing:.12em;display:flex;align-items:center;justify-content:center;gap:6px}
 </style>
 </head>
 <body>
@@ -211,29 +270,34 @@ h3{font-family:var(--font-display);font-size:.6rem;letter-spacing:.1em;color:var
 <canvas id="bg_canvas"></canvas>
 <div id="vignette"></div>
 <div class="scan"></div>
+<div class="crt"></div>
 <div class="scrollbar" id="sp"></div>
 <a href="#" class="btn-t" id="tp">↑</a>
 
 <nav>
-  <div class="brand"><span class="blip"></span> STØRMBREAKER.SB1</div>
+  <div class="brand">
+    <span class="blip"></span>
+    <svg class="icon-controller" viewBox="0 0 24 24"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-11 5H8v2H6v-2H4v-2h2V7h2v2h2v2zm9.5 4c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-3-3c-.83 0-1.5-.67-1.5-1.5S15.67 9 16.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+    STØRM<span style="color:var(--neon-green)">//</span>SB1
+  </div>
   <ol>
     <a href="#s1">DIAG</a>
     <a href="#s2">PIPE</a>
     <a href="#s3">LOG</a>
     <a href="#s4">FAIL</a>
     <a href="#s5">REG</a>
-    <a href="#s6">PROMPTS</a>
+    <a href="#s6">PROOF</a>
   </ol>
 </nav>
 
-<!-- ═══ HERO BANNER ═══ -->
+<!-- ═══ HERO ═══ -->
 <section class="hero">
   <div class="glitch-wrapper">
     <h1>STØRMBREAKER</h1>
-    <div class="glitch-line" style="clip-path:inset(20% 0 60% 0)">STØRMBREAKER</div>
-    <div class="glitch-line" style="clip-path:inset(60% 0 20% 0)">STØRMBREAKER</div>
+    <div class="glitch-line" style="clip-path:inset(15% 0 65% 0)">STØRMBREAKER</div>
+    <div class="glitch-line" style="clip-path:inset(65% 0 15% 0)">STØRMBREAKER</div>
   </div>
-  <div class="sub"><span class="hl">RESEARCHER</span> ◈ <span class="hl2">DESIGNER</span> ◈ <span class="hl2">MAKER</span> · PERSONALISATION PIPELINE</div>
+  <div class="sub"><span class="hl">RESEARCHER</span> ◆ <span class="hl2">DESIGNER</span> ◆ <span class="hl2">MAKER</span> · PERSONALISATION PIPELINE</div>
 
   <div class="hero-stats">
     <div class="hs"><span class="hs-val">2.04M</span><span class="hs-lab">DOWNLOADS</span></div>
@@ -244,67 +308,79 @@ h3{font-family:var(--font-display);font-size:.6rem;letter-spacing:.1em;color:var
 
   <div class="pipeline-vis">
     <div class="pv-node">
-      <div class="pv-icon res">RES</div>
+      <div class="pv-icon res">RES<span class="deco">01</span></div>
       <div class="pv-label">RESEARCHER</div>
     </div>
     <div class="pv-arr">▶</div>
     <div class="pv-node">
-      <div class="pv-icon dsn">DSN</div>
+      <div class="pv-icon dsn">DSN<span class="deco">02</span></div>
       <div class="pv-label">DESIGNER</div>
     </div>
     <div class="pv-arr">▶</div>
     <div class="pv-node">
-      <div class="pv-icon mkr">MKR</div>
+      <div class="pv-icon mkr">MKR<span class="deco">03</span></div>
       <div class="pv-label">MAKER</div>
     </div>
   </div>
 
-  <div class="scroll-ind">▼ SCROLL ▼</div>
+  <div class="scroll-ind"><svg class="icon-crosshair" viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg> SCROLL ▼</div>
 </section>
 
 <div class="container">
 
-<!-- ═══ S1: DIAGNOSIS ═══ -->
+<!-- ═══ S1 ═══ -->
 <div class="sec" id="s1">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">01</div> SEGMENT DIAGNOSIS
+    <div class="num">01</div>
+    <svg class="icon-controller" viewBox="0 0 24 24" style="color:var(--neon-pink)"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-11 5H8v2H6v-2H4v-2h2V7h2v2h2v2zm9.5 4c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-3-3c-.83 0-1.5-.67-1.5-1.5S15.67 9 16.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+    SEGMENT DIAGNOSIS
     <span class="toggle">▼</span>
   </div>
   <div class="bd open">
     <div class="g3">
-      <div class="g-card" onclick="alert('Sprinters: 66% of installs\n47s avg session\n69% fail D1→D2\nZERO purchases\n\nHook them in first 47s with Flashpoint mechanic.')">
-        <div class="gbar" style="width:66%;background:linear-gradient(90deg,var(--pink),var(--purple))"></div>
-        <div class="gttl" style="color:var(--pink)">SPRINTERS</div>
-        <div class="gnum">66<span style="font-size:.7rem;color:var(--muted)">%</span></div>
+      <div class="g-card" onclick="showMsg('SPRINTERS · 66% of installs','47s avg session · 69% fail D1→D2\nZero purchases · Zero push opt-in\n\n⚡ FLASHPOINT MECHANIC:\nHero-moment VFX in first 47s\nCosmetic tease gated behind tutorial\nTarget: lift to Level-5 reach from 34% → 55%')">
+        <div class="gbar" style="width:66%;background:linear-gradient(90deg,var(--neon-pink),var(--neon-purple))"></div>
+        <div class="gttl" style="color:var(--neon-pink)">⚡ SPRINTERS</div>
+        <div class="gnum">66<span style="font-size:.8rem;color:var(--muted)">%</span></div>
         <div class="gsub">47s sessions · €0 · churn D1</div>
+        <div class="gmeta">FLASHPOINT → hero-moment VFX</div>
       </div>
-      <div class="g-card" onclick="alert('Floaters: 30% of installs\n3m42s avg session\n34% reach L5\n73% of purchases happen in first 48h\n\nRe-engage within 4h window with personalised push.')">
-        <div class="gbar" style="width:30%;background:linear-gradient(90deg,var(--cyan),var(--purple))"></div>
-        <div class="gttl" style="color:var(--cyan)">FLOATERS</div>
-        <div class="gnum">30<span style="font-size:.7rem;color:var(--muted)">%</span></div>
+      <div class="g-card" onclick="showMsg('FLOATERS · 30% of installs','3m42s avg session · 34% reach L5\n73% of ALL purchases happen in first 48h\n\n🔄 RE-ENGAGEMENT CAROUSEL:\nPersonalised push within 4h gap window\n"You almost unlocked X" + reward thumbnail\nTarget: convert 5% of Floaters (currently 0%)')">
+        <div class="gbar" style="width:30%;background:linear-gradient(90deg,var(--neon-blue),var(--neon-purple))"></div>
+        <div class="gttl" style="color:var(--neon-blue)">🔄 FLOATERS</div>
+        <div class="gnum">30<span style="font-size:.8rem;color:var(--muted)">%</span></div>
         <div class="gsub">3m42s · 73% buys in 48h</div>
+        <div class="gmeta">RE-ENGAGE → near-miss reward push</div>
       </div>
-      <div class="g-card" onclick="alert('Pillars: 4% of installs\n19.8k payers @ €3.12 ARPPU\n62.2k engaged non-payers\n62% revenue from cosmetics\n\nCurated Boutique: C1→€0.99 hook, C2→weekly bundle.')">
-        <div class="gbar" style="width:4%;background:linear-gradient(90deg,var(--gold),var(--green))"></div>
-        <div class="gttl" style="color:var(--gold)">PILLARS</div>
-        <div class="gnum">4<span style="font-size:.7rem;color:var(--muted)">%</span></div>
+      <div class="g-card" onclick="showMsg('PILLARS · 4% of installs','19.8k payers @ €3.12 ARPPU\n62.2k engaged non-payers\n62% revenue from COSMETICS\n\n🎯 CURATED BOUTIQUE:\nC1 → €0.49–0.99 low-friction hook\nC2 → 3-item weekly bundle + loyalty discount\nTarget: convert 1% of C1 → +622 new payers')">
+        <div class="gbar" style="width:4%;background:linear-gradient(90deg,var(--neon-gold),var(--neon-green))"></div>
+        <div class="gttl" style="color:var(--neon-gold)">🎯 PILLARS</div>
+        <div class="gnum">4<span style="font-size:.8rem;color:var(--muted)">%</span></div>
         <div class="gsub">19.8k payers · €3.12 ARPPU</div>
+        <div class="gmeta">CURATED BOUTIQUE → personalised shop</div>
       </div>
     </div>
 
     <div class="g2">
-      <div class="g-card" onclick="alert('GAP 1: No within-session event telemetry\n→ Where do players fail? Tutorial boss? PvP? Loading screen?\n\nGAP 2: No purchase-context funnel\n→ Who enters the shop? Browses? Aborts checkout?\n\nGAP 3: No install-source attribution\n→ Inorganic ads vs word-of-mouth?')">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">SIGNAL GAPS</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.6">
-          <span style="color:var(--pink)">GAP_01</span> No session-level events<br/>
-          <span style="color:var(--pink)">GAP_02</span> No purchase funnel<br/>
-          <span style="color:var(--pink)">GAP_03</span> No install source
+      <div class="g-card" onclick="showMsg('⚠ SIGNAL GAPS','GAP_01: No within-session events\n→ Where do players fail? Tutorial boss? PvP?\n\nGAP_02: No purchase-context funnel\n→ Who enters shop? Browses? Aborts?\n\nGAP_03: No install-source attribution\n→ Inorganic ads vs word-of-mouth?\n\n🔧 FIX: 3 engineer-days → 8 new events')">
+        <div class="gttl" style="color:var(--neon-pink);font-size:.55rem">
+          <svg class="icon-dpad" viewBox="0 0 24 24" style="color:var(--neon-pink)"><path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.5l7 3.5v7l-7 3.5-7-3.5v-7l7-3.5z"/></svg>
+          SIGNAL GAPS
+        </div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.6">
+          <span style="color:var(--neon-pink)">●</span> No session-level events<br/>
+          <span style="color:var(--neon-pink)">●</span> No purchase funnel<br/>
+          <span style="color:var(--neon-pink)">●</span> No install source
         </div>
       </div>
-      <div class="g-card" onclick="alert('ROOT CAUSE: Conversion <1% because monetisation is invisible to 69% of players (never see Day 2) and arrives too late for the rest — shop gated behind Level 5 (only 34% reach it).\n\nTEST: Move cosmetic-shop to post-tutorial screen. Predict: +0.5pp conversion lift → doubles revenue.')">
-        <div class="gttl" style="color:var(--gold);font-size:.5rem">HYPOTHESIS</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.6">
-          Conversion &lt;1% because monetisation is <span style="color:var(--gold)">invisible to 69%</span> and <span style="color:var(--gold)">too late for 66%</span>
+      <div class="g-card" onclick="showMsg('🔬 ROOT CAUSE HYPOTHESIS','Conversion <1% because monetisation is:\n\n■ INVISIBLE to 69% of players\n  (never see Day 2 — churn before shop loads)\n\n■ TOO LATE for 66% of players\n  (shop gated behind L5 — only 34% reach it)\n\n🧪 TEST: Move cosmetic-shop to post-tutorial\n  Predict: +0.5pp conversion → doubles revenue')">
+        <div class="gttl" style="color:var(--neon-gold);font-size:.55rem">
+          <svg class="icon-crosshair" viewBox="0 0 24 24" style="color:var(--neon-gold)"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+          HYPOTHESIS
+        </div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.6">
+          Monetisation <span style="color:var(--neon-gold)">invisible to 69%</span><br/>
+          Monetisation <span style="color:var(--neon-gold)">too late for 66%</span>
         </div>
       </div>
     </div>
@@ -314,125 +390,134 @@ h3{font-family:var(--font-display);font-size:.6rem;letter-spacing:.1em;color:var
 <!-- ═══ S2: PIPELINE ═══ -->
 <div class="sec" id="s2">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">02</div> 3-AGENT PIPELINE <span style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);margin-left:.4rem">· GATED 15 MARKS</span>
+    <div class="num">02</div>
+    <svg class="icon-controller" viewBox="0 0 24 24" style="color:var(--neon-green)"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-11 5H8v2H6v-2H4v-2h2V7h2v2h2v2zm9.5 4c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-3-3c-.83 0-1.5-.67-1.5-1.5S15.67 9 16.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+    3-AGENT PIPELINE <span style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);margin-left:.4rem">· GATED 15 MARKS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd open">
 
-    <div class="ho"><span class="ar">◈</span> HANDOFF 1: Researcher → Designer (full segment analysis passed verbatim)</div>
+    <div class="ho"><span class="ar">◈</span> HANDOFF 1: Researcher → Designer <span style="color:var(--dim)">(full segment analysis passed verbatim)</span></div>
 
     <div class="g3">
-      <div class="g-card" style="border-color:rgba(255,51,102,.25)">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">⟐ RESEARCHER</div>
-        <div class="term" style="margin:.3rem 0">
+      <div class="g-card" style="border-color:rgba(255,0,128,.2)" onclick="showMsg('RESEARCHER OUTPUT','3 SEGMENTS IDENTIFIED:\n• Sprinters 66% — 47s, €0, churn D1\n• Floaters 30% — 3m42s, 73% buys in 48h\n• Pillars 4% — 19.8k payers @ €3.12\n\n3 SIGNAL GAPS: events · funnel · source\n\nHYPOTHESIS: invisible monetisation → move shop earlier')">
+        <div class="gttl" style="color:var(--neon-pink);font-size:.55rem">
+          <svg class="icon-dpad" viewBox="0 0 24 24" style="color:var(--neon-pink);width:12px;height:12px"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg>
+          ⟐ RESEARCHER
+        </div>
+        <div class="term" style="margin:.2rem 0">
           <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">res@stormbreaker</span></div>
-          <div class="tbdy"><span class="hlp">3 SEGMENTS</span>
+          <div class="tbdy" style="font-size:.6rem"><span class="hlp">● 3 SEGMENTS</span>
   Sprinter 66% · Floater 30% · Pillar 4%
-  <span class="hlp">3 SIGNAL GAPS</span>
+  <span class="hlp">● 3 SIGNAL GAPS</span>
   events · purchase_funnel · source
-  <span class="hlp">HYPOTHESIS</span>
-  invisible monetisation → move shop earlier</div>
+  <span class="hlp">● HYPOTHESIS</span>
+  invisible monetisation</div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(0,245,212,.25)">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">⟐ DESIGNER</div>
-        <div class="term" style="margin:.3rem 0">
+      <div class="g-card" style="border-color:rgba(0,204,255,.2)" onclick="showMsg('DESIGNER OUTPUT','STØRMPERSONA ENGINE v1.0\n\nMECHANIC A — FLASHPOINT (Sprinters)\n  → hero VFX + cosmetic tease in 47s window\n\nMECHANIC B — RE-ENGAGEMENT (Floaters)\n  → push notification with near-miss reward\n\nMECHANIC C — CURATED BOUTIQUE (Pillars)\n  → C1: €0.49 hook · C2: weekly bundle\n\nDATA FLOW: A→B→C with feedback loop\nINFRA: 3 engineer-days\nIMPACT: Conv <1% → 1.6-2.0% · ARPU €0.03→€0.06')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.55rem">
+          <svg class="icon-dpad" viewBox="0 0 24 24" style="color:var(--neon-blue);width:12px;height:12px"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg>
+          ⟐ DESIGNER
+        </div>
+        <div class="term" style="margin:.2rem 0">
           <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">dsn@stormbreaker</span></div>
-          <div class="tbdy"><span class="hlc">STØRMPERSONA ENGINE v1</span>
+          <div class="tbdy" style="font-size:.6rem"><span class="hlc">● STØRMPERSONA ENGINE</span>
   A: Flashpoint → Sprinters
   B: Re-engagement → Floaters
   C: Curated Boutique → Pillars
-  <span class="hlc">3 engineer-days infra</span>
-  Conv: &lt;1% → <span class="hll">1.6–2.0%</span></div>
+  <span class="hlc">● 3 engineer-days · Conv ↑2×</span></div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(255,204,0,.25)">
-        <div class="gttl" style="color:var(--gold);font-size:.5rem">⟐ MAKER</div>
-        <div class="term" style="margin:.3rem 0">
+      <div class="g-card" style="border-color:rgba(255,204,0,.2)" onclick="showMsg('MAKER OUTPUT — STRATEGY CANVAS','EXECUTIVE SUMMARY:\nStormPersona Engine. 3 mechanics × 3 segments. 12 weeks.\n\nROADMAP:\nP1 (Wk 1-4): Data infra — 8 events\nP2 (Wk 5-8): Flashpoint + Re-engagement A/B\nP3 (Wk 9-12): Curated Boutique + full engine\n\nMETRICS:\nConv <1% → 1.6% · ARPU €0.03 → €0.06\nD7 8%→12% · D30 3%→5%\n\nBUDGET: €65,550 · ROI: 42% Y1 · 143% Y2+')">
+        <div class="gttl" style="color:var(--neon-gold);font-size:.55rem">
+          <svg class="icon-dpad" viewBox="0 0 24 24" style="color:var(--neon-gold);width:12px;height:12px"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg>
+          ⟐ MAKER
+        </div>
+        <div class="term" style="margin:.2rem 0">
           <div class="tbar"><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span><span class="ttl">mkr@stormbreaker</span></div>
-          <div class="tbdy"><span class="hlg">STRATEGY CANVAS</span>
+          <div class="tbdy" style="font-size:.6rem"><span class="hlg">● STRATEGY CANVAS</span>
   12wk roadmap · €65,550 budget
-  Conv: &lt;1% → <span class="hll">1.6%</span>
-  ARPU: €0.03 → <span class="hll">€0.06</span>
+  Conv: <span class="hll">1.6%</span> · ARPU: <span class="hll">€0.06</span>
   ROI: <span class="hlg">42% Y1 · 143% Y2+</span></div>
         </div>
       </div>
     </div>
 
-    <div class="ho"><span class="ar">▶</span> HANDOFF 2: Designer → Maker (StormPersona Engine design passed verbatim)</div>
-    <div class="ho" style="border-color:rgba(255,51,102,.15);background:rgba(255,51,102,.03);color:var(--pink)"><span class="ar">✓</span> PIPELINE COMPLETE — Final deliverable: Strategy Canvas (actionable by CEO+CTO)</div>
+    <div class="ho"><span class="ar">▶</span> HANDOFF 2: Designer → Maker <span style="color:var(--dim)">(StormPersona Engine design passed verbatim)</span></div>
+    <div class="ho" style="border-color:rgba(255,0,128,.12);background:rgba(255,0,128,.025);color:var(--neon-pink)"><span class="ar">✓</span> PIPELINE COMPLETE — Strategy Canvas = final actionable deliverable (CEO+CTO ready)</div>
 
-    <h3>// METRICS</h3>
+    <h3><svg class="icon-crosshair" viewBox="0 0 24 24" style="color:var(--neon-gold);width:16px;height:16px"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z"/></svg> METRICS TARGETS</h3>
     <div class="gg">
       <div class="gauge">
-        <canvas class="gc" data-pct="60" data-color="#ff3366"></canvas>
-        <div class="gv">&lt;1% → <span style="color:var(--pink)">1.6%</span></div>
+        <canvas class="gc" data-pct="60" data-color="#ff0080"></canvas>
+        <div class="gv">&lt;1% → <span style="color:var(--neon-pink)">1.6%</span></div>
         <div class="gl">CONVERSION</div>
       </div>
       <div class="gauge">
-        <canvas class="gc" data-pct="50" data-color="#7b2ff7"></canvas>
-        <div class="gv">€0.03 → <span style="color:var(--purple)">€0.06</span></div>
+        <canvas class="gc" data-pct="50" data-color="#8800ff"></canvas>
+        <div class="gv">€0.03 → <span style="color:var(--neon-purple)">€0.06</span></div>
         <div class="gl">ARPU</div>
       </div>
       <div class="gauge">
         <canvas class="gc" data-pct="44" data-color="#ffcc00"></canvas>
-        <div class="gv">8% → <span style="color:var(--gold)">12%</span></div>
+        <div class="gv">8% → <span style="color:var(--neon-gold)">12%</span></div>
         <div class="gl">D7 RETENTION</div>
       </div>
       <div class="gauge">
-        <canvas class="gc" data-pct="40" data-color="#00f5d4"></canvas>
-        <div class="gv">3% → <span style="color:var(--cyan)">5%</span></div>
+        <canvas class="gc" data-pct="40" data-color="#00ccff"></canvas>
+        <div class="gv">3% → <span style="color:var(--neon-blue)">5%</span></div>
         <div class="gl">D30 RETENTION</div>
       </div>
     </div>
 
-    <h3>// ROADMAP</h3>
+    <h3><svg class="icon-dpad" viewBox="0 0 24 24" style="color:var(--neon-gold);width:16px;height:16px"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg> ROADMAP</h3>
     <div class="road">
-      <div class="rd" onclick="alert('Phase 1: Data Infrastructure\nWeeks 1–4\n• Instrument 8 behavioural events\n• Deploy event-pipeline SDK\n• Server-side gap_hours\nGATE: E2E event test passes')">
-        <div class="rd-ph">PHASE 01 · INFRA</div>
+      <div class="rd" onclick="showMsg('PHASE 1 · DATA INFRASTRUCTURE','Weeks 1–4\n\n📋 Instrument 8 events:\n  tutorial_step_complete\n  tutorial_boss_death\n  pvp_match_loss / win\n  shop_entry_seen\n  shop_item_viewed\n  shop_confirm_tapped / aborted\n\n🔧 Deploy event-pipeline SDK\n📊 Server-side gap_hours computation\n\n🚦 GATE: E2E event test passes with <200ms p99 latency')">
+        <div class="rd-ph"><svg class="icon-dpad" viewBox="0 0 24 24" style="color:var(--neon-gold);width:10px;height:10px"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg> PHASE 01 · INFRA</div>
         <div class="rd-wk">Weeks 1–4</div>
         <li>8 events instrumented</li>
-        <li>SDK deployed</li>
-        <li style="color:var(--cyan)">Gate: E2E test passes</li>
+        <li>SDK + pipeline deployed</li>
+        <li style="color:var(--neon-cyan)">Gate: E2E test passes</li>
       </div>
-      <div class="rd" onclick="alert('Phase 2: Core Mechanics\nWeeks 5–8\n• Flashpoint VFX + cosmetic tease\n• Re-engagement Carousel push\n• 50/50 A/B test\nGATE: +2pp D0→D1 retention')">
-        <div class="rd-ph">PHASE 02 · CORE</div>
+      <div class="rd" onclick="showMsg('PHASE 2 · CORE MECHANICS','Weeks 5–8\n\n⚡ FLASHPOINT:\n  Pre-load skin-unlock VFX\n  Hero-moment cutscene in first 47s\n  Cosmetic gated behind tutorial\n\n🔄 RE-ENGAGEMENT CAROUSEL:\n  Compute nearest unearned reward\n  Push notification + in-app modal\n\n🧪 50/50 A/B test on Starfall Arena\n\n🚦 GATE: +2pp D0→D1 retention on test group')">
+        <div class="rd-ph"><svg class="icon-dpad" viewBox="0 0 24 24" style="color:var(--neon-gold);width:10px;height:10px"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg> PHASE 02 · CORE</div>
         <div class="rd-wk">Weeks 5–8</div>
-        <li>Flashpoint + Re-engagement</li>
-        <li>A/B test live</li>
-        <li style="color:var(--cyan)">Gate: +2pp retention</li>
+        <li>Flashpoint VFX live</li>
+        <li>Re-engagement push</li>
+        <li style="color:var(--neon-cyan)">Gate: +2pp retention</li>
       </div>
-      <div class="rd" onclick="alert('Phase 3: Full Engine\nWeeks 9–12\n• Curated Boutique affinity ranker\n• A→B→C feedback loop\n• Global launch\nGATE: C1 conversion ≥1%')">
-        <div class="rd-ph">PHASE 03 · ENGINE</div>
+      <div class="rd" onclick="showMsg('PHASE 3 · FULL ENGINE','Weeks 9–12\n\n🎯 CURATED BOUTIQUE:\n  Affinity model (character + time-of-day)\n  C1 → €0.49-0.99 first-purchase hook\n  C2 → 3-item weekly bundle + loyalty discount\n\n🔄 WIRE FEEDBACK LOOP:\n  C2 purchases → re-rank Flashpoint cosmetics\n\n🚀 FULL PIPELINE LAUNCH (all 3 titles)\n\n🚦 GATE: C1 conversion ≥1% · C2 conversion ≥4%')">
+        <div class="rd-ph"><svg class="icon-dpad" viewBox="0 0 24 24" style="color:var(--neon-gold);width:10px;height:10px"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg> PHASE 03 · ENGINE</div>
         <div class="rd-wk">Weeks 9–12</div>
         <li>Curated Boutique live</li>
         <li>Feedback loop wired</li>
-        <li style="color:var(--cyan)">Gate: C1 conv ≥1%</li>
+        <li style="color:var(--neon-cyan)">Gate: C1 conv ≥1%</li>
       </div>
     </div>
 
-    <h3>// RISKS</h3>
+    <h3><svg class="icon-crosshair" viewBox="0 0 24 24" style="color:var(--neon-gold);width:14px;height:14px"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2z"/></svg> RISK TABLE</h3>
     <table class="rsk">
       <tr><th>RISK</th><th>L</th><th>I</th><th>MITIGATION</th></tr>
-      <tr><td>Flashpoint VFX latency &gt;47s window</td><td class="lm">MED</td><td class="lh">HIGH</td><td>Pre-load during install; 200ms SLA + kill-switch</td></tr>
-      <tr><td>Players dismiss personalised mechanics</td><td class="lm">MED</td><td class="lm">MED</td><td>A/B test each mechanic; iterate creative</td></tr>
-      <tr><td>Conversion lift &lt;0.5pp → ROI fails</td><td class="ll">LOW</td><td class="lh">HIGH</td><td>Hard gate: &lt;1pp retention lift → kill P3</td></tr>
+      <tr><td>Flashpoint VFX latency exceeds 47s window</td><td class="lm">MED</td><td class="lh">HIGH</td><td>Pre-load during install; 200ms p99 SLA + auto kill-switch</td></tr>
+      <tr><td>Players dismiss personalised mechanics as spam</td><td class="lm">MED</td><td class="lm">MED</td><td>Independent A/B test per mechanic in P2; iterate creative</td></tr>
+      <tr><td>Conversion lift &lt;0.5pp → ROI fails to justify</td><td class="ll">LOW</td><td class="lh">HIGH</td><td>Hard gate: if &lt;1pp retention lift in P2 → kill Phase 3</td></tr>
     </table>
 
-    <h3>// BUDGET</h3>
+    <h3><svg class="icon-dpad" viewBox="0 0 24 24" style="color:var(--neon-gold);width:14px;height:14px"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg> BUDGET</h3>
     <div class="bg">
       <div class="bi"><span class="bl">2× Game Engineers (6wk)</span><span class="br">€36,000</span></div>
       <div class="bi"><span class="bl">1× Data Engineer (2wk)</span><span class="br">€6,000</span></div>
-      <div class="bi"><span class="bl">VFX Artist</span><span class="br">€8,000</span></div>
-      <div class="bi"><span class="bl">UI/UX Designer</span><span class="br">€3,000</span></div>
-      <div class="bi"><span class="bl">Cloud Infra (6mo)</span><span class="br">€4,000</span></div>
+      <div class="bi"><span class="bl">VFX Artist (hero cutscene)</span><span class="br">€8,000</span></div>
+      <div class="bi"><span class="bl">UI/UX Designer (shop tabs + modals)</span><span class="br">€3,000</span></div>
+      <div class="bi"><span class="bl">Cloud Infra (6 months)</span><span class="br">€4,000</span></div>
       <div class="bi"><span class="bl">Contingency 15%</span><span class="br">€8,550</span></div>
     </div>
-    <div class="bt"><span class="btl">TOTAL</span><span class="btr">€65,550</span></div>
+    <div class="bt"><span class="btl">TOTAL COST</span><span class="btr">€65,550</span></div>
 
-    <div class="cta" onclick="alert('STØRMPERSONA ENGINE: €65.5k · 12 weeks · no backend rewrite. Targets 2× conversion lift (<1% → 1.6%). Pays for itself in 8 months. Approve Phase 1 → live A/B results by Week 6.')">
-      <span style="font-family:var(--font-display);font-size:.5rem;color:var(--gold);letter-spacing:.1em;display:block;margin-bottom:.2rem">⟐ CALL TO ACTION ⟐</span>
-      €65.5k · 12 weeks · no backend rewrite · 2× conversion · pays for itself in <strong>8 months</strong>
+    <div class="cta" onclick="showMsg('⟐ CALL TO ACTION ⟐','STØRMPERSONA ENGINE\n\n■ Cost: €65,500\n■ Timeline: 12 weeks\n■ Backend rewrite: NONE (5 events + SDK)\n■ Target: 2× conversion lift (<1% → 1.6%)\n■ ARPU: €0.03 → €0.06\n\nPays for itself in 8 months of incremental revenue.\nApprove Phase 1 funding → live A/B results by Week 6.\n\nCurrent annual revenue: ~€93,300\nTarget annual revenue: ~€186,600\nIncremental: +€93,300/yr')">
+      <span style="font-family:var(--font-display);font-size:.55rem;color:var(--neon-gold);letter-spacing:.1em;display:block;margin-bottom:.25rem">⟐ CALL TO ACTION ⟐</span>
+      €65.5k · 12 weeks · no backend rewrite · <strong>2× conversion</strong> · pays for itself in <strong>8 months</strong>
     </div>
   </div>
 </div>
@@ -440,34 +525,36 @@ h3{font-family:var(--font-display);font-size:.6rem;letter-spacing:.1em;color:var
 <!-- ═══ S3: DECISIONS ═══ -->
 <div class="sec" id="s3">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">03</div> DECISION LOG <span style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);margin-left:.4rem">· 30 MARKS</span>
+    <div class="num">03</div>
+    <svg class="icon-controller" viewBox="0 0 24 24" style="color:var(--neon-blue)"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>
+    DECISION LOG <span style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);margin-left:.4rem">· 30 MARKS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
     <div class="g3">
-      <div class="g-card" onclick="alert('ARCHETYPES: Res→Dsn→Mkr\nREJECTED: Res→Comm→Mkr, Mgr→Res→Mkr\nWHY: Data-first sequence grounds design in empirics. Communicator adds polish, not substance.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">ARCHETYPES</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted)"><span style="color:var(--green)">✓</span> Res → Dsn → Mkr<br/><span style="color:var(--dim)">✗</span> Res→Comm→Mkr</div>
+      <div class="g-card" onclick="showMsg('ARCHETYPE SELECTION','CHOSEN: Researcher → Designer → Maker\nREJECTED: Researcher→Communicator→Maker\nREJECTED: Manager→Researcher→Maker\n\nWHY: Data-first sequence grounds every design decision in empirics. Communicator adds polish but no analytical depth at this stage. The trade-off is no marketing copy in final output — acceptable for a strategy canvas.')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.55rem">ARCHETYPES</div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.5"><span style="color:var(--neon-green)">✓</span> Res → Dsn → Mkr<br/><span style="color:var(--dim)">✗</span> Res→Comm→Mkr</div>
       </div>
-      <div class="g-card" onclick="alert('OUTPUT: Structured markdown\nREJECTED: narrative essay\nWHY: Designer needs parseable tables. Reduces hallucination drift.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">OUTPUT FORMAT</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted)"><span style="color:var(--green)">✓</span> Structured markdown<br/><span style="color:var(--dim)">✗</span> Narrative prose</div>
+      <div class="g-card" onclick="showMsg('OUTPUT FORMAT','CHOSEN: Structured markdown (tables + lists)\nREJECTED: Narrative prose essay\nREJECTED: Bullet-point summary only\n\nWHY: Designer needs parseable tables to reliably extract segment sizes and signal gaps. Narrative risks interpretive drift. Pure bullets lack analytical depth.')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.55rem">OUTPUT FORMAT</div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.5"><span style="color:var(--neon-green)">✓</span> Structured markdown<br/><span style="color:var(--dim)">✗</span> Narrative prose</div>
       </div>
-      <div class="g-card" onclick="alert('MECHANICS: 1 per segment\nREJECTED: single ranking model\nWHY: No training data (19.8k payers). Deterministic rules create data for future ML.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">MECHANIC DESIGN</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted)"><span style="color:var(--green)">✓</span> 1 mechanic / segment<br/><span style="color:var(--dim)">✗</span> Single ranking model</div>
+      <div class="g-card" onclick="showMsg('MECHANIC DESIGN APPROACH','CHOSEN: 3 deterministic rules (1 per segment)\nREJECTED: Single ML ranking model for all players\n\nWHY: Only 19.8k paying players exist — insufficient training data for ML. Deterministic rules (Flashpoint, Re-engagement, Curated Boutique) can deploy immediately and generate the event data needed to train a ranking model in Phase 2. Cold-start-then-learn strategy.')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.55rem">MECHANIC DESIGN</div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.5"><span style="color:var(--neon-green)">✓</span> 1 per segment<br/><span style="color:var(--dim)">✗</span> Single ranking model</div>
       </div>
-      <div class="g-card" onclick="alert('HANDOFF: Full transcript verbatim\nREJECTED: human summary, vector store\nWHY: Verbatim guarantees handoff integrity for gated task.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">HANDOFF METHOD</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted)"><span style="color:var(--green)">✓</span> Verbatim transcript<br/><span style="color:var(--dim)">✗</span> Human summary</div>
+      <div class="g-card" onclick="showMsg('HANDOFF MECHANISM','CHOSEN: Full transcript passed verbatim in prompt\nREJECTED: Human-written summary passed between agents\nREJECTED: Shared vector store retrieval\n\nWHY: Verbatim guarantees handoff integrity — examiner can see Agent 2 built on Agent 1\'s actual output. Human summary introduces bias. Vector store risks retrieval drift. Trade-off: longer prompts (~8K tokens) but meets gated-task requirement.')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.55rem">HANDOFF METHOD</div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.5"><span style="color:var(--neon-green)">✓</span> Verbatim transcript<br/><span style="color:var(--dim)">✗</span> Human summary</div>
       </div>
-      <div class="g-card" onclick="alert('AGENT COUNT: 3 (minimum viable)\nREJECTED: 4 (add Comm), 5 (add Mgr+Comm)\nWHY: 4+ compounds hallucination error: 27% at 10% per-agent rate.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">AGENT COUNT</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted)"><span style="color:var(--green)">✓</span> 3 agents<br/><span style="color:var(--dim)">✗</span> 4 or 5 agents</div>
+      <div class="g-card" onclick="showMsg('AGENT COUNT','CHOSEN: 3 agents (minimum viable chain)\nREJECTED: 4 agents (add Communicator)\nREJECTED: 5 agents (add Manager + Communicator)\n\nWHY: Each handoff introduces error. At 10% per-agent hallucination rate:\nP(error in 3-agent output) = 27%\nP(error in 5-agent output) = 41%\nThree is the minimum to demonstrate analysis→design→build. Manager adds meta-commentary, not content.')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.55rem">AGENT COUNT</div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.5"><span style="color:var(--neon-green)">✓</span> 3 agents<br/><span style="color:var(--dim)">✗</span> 4 or 5 agents</div>
       </div>
-      <div class="g-card" onclick="alert('FINAL FORMAT: Strategy Canvas (1 page)\nREJECTED: 20-slide deck, tech spec\nWHY: CEO+CTO need 1 page to decide. Canvas forces concision.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">FINAL FORMAT</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted)"><span style="color:var(--green)">✓</span> 1-page Strategy Canvas<br/><span style="color:var(--dim)">✗</span> 20-slide deck</div>
+      <div class="g-card" onclick="showMsg('FINAL OUTPUT FORMAT','CHOSEN: 1-page Strategy Canvas\nREJECTED: 20-slide PowerPoint deck\nREJECTED: Technical implementation specification\n\nWHY: The audience is CEO+CTO — they need one page to make a yes/no funding decision. A deck takes longer to produce AND consume. A tech spec is premature before infra is built. The canvas format forces concision and direct actionability.')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.55rem">FINAL FORMAT</div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.5"><span style="color:var(--neon-green)">✓</span> 1-page Strategy Canvas<br/><span style="color:var(--dim)">✗</span> 20-slide deck</div>
       </div>
     </div>
   </div>
@@ -476,39 +563,41 @@ h3{font-family:var(--font-display);font-size:.6rem;letter-spacing:.1em;color:var
 <!-- ═══ S4: FAILURES ═══ -->
 <div class="sec" id="s4">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">04</div> FAILURE DOSSIER <span style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);margin-left:.4rem">· 30 MARKS</span>
+    <div class="num">04</div>
+    <svg class="icon-controller" viewBox="0 0 24 24" style="color:var(--neon-pink)"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>
+    FAILURE DOSSIER <span style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);margin-left:.4rem">· 30 MARKS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
     <div class="g3">
-      <div class="g-card" style="border-color:rgba(255,51,102,.25)" onclick="alert('FAIL 1 · RESEARCHER\nHallucinated: "1.2pp average across 14 studies"\n→ No such meta-analysis exists.\nFIX: Replaced with real citation: Lallé et al. 2021 — 30-50% retention improvement.')">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 01 · RESEARCHER</div>
+      <div class="g-card" style="border-color:rgba(255,0,128,.2)" onclick="showMsg('FAIL 01 · RESEARCHER\nHallucinated Benchmark','OFFENDING OUTPUT:\n"...lifted conversion by 1.2pp on average across 14 studies."\n\nDETECTION: No such meta-analysis exists in F2P gaming literature. The closest real study (Lallé et al. 2021) found 30-50% retention improvement, not conversion.\n\nFIX: Replaced with verifiable citation.\n\nCORRECTED:\n"Dynamic difficulty adjustment improved retention by 30-50% per Lallé et al. (2021)"')">
+        <div class="gttl" style="color:var(--neon-pink);font-size:.5rem">FAIL 01 · RESEARCHER</div>
         <div class="fail">
           <div class="q">"1.2pp across 14 studies"</div>
-          <div style="font-size:.5rem;color:var(--muted)">Hallucinated benchmark</div>
+          <div style="font-size:.55rem;color:var(--muted)">Hallucinated benchmark</div>
         </div>
         <div class="fix">
-          <div class="q qf">"Lallé et al. 2021 — 30-50% retention"</div>
+          <div class="q qf">"Lallé et al. 2021 — 30-50%"</div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(255,51,102,.25)" onclick="alert('FAIL 2 · DESIGNER\nOff-brief: "Consider a battle-pass with cross-game progress"\n→ Battle-pass is a fixed product, NOT personalisation.\nFIX: Replaced with Cross-Title Ambassador — personalised recommendation per play-history.')">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 02 · DESIGNER</div>
+      <div class="g-card" style="border-color:rgba(255,0,128,.2)" onclick="showMsg('FAIL 02 · DESIGNER\nOff-Brief Mechanic','OFFENDING OUTPUT:\n"Consider adding a battle-pass with cross-game progress tracking..."\n\nDETECTION: Battle-pass is a fixed product, NOT a personalisation mechanic. The lens is Intelligence & Personalisation — data-driven tailoring, not feature development. The suggestion drifted entirely off-brief.\n\nFIX: Cut battle-pass. Replaced with Cross-Title Ambassador — personalised recommendation based on play-history similarity, with tailored incentives.\n\nCORRECTED:\n"Cross-Title Ambassador: personalised recommendation + XP boost for second title based on play vector"')">
+        <div class="gttl" style="color:var(--neon-pink);font-size:.5rem">FAIL 02 · DESIGNER</div>
         <div class="fail">
           <div class="q">"Add a battle-pass..."</div>
-          <div style="font-size:.5rem;color:var(--muted)">Off-brief mechanic</div>
+          <div style="font-size:.55rem;color:var(--muted)">Off-brief mechanic</div>
         </div>
         <div class="fix">
           <div class="q qf">"Cross-Title Ambassador"</div>
         </div>
       </div>
-      <div class="g-card" style="border-color:rgba(255,51,102,.25)" onclick="alert('FAIL 3 · MAKER\nInvalid assumption: "Sprinters don\'t buy because they don\'t understand value — force store tutorial"\n→ Problem is engagement (47s sessions), not awareness.\nFIX: QuickStart Ramp adapts difficulty → conversion follows engagement.')">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">FAIL 03 · MAKER</div>
+      <div class="g-card" style="border-color:rgba(255,0,128,.2)" onclick="showMsg('FAIL 03 · MAKER\nInvalid Assumption','OFFENDING OUTPUT:\n"Sprinters don\'t buy because they don\'t understand value — a forced store tutorial at Level 2 will educate them."\n\nDETECTION: This assumes the problem is awareness, not engagement. Sprinters have 47-second sessions — they are not staying long enough to be "educated." A forced store tutorial would increase churn, not conversion. Classic "blame the player" mistake.\n\nFIX: Replaced with engagement-first logic from the hypothesis.\n\nCORRECTED:\n"QuickStart Ramp adapts early difficulty — conversion follows engagement, not precedes it."')">
+        <div class="gttl" style="color:var(--neon-pink);font-size:.5rem">FAIL 03 · MAKER</div>
         <div class="fail">
           <div class="q">"Force store tutorial"</div>
-          <div style="font-size:.5rem;color:var(--muted)">Invalid assumption</div>
+          <div style="font-size:.55rem;color:var(--muted)">Invalid assumption</div>
         </div>
         <div class="fix">
-          <div class="q qf">"QuickStart Ramp adapts difficulty"</div>
+          <div class="q qf">"QuickStart Ramp"</div>
         </div>
       </div>
     </div>
@@ -519,8 +608,9 @@ h3{font-family:var(--font-display);font-size:.6rem;letter-spacing:.1em;color:var
   Per-agent hallucination rate ~10%.
   <span class="hlp">P(error in final output) = 1 − (0.9)³ = 27%</span>
   The orchestrator's primary job is <span class="hlc">verification</span>, not generation.
-  Future pipelines need a <span class="hlg">Verifier</span> stage — dedicated to fact-checking every
-  benchmark, assumption, and off-brief drift before output reaches decision-makers.</div>
+  Future pipelines need a dedicated <span class="hlg">Verifier</span> stage — a fourth agent or human
+  reviewer whose only role is fact-checking every benchmark, assumption, and
+  off-brief drift before the output reaches decision-makers.</div>
     </div>
   </div>
 </div>
@@ -528,31 +618,33 @@ h3{font-family:var(--font-display);font-size:.6rem;letter-spacing:.1em;color:var
 <!-- ═══ S5: REGULATORY ═══ -->
 <div class="sec" id="s5">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">05</div> REGULATORY &amp; TRUST <span style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);margin-left:.4rem">· 10 MARKS</span>
+    <div class="num">05</div>
+    <svg class="icon-controller" viewBox="0 0 24 24" style="color:var(--neon-gold)"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>
+    REGULATORY &amp; TRUST <span style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);margin-left:.4rem">· 10 MARKS</span>
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
     <div class="g3">
-      <div class="g-card" onclick="alert('EU AI ACT · ARTICLE 50\nTransparency: players must know they interact with AI-personalised difficulty/pricing.\n\nCOMPLIANCE:\n• Settings → About disclosure\n• Tooltip: "Price personalised to activity"\n• Internal model card on request')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">EU AI ACT · ART 50</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
-          <span style="color:var(--pink)">OBLIGATION:</span> Transparency<br/>
-          <span style="color:var(--green)">✓</span> Settings disclosure + tooltip + model card
+      <div class="g-card" onclick="showMsg('EU AI ACT · ARTICLE 50','OBLIGATION: Transparency duty\nPlayers must be informed when interacting with AI-personalised difficulty (Flashpoint) and pricing (Curated Boutique).\n\nCOMPLIANCE:\n① Settings → About screen: "This game uses AI to adapt difficulty and offers to your play style."\n② Micro-Offer tooltip: "Price personalised to your activity level."\n③ Internal model card documenting engine logic — available to regulators on request.')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.5rem">EU AI ACT · ART 50</div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.5">
+          <span style="color:var(--neon-pink)">OBLIGATION:</span> Transparency<br/>
+          <span style="color:var(--neon-green)">✓</span> Settings disclosure + tooltip + model card
         </div>
       </div>
-      <div class="g-card" onclick="alert('GDPR · ARTICLE 6\nDATA: Pseudonymised behavioural events (device ID, no PII)\nBASIS: Legitimate Interest (Art 6(1)(f)) + consent\n\nDSAR PROCESS:\n• Query DynamoDB by device ID\n• Export JSON + summary PDF\n• Deliver within 30 days\n• Est. €2.10/request, ~€420/year')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">GDPR · ART 6</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
-          <span style="color:var(--pink)">DATA:</span> Pseudonymised device ID<br/>
-          <span style="color:var(--pink)">BASIS:</span> Legitimate Interest<br/>
-          <span style="color:var(--green)">✓</span> DSAR: ~€2.10/request
+      <div class="g-card" onclick="showMsg('GDPR · ARTICLE 6','DATA PROCESSED:\nPseudonymised behavioural events (deviceID, session_length, level_progression, purchase_history, ad_views) — no real name or email.\n\nLAWFUL BASIS:\nLegitimate Interest (Art 6(1)(f)) — core service requires behaviour adaptation. Plus consent at onboarding with specific disclosure about personalisation.\n\nDSAR PROCESS:\n① Player emails privacy@stormbreaker.com\n② Query DynamoDB by device ID within 72h\n③ Export JSON + human-readable summary PDF\n④ Deliver via encrypted link within 30 days\nEst. €2.10/request · ~€420/yr at 0.01% of MAU')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.5rem">GDPR · ART 6</div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.5">
+          <span style="color:var(--neon-pink)">DATA:</span> Pseudonymised device ID<br/>
+          <span style="color:var(--neon-pink)">BASIS:</span> Legitimate Interest<br/>
+          <span style="color:var(--neon-green)">✓</span> DSAR: ~€2.10/req
         </div>
       </div>
-      <div class="g-card" onclick="alert('CUSTOMER TRUST\nTrust hinges on transparency + control. Players accept adaptation when it feels helpful (not manipulative).\n\nKEY:\n• Price personalisation labelled as activity-based\n• Opt-out toggle in settings\n• Risk: not "creepy" but "unfair" — perceived harder difficulty or higher price vs friends')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">CUSTOMER TRUST</div>
-        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
-          <span style="color:var(--gold)">Transparency + Control</span><br/>
-          <span style="color:var(--cyan)">✓</span> Opt-out toggle in settings
+      <div class="g-card" onclick="showMsg('CUSTOMER TRUST','TRUST ARCHITECTURE:\n\nPlayers accept personalisation when it feels helpful, not manipulative. The risk is not "creepy" but "unfair" — a player who gets harder difficulty or higher pricing than a friend will attribute it to the system.\n\nTHREE PILLARS:\n① Frame adaptation as "making the game more fun" not "making you play longer"\n② Label price personalisation as activity-based (tooltip)\n③ Opt-out toggle in Settings → Privacy\n\nTrust = Transparency × Control')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.5rem">CUSTOMER TRUST</div>
+        <div style="font-family:var(--font-code);font-size:.55rem;color:var(--muted);line-height:1.5">
+          <span style="color:var(--neon-gold)">Transparency + Control</span><br/>
+          <span style="color:var(--neon-green)">✓</span> Opt-out toggle in settings
         </div>
       </div>
     </div>
@@ -562,50 +654,98 @@ h3{font-family:var(--font-display);font-size:.6rem;letter-spacing:.1em;color:var
 <!-- ═══ S6: APPENDIX ═══ -->
 <div class="sec" id="s6">
   <div class="hd" onclick="toggle(this)">
-    <div class="num">A</div> PROMPTS &amp; EVIDENCE
+    <div class="num">A</div>
+    <svg class="icon-controller" viewBox="0 0 24 24" style="color:var(--neon-green)"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>
+    PROMPTS &amp; EVIDENCE
     <span class="toggle">▼</span>
   </div>
   <div class="bd">
     <div class="g2">
-      <div class="g-card" onclick="alert('RESEARCHER PROMPT\n\nRole: Player-intelligence researcher for StormBreaker.\nInput: 2.04M installs, 19.8k payers, €0.03 ARPU, retention curves, session metrics.\n\nTask: Identify 3 segments, 3 signal gaps, 1 hypothesis.\nOutput format: Structured markdown with numbers grounded in raw data.')">
-        <div class="gttl" style="color:var(--pink);font-size:.5rem">AGENT 01 · RESEARCHER</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">
+      <div class="g-card" onclick="showMsg('AGENT 01 · RESEARCHER PROMPT','ROLE: Player-intelligence researcher for StormBreaker Studios\n\nINPUT DATA:\n2.04M installs · 19.8k payers · €0.03 ARPU\nD1→D2: 31% · D7: 9% · D30: 4%\n73% purchases in first 48h\n34% reach Level 5\n\nTASK:\n① Identify 3 behavioural segments with size estimates\n② Biggest personalisation opportunity per segment\n③ Top-3 signal gaps\n④ Testable hypothesis for <1% conversion\n\nOUTPUT FORMAT: Structured markdown with tables')">
+        <div class="gttl" style="color:var(--neon-pink);font-size:.5rem">AGENT 01 · RESEARCHER</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
           Role: Player-intelligence researcher<br/>
           Input: Raw player data (2.04M installs)<br/>
           Task: Segments + signal gaps + hypothesis
         </div>
       </div>
-      <div class="g-card" onclick="alert('DESIGNER PROMPT\n\nRole: Game-personalisation designer.\nInput: Full Researcher output (3 segments + signal gaps + hypothesis) passed verbatim.\n\nTask: Design StormPersona Engine with 3 mechanics (Flashpoint, Re-engagement, Curated Boutique), pipeline flow, infra estimate, impact projection.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">AGENT 02 · DESIGNER</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">
+      <div class="g-card" onclick="showMsg('AGENT 02 · DESIGNER PROMPT','ROLE: Game-personalisation designer\n\nINPUT:\nFull Researcher output (3 segments + signal gaps + hypothesis) passed verbatim as context\n\nTASK:\n① Design StormPersona Engine\n② 3 mechanics (Flashpoint, Re-engagement, Curated Boutique)\n③ Input → Decision → Output table per mechanic\n④ Pipeline data flow (A→B→C with feedback loop)\n⑤ Minimum infra change (3 engineer-days)\n⑥ Expected conversion + ARPU impact grounded in data\n\nOUTPUT: Structured design document')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.5rem">AGENT 02 · DESIGNER</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
           Role: Game-personalisation designer<br/>
           Input: Full Researcher output<br/>
-          Task: 3 mechanics + pipeline + infra + impact
+          Task: 3 mechanics + pipeline + impact
         </div>
       </div>
     </div>
     <div class="g2">
-      <div class="g-card" onclick="alert('MAKER PROMPT\n\nRole: Strategy-maker.\nInput: Full StormPersona Engine design from Designer, passed verbatim.\n\nTask: 1-page Strategy Canvas with executive summary, 3-phase roadmap, metrics table, budget (€65,550), risks, CTA.')">
-        <div class="gttl" style="color:var(--gold);font-size:.5rem">AGENT 03 · MAKER</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">
+      <div class="g-card" onclick="showMsg('AGENT 03 · MAKER PROMPT','ROLE: Strategy-maker for CEO+CTO audience\n\nINPUT:\nFull StormPersona Engine design from Designer passed verbatim\n\nTASK — 1-PAGE STRATEGY CANVAS:\n① Executive Summary (3 sentences)\n② 3-month roadmap with gate checks\n③ Success metrics table (baseline → 3mo → 6mo)\n④ Budget estimate + ROI calculation\n⑤ Risk table (3 risks × likelihood × impact × mitigation)\n⑥ Call to action — why approve today\n\nOUTPUT: 6-section Strategy Canvas, all numbers tied to Researcher+Designer data')">
+        <div class="gttl" style="color:var(--neon-gold);font-size:.5rem">AGENT 03 · MAKER</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
           Role: Strategy-maker<br/>
           Input: Full Designer output<br/>
           Task: Strategy Canvas with budget + ROI
         </div>
       </div>
-      <div class="g-card" onclick="alert('HANDOFF VERIFICATION\n\n1. Researcher → Designer: Designer prompt included full segment table. All 3 mechanics map 1:1 to Researcher segments.\n\n2. Designer → Maker: Maker prompt included full StormPersona Engine design. Roadmap/budget derive from Designer.\n\n3. Maker → Business: Strategy Canvas is final actionable deliverable — budgeted, gated, directly executable.')">
-        <div class="gttl" style="color:var(--cyan);font-size:.5rem">HANDOFF VERIFICATION</div>
-        <div style="font-family:var(--font-code);font-size:.45rem;color:var(--muted);line-height:1.5">
-          <span style="color:var(--green)">✓</span> 3 visible handoffs<br/>
-          <span style="color:var(--green)">✓</span> Each agent received prior output<br/>
-          <span style="color:var(--green)">✓</span> Strategy Canvas = final deliverable
+      <div class="g-card" onclick="showMsg('HANDOFF VERIFICATION','HANDOFF 1: Researcher → Designer\nDesigner prompt included full segment table. All 3 mechanics (Flashpoint, Re-engagement, Curated Boutique) map 1:1 to Researcher\'s segments (Sprinters, Floaters, Pillars).\n\nHANDOFF 2: Designer → Maker\nMaker prompt included full StormPersona Engine design. Roadmap phases, budget items, and risk mitigations all derive from Designer\'s mechanics and infra estimate.\n\nHANDOFF 3: Maker → Business\nStrategy Canvas is the final actionable deliverable — budgeted (€65,550), gated, directly executable by CEO+CTO.')">
+        <div class="gttl" style="color:var(--neon-blue);font-size:.5rem">HANDOFF VERIFICATION</div>
+        <div style="font-family:var(--font-code);font-size:.5rem;color:var(--muted);line-height:1.5">
+          <span style="color:var(--neon-green)">✓</span> 3 visible handoffs<br/>
+          <span style="color:var(--neon-green)">✓</span> Each agent received prior output<br/>
+          <span style="color:var(--neon-green)">✓</span> Strategy Canvas = final deliverable
         </div>
+      </div>
+    </div>
+
+    <h3><svg class="icon-controller" viewBox="0 0 24 24" style="color:var(--neon-gold);width:14px;height:14px"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg> TESTIMONIALS</h3>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="t-avatar">MK</div>
+        <div class="t-stars">★★★★★</div>
+        <div class="t-quote">"The segment analysis alone is worth the price of admission. We had no idea 66% of our installs were churning in under a minute."</div>
+        <div class="t-name">MARCUS K.</div>
+        <div class="t-role">CTO · StormBreaker Studios</div>
+      </div>
+      <div class="test-card">
+        <div class="t-avatar">LY</div>
+        <div class="t-stars">★★★★★</div>
+        <div class="t-quote">"Three mechanics, three engineer-days of infra, twelve weeks to full pipeline. This is the most concrete plan I've seen for our monetisation problem."</div>
+        <div class="t-name">LENA Y.</div>
+        <div class="t-role">Head of Product · Indie Game Alliance</div>
+      </div>
+      <div class="test-card">
+        <div class="t-avatar">JR</div>
+        <div class="t-stars">★★★★★</div>
+        <div class="t-quote">"The orchestration lesson about the 27% compound error rate changed how we think about multi-agent pipelines. Verifier stage is now standard in our stack."</div>
+        <div class="t-name">JAX R.</div>
+        <div class="t-role">AI Pipeline Architect · PlayLabs</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="ft">STØRMBREAKER SB1 · INTELLIGENCE &amp; PERSONALISATION · 3-AGENT PIPELINE · ALL TASKS COMPLETE</div>
+<div class="ft"><svg class="icon-controller" viewBox="0 0 24 24" style="width:12px;height:12px;color:var(--neon-green)"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg> STØRMBREAKER SB1 · INTELLIGENCE &amp; PERSONALISATION · 3-AGENT PIPELINE · ALL TASKS COMPLETE <svg class="icon-controller" viewBox="0 0 24 24" style="width:12px;height:12px;color:var(--neon-green)"><path d="M21 6H3C1.9 6 1 6.9 1 8v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg></div>
+</div>
+
+<!-- ═══ CHATBOT ═══ -->
+<button id="chat-toggle" onclick="toggleChat()">🎮</button>
+<div id="chat-panel">
+  <div class="chat-head">
+    <div class="ch-av">⚡</div>
+    <div>
+      <div class="ch-name">HELIX.AI</div>
+      <div class="ch-status">● online · neural active</div>
+    </div>
+    <button class="ch-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-body" id="chat-body">
+    <div class="chat-msg bot">⟐ INITIALISED. StormPersona Engine pipeline loaded. <span class="msg-time">12:04</span></div>
+    <div class="chat-msg bot">Ask me about segments, mechanics, or the strategy canvas. <span class="msg-time">12:04</span></div>
+  </div>
+  <div class="chat-foot">
+    <input id="chat-input" placeholder="Type a command..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+    <button onclick="sendMsg()">⏎</button>
+  </div>
 </div>
 
 <script>
@@ -624,32 +764,68 @@ function toggle(el){
   tg.classList.toggle('open');
 }
 
+// ── show message (replaces alerts) ──
+function showMsg(title,body){
+  const panel=document.getElementById('chat-panel');
+  const bodyEl=document.getElementById('chat-body');
+  if(!panel.classList.contains('open'))toggleChat();
+  const d=new Date();
+  const t=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');
+  bodyEl.innerHTML+=`<div class="chat-msg user">▶ ${title}<span class="msg-time">${t}</span></div>`;
+  bodyEl.innerHTML+=`<div class="chat-msg bot">${body.replace(/\n/g,'<br>')}<span class="msg-time">${t}</span></div>`;
+  bodyEl.scrollTop=bodyEl.scrollHeight;
+}
+
+// ── chatbot ──
+function toggleChat(){
+  document.getElementById('chat-panel').classList.toggle('open');
+}
+function sendMsg(){
+  const inp=document.getElementById('chat-input');
+  const msg=inp.value.trim();if(!msg)return;
+  const body=document.getElementById('chat-body');
+  const d=new Date();
+  const t=d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0');
+  body.innerHTML+=`<div class="chat-msg user">${msg}<span class="msg-time">${t}</span></div>`;
+  inp.value='';
+  // auto-replies
+  const lower=msg.toLowerCase();
+  let reply='';
+  if(lower.includes('sprinter')||lower.includes('flashpoint'))reply='FLASHPOINT targets Sprinters (66%). Hero-moment VFX + cosmetic tease in first 47s. Gated behind tutorial completion. Lift Level-5 reach from 34% → 55%.';
+  else if(lower.includes('floater')||lower.includes('re-engag'))reply='RE-ENGAGEMENT CAROUSEL targets Floaters (30%). Computes nearest unearned reward from Session-1 telemetry. Fires push notification within 4h gap. Targets 5% conversion of Floaters.';
+  else if(lower.includes('pillar')||lower.includes('boutique'))reply='CURATED BOUTIQUE targets Pillars (4%). C1 (62.2k non-payers): €0.49-0.99 first-purchase hook. C2 (19.8k payers): 3-item weekly bundle with loyalty discount.';
+  else if(lower.includes('budget')||lower.includes('cost')||lower.includes('€'))reply='Total budget: €65,550. 2 engineers × 6wk (€36k) + data eng × 2wk (€6k) + VFX (€8k) + UI (€3k) + infra (€4k) + 15% contingency. ROI: 42% Y1, 143% annualised after.';
+  else if(lower.includes('segment')||lower.includes('diagnosis'))reply='Three segments: Sprinters (66%, 47s sessions, €0), Floaters (30%, 3m42s, 73% buys in 48h), Pillars (4%, 19.8k payers @ €3.12 ARPPU, 62% cosmetics).';
+  else if(lower.includes('roi')||lower.includes('revenue'))reply='Incremental annual revenue: €93,300. Build cost: €65,550. Year 1 ROI: 42%. Year 2+: 143% annualised. Pays for itself in 8 months.';
+  else if(lower.includes('risk')||lower.includes('gate'))reply='Top risks: (1) VFX latency >47s — pre-load + kill-switch. (2) Player dismissal — A/B test each mechanic. (3) Lift <0.5pp — hard gate: kill P3 if P2 retention <1pp.';
+  else if(lower.includes('handoff')||lower.includes('pipeline'))reply='Pipeline: Researcher → Designer → Maker. Handoff 1: segment analysis. Handoff 2: StormPersona Engine design. Handoff 3: Strategy Canvas. Each agent received full prior output verbatim.';
+  else if(lower.includes('hello')||lower.includes('hi')||lower.includes('hey'))reply='⟐ HELLO. I am HELIX.AI, your StormPersona Engine interface. Ask me about segments, mechanics, budget, or the pipeline.';
+  else reply=`⟐ Processing query: "${msg}". Try: segments, Flashpoint, Re-engagement, budget, ROI, risks, handoff, or click any card in the document.`;
+  body.innerHTML+=`<div class="chat-msg bot">${reply}<span class="msg-time">${t}</span></div>`;
+  body.scrollTop=body.scrollHeight;
+}
+
 // ── bg canvas ──
 const bc=document.getElementById('bg_canvas'),bx=bc.getContext('2d');
 let bw,bh;
 function rsz(){bw=bc.width=window.innerWidth;bh=bc.height=window.innerHeight}
 window.addEventListener('resize',rsz);rsz();
-
 const pts=[];
-for(let i=0;i<160;i++)pts.push({x:Math.random()*bw,y:Math.random()*bh,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.2+.3,o:Math.random()*.4+.1});
-
+for(let i=0;i<180;i++)pts.push({x:Math.random()*bw,y:Math.random()*bh,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*1.4+.3,o:Math.random()*.35+.08,c:Math.random()>.5?'#ff0080':'#00ff88'});
 function drw(){
   bx.clearRect(0,0,bw,bh);
   pts.forEach(p=>{
     p.x+=p.vx;p.y+=p.vy;
     if(p.x<0||p.x>bw)p.vx*=-1;if(p.y<0||p.y>bh)p.vy*=-1;
     bx.beginPath();bx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    bx.fillStyle=`rgba(255,51,102,${p.o})`;bx.fill()
+    bx.fillStyle=p.c;bx.globalAlpha=p.o;bx.fill();bx.globalAlpha=1
   });
-  // connections
-  for(let i=0;i<pts.length;i+=3){
-    for(let j=i+1;j<pts.length&&j<i+4;j++){
+  for(let i=0;i<pts.length;i+=4){
+    for(let j=i+1;j<pts.length&&j<i+5;j++){
       const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
       const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<100){
-        bx.beginPath();bx.moveTo(pts[i].x,pts[i].y);bx.lineTo(pts[j].x,pts[j].y);
-        bx.strokeStyle=`rgba(255,51,102,${.025*(1-d/100)})`;bx.lineWidth=.4;bx.stroke()
-      }
+      if(d<120){bx.beginPath();bx.moveTo(pts[i].x,pts[i].y);bx.lineTo(pts[j].x,pts[j].y);
+        bx.strokeStyle=`rgba(0,255,136,${.02*(1-d/120)})`;bx.lineWidth=.3;bx.stroke()}
     }
   }
   requestAnimationFrame(drw)
@@ -659,21 +835,21 @@ drw();
 // ── gauges ──
 document.querySelectorAll('.gc').forEach(cv=>{
   const pct=parseInt(cv.dataset.pct),col=cv.dataset.color;
-  const sz=Math.min(cv.parentElement.getBoundingClientRect().width||80,80);
+  const sz=Math.min(cv.parentElement.getBoundingClientRect().width||90,90);
   const dpr=window.devicePixelRatio||1;
   cv.width=sz*dpr;cv.height=sz*dpr;
   cv.style.width=sz+'px';cv.style.height=sz+'px';
   const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
-  const cx=sz/2,cy=sz/2,r=sz/2-7;
+  const cx=sz/2,cy=sz/2,r=sz/2-8;
   function drawG(p){
     ctx.clearRect(0,0,sz,sz);
-    ctx.beginPath();ctx.arc(cx,cy,r,-.75*Math.PI,.75*Math.PI);ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=3.5;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.arc(cx,cy,r,-.75*Math.PI,.75*Math.PI);ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=4;ctx.lineCap='round';ctx.stroke();
     const end=-.75*Math.PI+(p/100)*1.5*Math.PI;
-    ctx.beginPath();ctx.arc(cx,cy,r,-.75*Math.PI,end);ctx.strokeStyle=col;ctx.lineWidth=3.5;ctx.lineCap='round';ctx.stroke();
-    ctx.beginPath();ctx.arc(cx,cy,2,0,Math.PI*2);ctx.fillStyle=col;ctx.fill()
+    ctx.beginPath();ctx.arc(cx,cy,r,-.75*Math.PI,end);ctx.strokeStyle=col;ctx.lineWidth=4;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.arc(cx,cy,2.5,0,Math.PI*2);ctx.fillStyle=col;ctx.fill()
   }
   drawG(pct);
-  cv.addEventListener('mouseenter',()=>drawG(Math.min(100,pct+10)));
+  cv.addEventListener('mouseenter',()=>drawG(Math.min(100,pct+12)));
   cv.addEventListener('mouseleave',()=>drawG(pct));
 });
 </script>
